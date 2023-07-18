@@ -2,17 +2,19 @@ import { Request, Response } from "express";
 import path from "path";
 import * as xlsx from "xlsx"
 import fs from "fs"
+import IExcelDataModel from "./excel_data_model";
 
-
-
-
-async function saveXlsxFileData(req: Request, res: Response) {
+import session from 'express-session';
+export interface Req extends Request{
+    session:any
+}
+async function saveXlsxFileData(req: Req, res: Response) {
     const filepath = path.join(__dirname, "./target_excel/players_2023.xlsx")
     const fileData = xlsx.readFile(filepath)
     const fileJsonData = xlsx.utils.sheet_to_json(fileData.Sheets[fileData.SheetNames[0]])
 
 
-    const playersMap = []
+    const playersMap:IExcelDataModel[] = []
 
 
 
@@ -44,11 +46,11 @@ async function saveXlsxFileData(req: Request, res: Response) {
 
 
     }
-    fs.writeFile(path.join(__dirname, "result.json"), JSON.stringify(playersMap), function (err) {
-        if (err) {
-            console.log(err);
-        }
-    })
+    // fs.writeFile(path.join(__dirname, "result.json"), JSON.stringify(playersMap), function (err) {
+    //     if (err) {
+    //         console.log(err);
+    //     }
+    // })
 
     const result = [];
     const playerData = {};
@@ -69,8 +71,10 @@ async function saveXlsxFileData(req: Request, res: Response) {
 
         }
     }
+    req.session.result = result;
 
-    res.json(result)
+    res.redirect('/send_json_to_db')
+    //res.json(result)
 }
    // res.json({ message: "successfully conveted to json" })
 

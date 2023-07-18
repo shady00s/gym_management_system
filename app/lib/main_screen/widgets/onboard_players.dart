@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gym_management/main_screen/widgets/player_name_widget.dart';
 
-class OnBoardPlayers extends StatefulWidget {
+class OnBoardPlayers extends StatelessWidget {
   final String title;
-  const OnBoardPlayers({super.key,required this.title});
+   OnBoardPlayers({super.key,required this.title});
 
-  @override
-  State<OnBoardPlayers> createState() => _OnBoardPlayersState();
-}
-
-class _OnBoardPlayersState extends State<OnBoardPlayers> {
   final ScrollController _firstController = ScrollController();
 
   @override
@@ -25,11 +20,11 @@ class _OnBoardPlayersState extends State<OnBoardPlayers> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(widget.title),
+                  Text(title),
                   Text("22"),
                 ],
               ),
-              SizedBox(height: 40,),
+              const SizedBox(height: 40,),
               Expanded(child:Scrollbar(
                 controller: _firstController,
                   thumbVisibility: true,

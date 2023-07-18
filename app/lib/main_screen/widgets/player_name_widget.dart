@@ -15,7 +15,23 @@ class PlayerNameWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("shady safwat kamal el deen"),
-              IconButton(onPressed: (){}, icon: Icon(Icons.settings))
+              PopupMenuButton(itemBuilder: (context)=>[
+                PopupMenuItem(child: Row(children: [
+                  Icon(Icons.refresh),
+                  Text("Re-new subscription"),
+
+                ],)),
+                PopupMenuItem(child: Row(children: [
+                  Icon(Icons.insert_invitation_rounded),
+                  Text("Add Invitation"),
+
+                ],)),
+                PopupMenuItem(child: Row(children: [
+                  Icon(Icons.stop),
+                  Text("Freeze player"),
+
+                ],)),
+              ])
             ],
           ),
         ),),

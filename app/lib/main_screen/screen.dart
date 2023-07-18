@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym_management/main_screen/widgets/cards_with_icons.dart';
 import 'package:gym_management/main_screen/widgets/onboard_players.dart';
+import 'package:gym_management/main_screen/widgets/search_widget.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -21,7 +22,7 @@ class _MainScreenState extends State<MainScreen> {
         Expanded(
           flex: 3,
           child: Column(children: [
-            Expanded(flex:3,child: Text("")),
+            Expanded(flex:4,child: SearchWidget()),
             Align(
               alignment: AlignmentDirectional.topStart,
               child: Padding(
@@ -29,6 +30,7 @@ class _MainScreenState extends State<MainScreen> {
                 child: Text("Quick access"),
               ),),
             Expanded(
+              flex: 1,
                 child: GridView(
 
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),
