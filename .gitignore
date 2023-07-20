@@ -45,4 +45,4 @@ app/android/app/release
 
 
 #node.js
-app/node_modules
+node_modules/
