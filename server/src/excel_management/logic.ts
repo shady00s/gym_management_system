@@ -38,11 +38,12 @@ async function saveXlsxFileData(req: Req, res: Response) {
         let billId = fileJsonData[x]["__EMPTY_4"]
 
         let subscriptionDuration:number = fileJsonData[x]["__EMPTY_1"] ==="شهر"? 1 : fileJsonData[x]["__EMPTY_1"] ==="شهرين"? 2 :  fileJsonData[x]["__EMPTY_1"] === "3شهور"? 3 :  fileJsonData[x]["__EMPTY_1"] === "6شهور" ? 6 : fileJsonData[x]["__EMPTY_1"] ==="حصة" ? 0.1 : -1 
-        if (id != '*' && id != '-' && id != undefined && typeof id !== "string") {
+                if(id !=="" && id !=="ID" && id!== null){
+                    playersMap.push({ id: id, name, subscriptions: [{ subscriptionValue:subscriptionValue, beginDate:beginDate, finishDate:finishDate, billId:billId,subscriptionDuration:subscriptionDuration }] })
 
-            playersMap.push({ id: id, name, subscriptions: [{ subscriptionValue:subscriptionValue, beginDate:beginDate, finishDate:finishDate, billId:billId,subscriptionDuration:subscriptionDuration }] })
+                }
 
-        }
+        
 
 
     }
@@ -52,31 +53,41 @@ async function saveXlsxFileData(req: Req, res: Response) {
     //     }
     // })
 
-    const result = [];
+    let processedPlayer = new Set();
+    const result = []
     const playerData = {};
 
     for (const player of playersMap) {
         const playerId = player.id;
 
         if (playerData[playerId]) {
-            if (playerData[playerId].id === player.id) {
+            if (playerData[playerId].name === player.name) {
                 playerData[playerId].subscriptions.push(...player.subscriptions);
-                result.push(playerData[playerId]);
-            }else{
-                result.push(playerData[playerId]);
+                if (!processedPlayer.has(playerId)) {
+                    result.push(playerData[playerId]);
+                    processedPlayer.add(playerId);
+                  }
 
             }
+
+            
         } else {
             playerData[playerId] = player;
+            if (!processedPlayer.has(playerId)) {
+                result.push(playerData[playerId]);
+                processedPlayer.add(playerId);
+              }
 
         }
     }
+
+   
+    
     req.session.result = result;
 
-    res.redirect('/send_json_to_db')
+   res.redirect('/send_json_to_db')
     //res.json(result)
 }
-   // res.json({ message: "successfully conveted to json" })
 
 
 
