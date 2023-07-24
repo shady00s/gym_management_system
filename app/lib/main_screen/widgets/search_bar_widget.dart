@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-
+import 'package:flutter/material.dart' as material;
+import 'package:fluent_ui/fluent_ui.dart';
 class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({super.key});
 
@@ -19,7 +19,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            child: TextFormField(
+            child: TextBox(
               onTap: (){
                 setState(() {
                   showHint = true;
@@ -34,19 +34,18 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 val.isNotEmpty || val !="" ? setState((){changed = true;}):setState((){changed = false;});
               },
               controller: _controller,
-                decoration: InputDecoration(
-                    hintText: "Search here",
-                    helperText:showHint?"Search for players by name, ID or phone number":"",
+
+                    placeholder: "Search here",
                   suffix: changed?IconButton(onPressed:(){
                     setState(() {
                       _controller.text = "";
                       changed = false;
                     });
-                  },icon:const Icon(Icons.close,color: Colors.grey,)):null
+                  },icon:const Icon(material.Icons.close,color: Colors.grey,)):null
                 )
             ),
-          ),
-          IconButton(onPressed: (){}, icon: const Icon(Icons.search))
+
+          IconButton(onPressed: (){}, icon: const Icon(FluentIcons.search))
         ],
       ),
     );

@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { Req } from '../../excel_management/logic';
 import { Client, Pool } from "pg";
 import IExcelDataModel from '../../excel_management/excel_data_model';
-const client = new Client({
+export const client = new Client({
     host: "dpg-cir98s5ph6ev5rae7at0-a",
     ssl: {
         rejectUnauthorized: true
@@ -15,7 +15,7 @@ const client = new Client({
     password: "postgres://shady:gTxyDyzytUOEfRL080FX0epSmDnN0uXr@dpg-cir98s5ph6ev5rae7at0-a.oregon-postgres.render.com/gym_database_8ope"
 })
 
-const pool = new Pool({
+export const pool = new Pool({
     database: "gym_database_8ope",
     password: "postgres://shady:gTxyDyzytUOEfRL080FX0epSmDnN0uXr@dpg-cir98s5ph6ev5rae7at0-a.oregon-postgres.render.com/gym_database_8ope"
     , ssl: {
@@ -71,7 +71,8 @@ export default async function sendDataToDBController(req: Req, res: Response) {
 
     pool.query("SELECT * FROM SUBSCRIPTIONSDB").then(val => { console.log(val.rows); })
 
-
+    await client.end()
+    await pool.end()
 
     res.json({ message: "redirect succssessfully", results })
 }
