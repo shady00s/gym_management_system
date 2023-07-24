@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         ),
         home:FluentApp(
           theme: FluentThemeData.dark(),
-          home: const ImportExcelScreen(),
+          home: const MainScreen(),
       ));
   }
 }

@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
-
+import 'package:flutter/material.dart' as material;
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:postgres/postgres.dart';
 class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({super.key});
 
@@ -7,48 +8,81 @@ class SearchBarWidget extends StatefulWidget {
   State<SearchBarWidget> createState() => _SearchBarWidgetState();
 }
 
+
+Future<void> connectToPostgres() async{
+    var connection = PostgreSQLConnection(
+      "postgres://shady:gTxyDyzytUOEfRL080FX0epSmDnN0uXr@dpg-cir98s5ph6ev5rae7at0-a.oregon-postgres.render.com/gym_database_8ope"
+    , 5432,
+      "gym_database_8ope",
+      username: "shady",
+      password: "gTxyDyzytUOEfRL080FX0epSmDnN0uXr",
+        useSSL: true,
+
+    );
+
+    await connection.open().then((_){
+        connection.query("SELECT * FROM PLAYERS").then((value) => print(value));
+    }).catchError((err){
+      print(err);
+    });
+    
+}
 class _SearchBarWidgetState extends State<SearchBarWidget> {
    final TextEditingController _controller = TextEditingController();
     bool changed = false;
     bool showHint = false;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: TextFormField(
-              onTap: (){
-                setState(() {
-                  showHint = true;
-                });
-              },
-                onTapOutside: (event){
-                  setState(() {
-                    showHint = false;
-                  });
-                },
-              onChanged: (val){
-                val.isNotEmpty || val !="" ? setState((){changed = true;}):setState((){changed = false;});
-              },
-              controller: _controller,
-                decoration: InputDecoration(
-                    hintText: "Search here",
-                    helperText:showHint?"Search for players by name, ID or phone number":"",
-                  suffix: changed?IconButton(onPressed:(){
-                    setState(() {
-                      _controller.text = "";
-                      changed = false;
-                    });
-                  },icon:const Icon(Icons.close,color: Colors.grey,)):null
-                )
+    return FutureBuilder(
+        future: connectToPostgres(),
+
+        builder: (context,snapshot){
+
+      switch (snapshot.connectionState){
+        case ConnectionState.waiting:
+          return const Center(child: ProgressRing(),);
+
+        case ConnectionState.done:
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: TextBox(
+                      onTap: (){
+                        setState(() {
+                          showHint = true;
+                        });
+                      },
+                      onTapOutside: (event){
+                        setState(() {
+                          showHint = false;
+                        });
+                      },
+                      onChanged: (val){
+                        val.isNotEmpty || val !="" ? setState((){changed = true;}):setState((){changed = false;});
+                      },
+                      suffix: changed?IconButton(onPressed:(){
+                        setState(() {
+                          _controller.text = "";
+                          changed = false;
+                        });
+                      },icon:const Icon(FluentIcons.cancel,color: Colors.grey,)):null,
+                      placeholder:  "Search here",
+                      controller: _controller,
+
+                  ),
+                ),
+                IconButton(onPressed: (){}, icon: const Icon(FluentIcons.search))
+              ],
             ),
-          ),
-          IconButton(onPressed: (){}, icon: const Icon(Icons.search))
-        ],
-      ),
-    );
+          );
+        default:
+          return const Center(child: ProgressRing(),);
+      }
+
+    })
+    ;
   }
 }

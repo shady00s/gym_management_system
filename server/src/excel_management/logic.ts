@@ -30,7 +30,6 @@ async function saveXlsxFileData(req: Req, res: Response) {
         let begday = begdateVal.getDate();
 
         let id = fileJsonData[x]["GYM PLAYER 2023"]
-        //  console.log(id != '*');
         let name = fileJsonData[x]["__EMPTY"]
         let subscriptionValue = fileJsonData[x]["__EMPTY_6"]
         let beginDate = `${begday + "/" + begmonth + "/" + begyear}`
@@ -38,7 +37,7 @@ async function saveXlsxFileData(req: Req, res: Response) {
         let billId = fileJsonData[x]["__EMPTY_4"]
 
         let subscriptionDuration:number = fileJsonData[x]["__EMPTY_1"] ==="شهر"? 1 : fileJsonData[x]["__EMPTY_1"] ==="شهرين"? 2 :  fileJsonData[x]["__EMPTY_1"] === "3شهور"? 3 :  fileJsonData[x]["__EMPTY_1"] === "6شهور" ? 6 : fileJsonData[x]["__EMPTY_1"] ==="حصة" ? 0.1 : -1 
-                if(id !=="" && id !=="ID" && id!== null){
+                if( id !=="  " && id !=="ID" && id !=null && name !== null && name !== undefined ){
                     playersMap.push({ id: id, name, subscriptions: [{ subscriptionValue:subscriptionValue, beginDate:beginDate, finishDate:finishDate, billId:billId,subscriptionDuration:subscriptionDuration }] })
 
                 }
@@ -61,9 +60,10 @@ async function saveXlsxFileData(req: Req, res: Response) {
         const playerId = player.id;
 
         if (playerData[playerId]) {
-            if (playerData[playerId].name === player.name) {
+            if (playerData[playerId].name === player.name&& typeof player.name !=="number" && player.id !== null) {
                 playerData[playerId].subscriptions.push(...player.subscriptions);
-                if (!processedPlayer.has(playerId)) {
+                if (!processedPlayer.has(playerId) && typeof playerId !== "string" ) {
+                    
                     result.push(playerData[playerId]);
                     processedPlayer.add(playerId);
                   }
@@ -73,10 +73,16 @@ async function saveXlsxFileData(req: Req, res: Response) {
             
         } else {
             playerData[playerId] = player;
-            if (!processedPlayer.has(playerId)) {
-                result.push(playerData[playerId]);
-                processedPlayer.add(playerId);
-              }
+            if(playerData[playerId].name === player.name && typeof player.name !=="number" &&  player.id !== null){
+                playerData[playerId].subscriptions.push(...player.subscriptions);
+
+                if (!processedPlayer.has(playerId) && typeof playerId !== "string" ) {
+                    
+                    result.push(playerData[playerId]);
+                    processedPlayer.add(playerId);
+                  }
+            }
+            
 
         }
     }
@@ -109,12 +115,9 @@ function jsonModifier(req: Request, res: Response) {
                 const playerId = player.id;
 
                 if (playerData[playerId]) {
-                    if (playerData[playerId].id === player.id) {
+                    if (playerData[playerId].id === player.id && playerId) {
                         playerData[playerId].subscriptions.push(...player.subscriptions);
                         result.push(playerData[playerId]);
-                    }else{
-                        result.push(playerData[playerId]);
-
                     }
                 } else {
                     playerData[playerId] = player;
