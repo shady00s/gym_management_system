@@ -6,6 +6,7 @@ export default async function getPlayerInformationData(req:Request,res:Response)
     let playerInfo = {
                 player_name:"",
                 player_id:"",
+                player_phone_number:0,
                 subscriptions:[]
     }
    let result = await pool.query(`
@@ -16,9 +17,10 @@ export default async function getPlayerInformationData(req:Request,res:Response)
         WHERE PLAYERS.player_id = ${playerId}
     `)
     for (let data of result.rows) {
-        if(playerInfo){
+       
             playerInfo["player_name"] = data.player_name
             playerInfo["player_id"] = data.player_id
+            playerInfo["player_phone_number"] = data.player_phone_number 
             playerInfo.subscriptions.push({
                 player_subscription_id:data.player_subscription_id,
                 billid:data.billid,
@@ -28,12 +30,7 @@ export default async function getPlayerInformationData(req:Request,res:Response)
                 duration:data.duration,
                 billCollector:data.billCollector
             })
-        }else{
-            playerInfo = {
-                player_name:data.player_name,
-                player_id:data.player_id,
-                subscriptions:[]}
-        }
+            playerInfo.subscriptions.reverse()
         
     }
     res.json({message:"succssess",data:playerInfo})

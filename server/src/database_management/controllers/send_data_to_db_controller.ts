@@ -3,12 +3,8 @@ import { Request, Response } from 'express';
 import { Req } from '../../excel_management/logic';
 import { Client, Pool } from "pg";
 import IExcelDataModel from '../../excel_management/excel_data_model';
-<<<<<<< HEAD
 import format from 'pg-format';
-const client = new Client({
-=======
 export const client = new Client({
->>>>>>> dfe21ebe445093fe750dd1a645359e867aec6151
     host: "dpg-cir98s5ph6ev5rae7at0-a",
     ssl: {
         rejectUnauthorized: true
@@ -33,7 +29,7 @@ export default async function sendDataToDBController(req: Req, res: Response) {
     let results: IExcelDataModel[] = req.session.result
     await client.connect().then(async () => {
         await pool.query("DROP TABLE IF EXISTS SUBSCRIPTIONSDB CASCADE")
-       // await pool.query("DROP TABLE IF EXISTS PLAYERS CASCADE")
+        await pool.query("DROP TABLE IF EXISTS PLAYERS CASCADE")
         await pool.query(`
         CREATE TABLE IF NOT EXISTS SUBSCRIPTIONSDB (
           id SERIAL PRIMARY KEY,
@@ -49,6 +45,7 @@ export default async function sendDataToDBController(req: Req, res: Response) {
         CREATE TABLE IF NOT EXISTS PLAYERS (
           player_id INT PRIMARY KEY,
           player_name VARCHAR,
+          player_phone_number INT DEFAULT -3,
           discount_code VARCHAR DEFAULT 'no-code' NOT NULL,
           player_age INT DEFAULT 0 NOT NULL,
           player_gender VARCHAR DEFAULT 'not-recorded' NOT NULL,
@@ -99,12 +96,7 @@ export default async function sendDataToDBController(req: Req, res: Response) {
     });
 
 
-<<<<<<< HEAD
   //  pool.query("SELECT * FROM SUBSCRIPTIONSDB").then(val => { console.log(val.rows); })
 
-    }
-=======
-    await client.end()
-    await pool.end()
->>>>>>> dfe21ebe445093fe750dd1a645359e867aec6151
+}
 

@@ -25,7 +25,7 @@ class PlayersListWidget extends StatelessWidget {
                     child: ListView.builder(
                         controller: controller,
                         itemCount: snapshot.data.length,
-                        itemBuilder: (context,index)=> PlayerNameWidget("${snapshot.data[index]["player_name"]}", index )));
+                        itemBuilder: (context,index)=> PlayerNameWidget("${snapshot.data[index]["player_name"]}", snapshot.data[index]["player_id"] )));
               }else{
                 return Center(child: Text("No data found"),);
               }

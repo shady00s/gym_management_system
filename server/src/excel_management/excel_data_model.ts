@@ -1,7 +1,7 @@
 interface IExcelDataModel{
     id:string,
     name:string,
-    subscriptions:ISubscriptions[]
+    subscriptions?: ISubscriptions[]
 
 }
 

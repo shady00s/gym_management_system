@@ -1,17 +1,10 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart'as material;
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:gym_management/main_screen/widgets/player_card_information.dart';
 class PlayerNameWidget extends StatelessWidget {
   final  String playerName;
   final int playerId;
 
-  Future getPlayerInfo()async{
-    Dio dio = Dio();
-    var res = await dio.get("http://127.0.1.1:3000/get_one_player_data_from_db",queryParameters: {
-      "playerId":playerId + 1
-    });
-    return res.data["data"];
-  }
    const PlayerNameWidget(this.playerName,this.playerId,{super.key});
 
   @override
@@ -33,58 +26,8 @@ class PlayerNameWidget extends StatelessWidget {
                 )
               ],
             ),
-            content: StatefulBuilder(builder: (context,setState)=>
-                FutureBuilder(
-                    future: getPlayerInfo(),
-                    builder: (context, snapshot){
-                  switch(snapshot.connectionState){
-                    case ConnectionState.waiting:
-                      return Center(child: ProgressRing(),);
-                    case ConnectionState.done:
-                      return Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Name:"),
-                              Text(snapshot.data[0]["player_name"]),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("ID:"),
-                              Text(snapshot.data[0]["player_id"].toString()),
-                            ],
-                          ),
-                          Text("Subscriptions history:"),
-                          Expanded(child: ListView.builder(
-                              itemCount: snapshot.data["subscriptions"].length,
-                              itemBuilder: (context,index)=>Column(children: [
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Beginning date:"),
-                                Text(snapshot.data["subscriptions"]["beginning_date"])
-                            ],),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("end date:"),
-                                Text(snapshot.data["subscriptions"]["end_date"])
-                            ],),
-
-                          ],)))
-
-                        ],
-                      );
-                       default:
-                         return  Center(child: ProgressBar(),);
-
-
-                  }
-                }),)));
+            content: PlayerCardInformationWidget(playerId: playerId,)
+          ));
         },child:  Padding(
           padding:const EdgeInsets.all(8.0),
           child: Row(
@@ -108,7 +51,7 @@ class PlayerNameWidget extends StatelessWidget {
               ]),
               const Spacer(),
               Text(playerName??"No name"),
-              Text(" - $playerId"??"no id")
+              Text(" - $playerId "??"no id")
             ],
           ),
         ),),
