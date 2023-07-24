@@ -32,7 +32,7 @@ class OnBoardPlayers extends StatelessWidget {
                       controller: _firstController,
                     itemCount: 40,
                   shrinkWrap: false,
-                  itemBuilder: (context,index)=>PlayerNameWidget())))
+                  itemBuilder: (context,index)=>PlayerNameWidget("",0))))
             ],
           ),
         ),),
