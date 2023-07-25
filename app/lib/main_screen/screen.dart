@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/main_screen/widgets/cards_with_icons.dart';
 import 'package:gym_management/main_screen/widgets/onboard_players.dart';
 import 'package:gym_management/main_screen/widgets/search_widget.dart';
@@ -11,42 +11,112 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-
+  int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(flex:2,child: OnBoardPlayers(title:"Active players for today:")),
-        Expanded(
-          flex: 3,
-          child: Column(children: [
-            Expanded(flex:4,child: SearchWidget()),
-            Align(
-              alignment: AlignmentDirectional.topStart,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("Quick access"),
-              ),),
-            Expanded(
-              flex: 1,
-                child: GridView(
-
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),
+    return TabView(
+      currentIndex: currentIndex,
+      onChanged: (index) {
+        setState(() {
+          currentIndex = index;
+        });
+      },
+      tabs: [
+        Tab(
+          onClosed: null,
+          closeIcon: null,
+          text: Text("Gym"),
+          body: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CardsWithIcon(title: 'Re-new subscription', icon: Icons.refresh,),
-              CardsWithIcon(title: 'Show price list', icon: Icons.list_alt_outlined),
-
-            ],))
-
-          ],),
+              Expanded(
+                  flex: 2,
+                  child: OnBoardPlayers(title: "Active players for today:")),
+              Expanded(
+                flex: 3,
+                child: Column(
+                  children: [
+                    Expanded(flex: 4, child: SearchWidget()),
+                    Align(
+                      alignment: AlignmentDirectional.topStart,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Quick access"),
+                      ),
+                    ),
+                    Expanded(
+                        flex: 1,
+                        child: GridView(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 5),
+                          children: [
+                            CardsWithIcon(
+                              title: 'Re-new subscription',
+                              icon: FluentIcons.refresh,
+                            ),
+                            CardsWithIcon(
+                                title: 'Show price list',
+                                icon: FluentIcons.list),
+                          ],
+                        ))
+                  ],
+                ),
+              ),
+              Expanded(
+                  flex: 2,
+                  child: OnBoardPlayers(title: "Players need to subscribe:")),
+            ],
+          ),
         ),
-        Expanded(
-            flex:2,
-            child: OnBoardPlayers(title:"Players need to subscribe:")),
-
-      ],),
+        Tab(
+          onClosed: null,
+          closeIcon: null,
+          text: Text("Swimming"),
+          body: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                  flex: 2,
+                  child: OnBoardPlayers(title: "Active players for today:")),
+              Expanded(
+                flex: 3,
+                child: Column(
+                  children: [
+                    Expanded(flex: 4, child: SearchWidget()),
+                    Align(
+                      alignment: AlignmentDirectional.topStart,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Quick access"),
+                      ),
+                    ),
+                    Expanded(
+                        flex: 1,
+                        child: GridView(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 5),
+                          children: [
+                            CardsWithIcon(
+                              title: 'Re-new subscription',
+                              icon: FluentIcons.refresh,
+                            ),
+                            CardsWithIcon(
+                                title: 'Show price list',
+                                icon: FluentIcons.list),
+                          ],
+                        ))
+                  ],
+                ),
+              ),
+              Expanded(
+                  flex: 2,
+                  child: OnBoardPlayers(title: "Players need to subscribe:")),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

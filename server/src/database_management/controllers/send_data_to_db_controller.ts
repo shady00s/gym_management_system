@@ -46,8 +46,9 @@ export default async function sendDataToDBController(req: Req, res: Response) {
           player_id INT PRIMARY KEY,
           player_name VARCHAR,
           player_phone_number INT DEFAULT -3,
-          discount_code VARCHAR DEFAULT 'no-code' NOT NULL,
+          image_path VARCHAR DEFAULT 'no-image',
           player_age INT DEFAULT 0 NOT NULL,
+          player_first_join_date TIMESTAMP,
           player_gender VARCHAR DEFAULT 'not-recorded' NOT NULL,
           subscription_id INT
         )

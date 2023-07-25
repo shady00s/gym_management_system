@@ -26,7 +26,13 @@ class PlayerCardInformationWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
+                 const   CircleAvatar(
+                      radius: 33,
+                      backgroundColor: Color.fromRGBO(
+                          176, 175, 175, 0.7019607843137254),
+                      child: Icon(FluentIcons.contact ,size: 41,),
+                        ),
+                    SizedBox(height: 22,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -48,6 +54,16 @@ class PlayerCardInformationWidget extends StatelessWidget {
                       children: [
                         Text("Phone number:"),
                         Text((snapshot.data["player_phone_number"] != -3?snapshot.data["player_phone_number"]:"unrecorded").toString()),
+                      ],
+                    ),
+
+                    SizedBox(height: 14,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Status:"),
+                        Text("Valid",style: TextStyle(color:Color.fromRGBO(
+                            2, 176, 18, 0.8), fontWeight: FontWeight.bold, fontSize: 18),),
                       ],
                     ),
                     SizedBox(height: 30,),

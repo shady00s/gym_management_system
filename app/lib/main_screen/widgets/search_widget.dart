@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/main_screen/widgets/player_list.dart';
 import 'package:gym_management/main_screen/widgets/search_bar_widget.dart';
 

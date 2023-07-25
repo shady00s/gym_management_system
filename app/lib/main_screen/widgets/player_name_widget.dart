@@ -9,11 +9,10 @@ class PlayerNameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      borderRadius: BorderRadius.circular(5),
-      child:  material.InkWell(
-          borderRadius: BorderRadius.circular(5),
-        onTap:()async{
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Button(
+        onPressed:()async{
           await showDialog(context: context, builder: (context)=> ContentDialog(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -26,7 +25,12 @@ class PlayerNameWidget extends StatelessWidget {
                 )
               ],
             ),
-            content: PlayerCardInformationWidget(playerId: playerId,)
+            content: PlayerCardInformationWidget(playerId: playerId,),
+            actions: [
+              Button(child:Text("Re-new") ,onPressed: (){},),
+              Button(child:Text("Invitation") ,onPressed: (){},),
+              Button(child:Text("Freeze") ,onPressed: (){},),
+            ],
           ));
         },child:  Padding(
           padding:const EdgeInsets.all(8.0),

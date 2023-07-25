@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart' as material;
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:postgres/postgres.dart';
 class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({super.key});
 
