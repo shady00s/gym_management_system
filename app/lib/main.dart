@@ -1,14 +1,12 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:gym_management/database_management/tables/players_table.dart';
+import 'package:gym_management/database_management/player_database_manager.dart';
 import 'package:gym_management/main_screen/screen.dart';
 
 
 void main() async{
-  final PlayersDatabase playersDatabase = PlayersDatabase();
   WidgetsFlutterBinding.ensureInitialized();
- var test = await playersDatabase.select($PlayersTableTable(playersDatabase)).get();
- print(test);
+  await PlayersDatabaseManager().getDataFromBackup();
   runApp(const MyApp());
 }
 

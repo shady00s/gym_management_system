@@ -1,6 +1,8 @@
-import "package:dio/dio.dart";
 import "package:fluent_ui/fluent_ui.dart";
+import "package:gym_management/database_management/player_database_manager.dart";
 import 'package:gym_management/main_screen/widgets/player_name_widget.dart';
+
+import "../../database_management/tables/players_table.dart";
 class PlayersListWidget extends StatelessWidget {
   PlayersListWidget({super.key});
 
@@ -9,7 +11,7 @@ class PlayersListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: getPlayersFromRender(),
+        future: PlayersDatabaseManager().getPlayersData(),
         builder: (context, snapshot) {
 
           switch(snapshot.connectionState){
@@ -18,12 +20,20 @@ class PlayersListWidget extends StatelessWidget {
 
             case ConnectionState.done:
               if(snapshot.hasData){
-                return  Scrollbar(
-                    controller: controller,
-                    child: ListView.builder(
-                        controller: controller,
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context,index)=> PlayerNameWidget("${snapshot.data[index]["player_name"]}", snapshot.data[index]["player_id"] )));
+                List<Player> playersList = snapshot.data;
+                return CustomScrollView(
+                  shrinkWrap: false,
+                  physics: const AlwaysScrollableScrollPhysics (),
+                  slivers: [
+                    SliverFixedExtentList(
+
+                        delegate: SliverChildBuilderDelegate((context, index){
+                        return PlayerNameWidget("${playersList[index].playerName}", playersList[index].playerId );
+                    }
+                    ,childCount: playersList.length,
+                    ), itemExtent:70 )
+                  ],
+                ) ;
               }else{
                 return Center(child: Text("No data found"),);
               }
@@ -36,9 +46,4 @@ class PlayersListWidget extends StatelessWidget {
         }
       );
   }
-}
-Future getPlayersFromRender() async{
-  final dio = Dio();
-  var responseData = await dio.get("http://127.0.1.1:3000/get_players_data_from_db");
-  return responseData.data["data"];
 }

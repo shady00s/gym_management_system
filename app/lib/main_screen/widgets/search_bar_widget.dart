@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart' as material;
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:gym_management/database_management/player_database_manager.dart';
 class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({super.key});
 
@@ -52,7 +52,9 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
 
             ),
           ),
-          IconButton(onPressed: () {}, icon: const Icon(FluentIcons.search))
+          IconButton(onPressed: () {
+            PlayersDatabaseManager().searchForPlayer(_controller.text);
+          }, icon: const Icon(FluentIcons.search))
         ],
       ),
     );

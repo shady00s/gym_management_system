@@ -92,7 +92,7 @@ export default async function sendDataToDBController(req: Req, res: Response) {
      
 
 
-        res.json({ message: "redirect succssessfully", subMap   })
+        res.json({ message: "redirect succssessfully", results   })
 
     });
 

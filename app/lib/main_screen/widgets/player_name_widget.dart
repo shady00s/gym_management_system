@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart'as material;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/main_screen/widgets/player_card_information.dart';
 class PlayerNameWidget extends StatelessWidget {
   final  String playerName;
   final int playerId;
 
-   const PlayerNameWidget(this.playerName,this.playerId,{super.key});
-
+    PlayerNameWidget(this.playerName,this.playerId,{super.key});
+  final menuController = FlyoutController();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -34,31 +33,59 @@ class PlayerNameWidget extends StatelessWidget {
           ));
         },child:  Padding(
           padding:const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              material.PopupMenuButton(itemBuilder: (context)=>[
-                material.PopupMenuItem(child: Row(children: [
-                  Icon( material.Icons.refresh),
-                  Text("Re-new subscription"),
 
-                ],)),
-                material.PopupMenuItem(child: Row(children: [
-                  Icon( material.Icons.insert_invitation_rounded),
-                  Text("Add Invitation"),
 
-                ],)),
-                material.PopupMenuItem(child: Row(children: [
-                  Icon( material.Icons.stop),
-                  Text("Freeze player"),
+          child: FlyoutTarget(controller: menuController,
+          child:  Row(
+    children: [
+      OptionsMenu( menuController),
+      const Spacer(),
+      Text(playerName??"No name"),
+      Text(" - $playerId "??"no id")
 
-                ],)),
-              ]),
-              const Spacer(),
-              Text(playerName??"No name"),
-              Text(" - $playerId "??"no id")
-            ],
-          ),
+    ],
+    )
+
         ),),
-    );
+    ));
   }
 }
+
+class OptionsMenu extends StatelessWidget {
+
+  final FlyoutController menuController;
+  const OptionsMenu(this.menuController, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return  IconButton(icon: const Icon(FluentIcons.more_vertical),onPressed: (){
+      menuController.showFlyout(
+          autoModeConfiguration: FlyoutAutoConfiguration(
+            preferredMode: FlyoutPlacementMode.left,
+          ),
+          barrierDismissible: true,
+          dismissOnPointerMoveAway: false,
+          dismissWithEsc: true,
+
+          builder: (context){
+            return   MenuFlyout(items: [
+              MenuFlyoutItem(
+                leading: const Icon(FluentIcons.refresh),
+                text: const Text('Re-subscribe'),
+                onPressed: Flyout.of(context).close,
+              ),
+              MenuFlyoutItem(
+                leading: const Icon(FluentIcons.stop),
+                text: const Text('Freeze'),
+                onPressed: Flyout.of(context).close,
+              ),
+              MenuFlyoutItem(
+                leading: const Icon(FluentIcons.contact_heart),
+                text: const Text('Invitation'),
+                onPressed: Flyout.of(context).close,
+              )]);
+          });
+    },);
+  }
+}
+

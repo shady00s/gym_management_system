@@ -38,7 +38,7 @@ async function saveXlsxFileData(req: Req, res: Response) {
         let billId = fileJsonData[x]["__EMPTY_4"]== null? -1 : fileJsonData[x]["__EMPTY_4"]
 
         let subscriptionDuration:number = fileJsonData[x]["__EMPTY_1"] ==="شهر"? 1 : fileJsonData[x]["__EMPTY_1"] ==="شهرين"? 2 :  fileJsonData[x]["__EMPTY_1"] === "3شهور"? 3 :  fileJsonData[x]["__EMPTY_1"] === "6شهور" ? 6 : fileJsonData[x]["__EMPTY_1"] ==="حصة" ? 11 : -1 
-                if( name !=="  "&& id !=="ID" && id !=null && name !== null ){
+                if( name !=="  "&& name !==" " && id !=="ID" && id !==null && name !== null ){
                     playersMap.push({ id: id, name, subscriptions: [{ subscriptionValue:subscriptionValue, beginDate:beginDate, finishDate:finishDate, billId:billId,subscriptionDuration:subscriptionDuration }] })
 
                 }
@@ -54,56 +54,59 @@ async function saveXlsxFileData(req: Req, res: Response) {
 
     for (const player of playersMap) {
         const playerId = player.id;
-        if (playerData[playerId]) {
-            if (playerData[playerId].name == player.name && typeof player.name !=="number" && player.id != null) {
-                
-
-                    if(!player.subscriptions?.every(e=> playerData[playerId].subscriptions.every(
-                        f=> e.beginDate === f.beginDate && e.billId === f.billId && e.subscriptionDuration === f.subscriptionDuration && e.subscriptionValue === f.subscriptionValue)))
-                    {
-                        playerData[playerId].subscriptions.push(...player.subscriptions);
+        if(playerId !== undefined && playerId !=="" && playerId !== "  "){
+            if (playerData[playerId]) {
+                if (playerData[playerId].name === player.name && typeof player.name !=="number" ) {
+                    
     
+                        if(!player.subscriptions?.every(e=> playerData[playerId].subscriptions.every(
+                            f=> e.beginDate === f.beginDate && e.billId === f.billId && e.subscriptionDuration === f.subscriptionDuration && e.subscriptionValue === f.subscriptionValue)))
+                        {
+                            playerData[playerId].subscriptions.push(...player.subscriptions);
+        
+                        
                     
-                
-                
-            }
-                if (!processedPlayer.has(playerId) && typeof playerId !== "string" ) {
                     
-                    result.push(playerData[playerId]);
-                    processedPlayer.add(playerId);
-                  }
-
-            }
+                }
+                    if (!processedPlayer.has(playerId) && typeof playerId !== "string" ) {
+                        
+                        result.push(playerData[playerId]);
+                        processedPlayer.add(playerId);
+                      }
+    
+                }
+            
         
     
-
-            
-        } else {
-            playerData[playerId] = player;
-            if(playerData[playerId].name == player.name && typeof player.name !=="number" &&  player.id !== null){
-               
-                if(playerData[playerId].subscriptions.length !== 0 && playerData[playerId].subscriptions !==undefined){
-
-                    if(!player.subscriptions?.every(e=> playerData[playerId].subscriptions.every(
-                        f=> e.beginDate === f.beginDate && e.billId === f.billId && e.subscriptionDuration === f.subscriptionDuration && e.subscriptionValue === f.subscriptionValue)))
-                    {
-                        playerData[playerId].subscriptions.push(...player.subscriptions);
+                
+            } else {
+                playerData[playerId] = player;
+                if(playerData[playerId].name == player.name && typeof player.name !=="number" && playerData[playerId].id !== null && player.id !==null){
+                   
+                    if(playerData[playerId].subscriptions.length !== 0 && playerData[playerId].subscriptions !==undefined){
     
-                    }
+                        if(!player.subscriptions?.every(e=> playerData[playerId].subscriptions.every(
+                            f=> e.beginDate === f.beginDate && e.billId === f.billId && e.subscriptionDuration === f.subscriptionDuration && e.subscriptionValue === f.subscriptionValue)))
+                        {
+                            playerData[playerId].subscriptions.push(...player.subscriptions);
+        
+                        }
+                    
+                }
+        
+                        
+                    
+    
+                    if (!processedPlayer.has(playerId) && typeof playerId !== "string" ) {
+                        
+                        result.push(playerData[playerId]);
+                        processedPlayer.add(playerId);
+                      }
+                }
                 
             }
-    
-                    
-                
-
-                if (!processedPlayer.has(playerId) && typeof playerId !== "string" ) {
-                    
-                    result.push(playerData[playerId]);
-                    processedPlayer.add(playerId);
-                  }
-            }
-            
         }
+       
     }
 
    

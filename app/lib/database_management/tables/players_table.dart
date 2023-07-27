@@ -4,11 +4,11 @@ import 'package:path/path.dart' as p;
 import 'package:drift/drift.dart';
 import 'package:path_provider/path_provider.dart';
 part 'players_table.g.dart';
-class PlayersTable extends Table{
+class Players extends Table{
   IntColumn get id => integer().autoIncrement()();
   IntColumn get playerId => integer()();
-  TextColumn get playerName => text().withLength(min: 3, max: 90)();
-  TextColumn get playerPhoneNumber =>text().withLength(min:11,max: 11)();
+  TextColumn get playerName => text().withLength(min: 2, max: 90)();
+  IntColumn get playerPhoneNumber =>integer()();
   TextColumn get imagePath => text()();
   IntColumn get playerAge => integer()();
   DateTimeColumn get playerFirstJoinDate => dateTime()();
@@ -17,7 +17,7 @@ class PlayersTable extends Table{
 
 }
 
-@DriftDatabase(tables:[PlayersTable])
+@DriftDatabase(tables:[Players])
 
 class PlayersDatabase extends _$PlayersDatabase{
   PlayersDatabase():super(_openConnection());
@@ -29,9 +29,7 @@ class PlayersDatabase extends _$PlayersDatabase{
 LazyDatabase _openConnection(){
   
   return LazyDatabase(() async{
-    final Directory dir = await getApplicationDocumentsDirectory();
-    final File file = File(p.join(dir.path,'playersDatabase.sqlite'));
-
+    final File file = File(p.join("/home/ssk/Desktop/projects/gym_management_system/app/assets",'PlayersDatabase.sqlite'));
     return NativeDatabase.createInBackground(file);
   });
 }
