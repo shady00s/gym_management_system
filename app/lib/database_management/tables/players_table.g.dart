@@ -3,12 +3,11 @@
 part of 'players_table.dart';
 
 // ignore_for_file: type=lint
-class $PlayersTableTable extends PlayersTable
-    with TableInfo<$PlayersTableTable, PlayersTableData> {
+class $PlayersTable extends Players with TableInfo<$PlayersTable, Player> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $PlayersTableTable(this.attachedDatabase, [this._alias]);
+  $PlayersTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -30,18 +29,15 @@ class $PlayersTableTable extends PlayersTable
   late final GeneratedColumn<String> playerName = GeneratedColumn<String>(
       'player_name', aliasedName, false,
       additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 3, maxTextLength: 90),
+          GeneratedColumn.checkTextLength(minTextLength: 2, maxTextLength: 90),
       type: DriftSqlType.string,
       requiredDuringInsert: true);
   static const VerificationMeta _playerPhoneNumberMeta =
       const VerificationMeta('playerPhoneNumber');
   @override
-  late final GeneratedColumn<String> playerPhoneNumber =
-      GeneratedColumn<String>('player_phone_number', aliasedName, false,
-          additionalChecks: GeneratedColumn.checkTextLength(
-              minTextLength: 11, maxTextLength: 11),
-          type: DriftSqlType.string,
-          requiredDuringInsert: true);
+  late final GeneratedColumn<int> playerPhoneNumber = GeneratedColumn<int>(
+      'player_phone_number', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _imagePathMeta =
       const VerificationMeta('imagePath');
   @override
@@ -85,11 +81,11 @@ class $PlayersTableTable extends PlayersTable
         subscriptionId
       ];
   @override
-  String get aliasedName => _alias ?? 'players_table';
+  String get aliasedName => _alias ?? 'players';
   @override
-  String get actualTableName => 'players_table';
+  String get actualTableName => 'players';
   @override
-  VerificationContext validateIntegrity(Insertable<PlayersTableData> instance,
+  VerificationContext validateIntegrity(Insertable<Player> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -160,9 +156,9 @@ class $PlayersTableTable extends PlayersTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  PlayersTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Player map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return PlayersTableData(
+    return Player(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       playerId: attachedDatabase.typeMapping
@@ -170,7 +166,7 @@ class $PlayersTableTable extends PlayersTable
       playerName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}player_name'])!,
       playerPhoneNumber: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}player_phone_number'])!,
+          DriftSqlType.int, data['${effectivePrefix}player_phone_number'])!,
       imagePath: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}image_path'])!,
       playerAge: attachedDatabase.typeMapping
@@ -186,23 +182,22 @@ class $PlayersTableTable extends PlayersTable
   }
 
   @override
-  $PlayersTableTable createAlias(String alias) {
-    return $PlayersTableTable(attachedDatabase, alias);
+  $PlayersTable createAlias(String alias) {
+    return $PlayersTable(attachedDatabase, alias);
   }
 }
 
-class PlayersTableData extends DataClass
-    implements Insertable<PlayersTableData> {
+class Player extends DataClass implements Insertable<Player> {
   final int id;
   final int playerId;
   final String playerName;
-  final String playerPhoneNumber;
+  final int playerPhoneNumber;
   final String imagePath;
   final int playerAge;
   final DateTime playerFirstJoinDate;
   final String playerGender;
   final int subscriptionId;
-  const PlayersTableData(
+  const Player(
       {required this.id,
       required this.playerId,
       required this.playerName,
@@ -218,7 +213,7 @@ class PlayersTableData extends DataClass
     map['id'] = Variable<int>(id);
     map['player_id'] = Variable<int>(playerId);
     map['player_name'] = Variable<String>(playerName);
-    map['player_phone_number'] = Variable<String>(playerPhoneNumber);
+    map['player_phone_number'] = Variable<int>(playerPhoneNumber);
     map['image_path'] = Variable<String>(imagePath);
     map['player_age'] = Variable<int>(playerAge);
     map['player_first_join_date'] = Variable<DateTime>(playerFirstJoinDate);
@@ -227,8 +222,8 @@ class PlayersTableData extends DataClass
     return map;
   }
 
-  PlayersTableCompanion toCompanion(bool nullToAbsent) {
-    return PlayersTableCompanion(
+  PlayersCompanion toCompanion(bool nullToAbsent) {
+    return PlayersCompanion(
       id: Value(id),
       playerId: Value(playerId),
       playerName: Value(playerName),
@@ -241,14 +236,14 @@ class PlayersTableData extends DataClass
     );
   }
 
-  factory PlayersTableData.fromJson(Map<String, dynamic> json,
+  factory Player.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return PlayersTableData(
+    return Player(
       id: serializer.fromJson<int>(json['id']),
       playerId: serializer.fromJson<int>(json['playerId']),
       playerName: serializer.fromJson<String>(json['playerName']),
-      playerPhoneNumber: serializer.fromJson<String>(json['playerPhoneNumber']),
+      playerPhoneNumber: serializer.fromJson<int>(json['playerPhoneNumber']),
       imagePath: serializer.fromJson<String>(json['imagePath']),
       playerAge: serializer.fromJson<int>(json['playerAge']),
       playerFirstJoinDate:
@@ -264,7 +259,7 @@ class PlayersTableData extends DataClass
       'id': serializer.toJson<int>(id),
       'playerId': serializer.toJson<int>(playerId),
       'playerName': serializer.toJson<String>(playerName),
-      'playerPhoneNumber': serializer.toJson<String>(playerPhoneNumber),
+      'playerPhoneNumber': serializer.toJson<int>(playerPhoneNumber),
       'imagePath': serializer.toJson<String>(imagePath),
       'playerAge': serializer.toJson<int>(playerAge),
       'playerFirstJoinDate': serializer.toJson<DateTime>(playerFirstJoinDate),
@@ -273,17 +268,17 @@ class PlayersTableData extends DataClass
     };
   }
 
-  PlayersTableData copyWith(
+  Player copyWith(
           {int? id,
           int? playerId,
           String? playerName,
-          String? playerPhoneNumber,
+          int? playerPhoneNumber,
           String? imagePath,
           int? playerAge,
           DateTime? playerFirstJoinDate,
           String? playerGender,
           int? subscriptionId}) =>
-      PlayersTableData(
+      Player(
         id: id ?? this.id,
         playerId: playerId ?? this.playerId,
         playerName: playerName ?? this.playerName,
@@ -296,7 +291,7 @@ class PlayersTableData extends DataClass
       );
   @override
   String toString() {
-    return (StringBuffer('PlayersTableData(')
+    return (StringBuffer('Player(')
           ..write('id: $id, ')
           ..write('playerId: $playerId, ')
           ..write('playerName: $playerName, ')
@@ -316,7 +311,7 @@ class PlayersTableData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is PlayersTableData &&
+      (other is Player &&
           other.id == this.id &&
           other.playerId == this.playerId &&
           other.playerName == this.playerName &&
@@ -328,17 +323,17 @@ class PlayersTableData extends DataClass
           other.subscriptionId == this.subscriptionId);
 }
 
-class PlayersTableCompanion extends UpdateCompanion<PlayersTableData> {
+class PlayersCompanion extends UpdateCompanion<Player> {
   final Value<int> id;
   final Value<int> playerId;
   final Value<String> playerName;
-  final Value<String> playerPhoneNumber;
+  final Value<int> playerPhoneNumber;
   final Value<String> imagePath;
   final Value<int> playerAge;
   final Value<DateTime> playerFirstJoinDate;
   final Value<String> playerGender;
   final Value<int> subscriptionId;
-  const PlayersTableCompanion({
+  const PlayersCompanion({
     this.id = const Value.absent(),
     this.playerId = const Value.absent(),
     this.playerName = const Value.absent(),
@@ -349,11 +344,11 @@ class PlayersTableCompanion extends UpdateCompanion<PlayersTableData> {
     this.playerGender = const Value.absent(),
     this.subscriptionId = const Value.absent(),
   });
-  PlayersTableCompanion.insert({
+  PlayersCompanion.insert({
     this.id = const Value.absent(),
     required int playerId,
     required String playerName,
-    required String playerPhoneNumber,
+    required int playerPhoneNumber,
     required String imagePath,
     required int playerAge,
     required DateTime playerFirstJoinDate,
@@ -367,11 +362,11 @@ class PlayersTableCompanion extends UpdateCompanion<PlayersTableData> {
         playerFirstJoinDate = Value(playerFirstJoinDate),
         playerGender = Value(playerGender),
         subscriptionId = Value(subscriptionId);
-  static Insertable<PlayersTableData> custom({
+  static Insertable<Player> custom({
     Expression<int>? id,
     Expression<int>? playerId,
     Expression<String>? playerName,
-    Expression<String>? playerPhoneNumber,
+    Expression<int>? playerPhoneNumber,
     Expression<String>? imagePath,
     Expression<int>? playerAge,
     Expression<DateTime>? playerFirstJoinDate,
@@ -392,17 +387,17 @@ class PlayersTableCompanion extends UpdateCompanion<PlayersTableData> {
     });
   }
 
-  PlayersTableCompanion copyWith(
+  PlayersCompanion copyWith(
       {Value<int>? id,
       Value<int>? playerId,
       Value<String>? playerName,
-      Value<String>? playerPhoneNumber,
+      Value<int>? playerPhoneNumber,
       Value<String>? imagePath,
       Value<int>? playerAge,
       Value<DateTime>? playerFirstJoinDate,
       Value<String>? playerGender,
       Value<int>? subscriptionId}) {
-    return PlayersTableCompanion(
+    return PlayersCompanion(
       id: id ?? this.id,
       playerId: playerId ?? this.playerId,
       playerName: playerName ?? this.playerName,
@@ -428,7 +423,7 @@ class PlayersTableCompanion extends UpdateCompanion<PlayersTableData> {
       map['player_name'] = Variable<String>(playerName.value);
     }
     if (playerPhoneNumber.present) {
-      map['player_phone_number'] = Variable<String>(playerPhoneNumber.value);
+      map['player_phone_number'] = Variable<int>(playerPhoneNumber.value);
     }
     if (imagePath.present) {
       map['image_path'] = Variable<String>(imagePath.value);
@@ -451,7 +446,7 @@ class PlayersTableCompanion extends UpdateCompanion<PlayersTableData> {
 
   @override
   String toString() {
-    return (StringBuffer('PlayersTableCompanion(')
+    return (StringBuffer('PlayersCompanion(')
           ..write('id: $id, ')
           ..write('playerId: $playerId, ')
           ..write('playerName: $playerName, ')
@@ -468,10 +463,10 @@ class PlayersTableCompanion extends UpdateCompanion<PlayersTableData> {
 
 abstract class _$PlayersDatabase extends GeneratedDatabase {
   _$PlayersDatabase(QueryExecutor e) : super(e);
-  late final $PlayersTableTable playersTable = $PlayersTableTable(this);
+  late final $PlayersTable players = $PlayersTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [playersTable];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [players];
 }
