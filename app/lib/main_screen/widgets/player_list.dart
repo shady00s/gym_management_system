@@ -10,7 +10,7 @@ class PlayersListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<List<Player>>(
         future: PlayersDatabaseManager().getPlayersData(),
         builder: (context, snapshot) {
 
@@ -20,7 +20,7 @@ class PlayersListWidget extends StatelessWidget {
 
             case ConnectionState.done:
               if(snapshot.hasData){
-                List<Player> playersList = snapshot.data;
+                List<Player> playersList = snapshot.data!;
                 return CustomScrollView(
                   shrinkWrap: false,
                   physics: const AlwaysScrollableScrollPhysics (),

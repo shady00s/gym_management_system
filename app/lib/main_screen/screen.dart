@@ -14,19 +14,8 @@ class _MainScreenState extends State<MainScreen> {
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return TabView(
-      currentIndex: currentIndex,
-      onChanged: (index) {
-        setState(() {
-          currentIndex = index;
-        });
-      },
-      tabs: [
-        Tab(
-          onClosed: null,
-          closeIcon: null,
-          text: Text("Gym"),
-          body: Row(
+    return
+         Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
@@ -67,56 +56,6 @@ class _MainScreenState extends State<MainScreen> {
                   flex: 2,
                   child: OnBoardPlayers(title: "Players need to subscribe:")),
             ],
-          ),
-        ),
-        Tab(
-          onClosed: null,
-          closeIcon: null,
-          text: Text("Swimming"),
-          body: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                  flex: 2,
-                  child: OnBoardPlayers(title: "Active players for today:")),
-              Expanded(
-                flex: 3,
-                child: Column(
-                  children: [
-                    Expanded(flex: 4, child: SearchWidget()),
-                    Align(
-                      alignment: AlignmentDirectional.topStart,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("Quick access"),
-                      ),
-                    ),
-                    Expanded(
-                        flex: 1,
-                        child: GridView(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 5),
-                          children: [
-                            CardsWithIcon(
-                              title: 'Re-new subscription',
-                              icon: FluentIcons.refresh,
-                            ),
-                            CardsWithIcon(
-                                title: 'Show price list',
-                                icon: FluentIcons.list),
-                          ],
-                        ))
-                  ],
-                ),
-              ),
-              Expanded(
-                  flex: 2,
-                  child: OnBoardPlayers(title: "Players need to subscribe:")),
-            ],
-          ),
-        ),
-      ],
-    );
+          );
   }
 }

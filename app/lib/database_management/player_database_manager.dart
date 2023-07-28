@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:gym_management/database_management/tables/players_table.dart';
 class PlayersDatabaseManager{
@@ -26,8 +24,9 @@ class PlayersDatabaseManager{
     print("no backup ");
   }
 
-  Future getPlayersData()async{
-    List<Player> responseData = await _playersDatabase.select($PlayersTable(_playersDatabase)).get();
+  Future<List<Player>> getPlayersData()async{
+    var data =  _playersDatabase.select($PlayersTable(_playersDatabase))..limit(300)..get();
+    List<Player> responseData = await data.get();
     print(responseData.length);
     return responseData;
   }
@@ -36,9 +35,9 @@ class PlayersDatabaseManager{
 
     var res =   _playersDatabase.select($PlayersTable(_playersDatabase))..where((player){
       int?  value = int.tryParse(searchInput);
-      if(value== null){
+      if(value == null){
           return  player.playerName.equals(searchInput);
-      } else if( searchInput.length < 11){
+      } else if( searchInput.length < 11 ){
         return  player.playerId.equals(value);
       }else{
         return  player.playerPhoneNumber.equals(value);
@@ -47,6 +46,5 @@ class PlayersDatabaseManager{
     }
     )..get();
     print( await res.get());
-      _playersDatabase.select($PlayersTable(_playersDatabase)).where((player)=>player.playerId.equals(12));
   }
 }

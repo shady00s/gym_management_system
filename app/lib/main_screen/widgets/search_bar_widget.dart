@@ -52,8 +52,13 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
 
             ),
           ),
-          IconButton(onPressed: () {
+          IconButton(onPressed: () async{
+
             PlayersDatabaseManager().searchForPlayer(_controller.text);
+
+            await showDialog(context: context, builder: (context)=>ContentDialog(content: Column(children: [
+
+              ],),));
           }, icon: const Icon(FluentIcons.search))
         ],
       ),

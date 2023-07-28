@@ -29,7 +29,7 @@ class PlayersDatabase extends _$PlayersDatabase{
 LazyDatabase _openConnection(){
   
   return LazyDatabase(() async{
-    final File file = File(p.join("/home/ssk/Desktop/projects/gym_management_system/app/assets",'PlayersDatabase.sqlite'));
+    final File file = File(p.join("assets",'PlayersDatabase2.sqlite'));
     return NativeDatabase.createInBackground(file);
   });
 }
