@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/database_management/player_database_manager.dart';
+import 'package:gym_management/main_screen/widgets/search_result_widget.dart';
 class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({super.key});
 
@@ -47,19 +49,36 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 });
               }, icon:  Icon(FluentIcons.cancel, color: Colors.grey[40],))
                   : null,
-              placeholder: "Search here",
+              placeholder: "Search here with player name or id or phone number.",
               controller: _controller,
 
             ),
           ),
-          IconButton(onPressed: () async{
+          Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
+            var changeName =  ref.read(searchInput.notifier);
 
-            PlayersDatabaseManager().searchForPlayer(_controller.text);
+            return IconButton(onPressed: () async{
+              changeName.state = _controller.text;
 
-            await showDialog(context: context, builder: (context)=>ContentDialog(content: Column(children: [
 
-              ],),));
-          }, icon: const Icon(FluentIcons.search))
+              await showDialog(context: context, builder: (context)=> ContentDialog(
+
+                title:Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Search"),
+                    IconButton(onPressed: (){
+                      Navigator.of(context).pop();
+                    },
+                      icon:const Icon(FluentIcons.cancel),
+                    ),
+                  ],
+                ) ,
+
+                content: const SearchResultWidget(),));
+            }, icon: const Icon(FluentIcons.search));
+          },)
+
         ],
       ),
     );

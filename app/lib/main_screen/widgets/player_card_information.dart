@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:gym_management/database_management/player_database_manager.dart';
 
 class PlayerCardInformationWidget extends StatelessWidget {
   final int playerId;
@@ -9,6 +10,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
     var res = await dio.get("http://127.0.1.1:3000/get_one_player_data_from_db",queryParameters: {
       "playerId":playerId
     });
+    await PlayersDatabaseManager().getPlayerSubscriptionInfo(playerId);
     return res.data["data"];
   }
 

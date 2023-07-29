@@ -17,7 +17,19 @@ class Players extends Table{
 
 }
 
-@DriftDatabase(tables:[Players])
+class PlayersSubscriptions extends Table{
+  IntColumn get subId => integer().autoIncrement()();
+  IntColumn get playerSubscriptionId => integer()();
+  TextColumn get beginningDate => text()();
+  TextColumn get endDate => text()();
+  IntColumn get billId => integer()();
+  IntColumn get duration => integer()();
+  IntColumn get billValue => integer()();
+  TextColumn get billCollector => text()();
+
+}
+
+@DriftDatabase(tables:[Players,PlayersSubscriptions])
 
 class PlayersDatabase extends _$PlayersDatabase{
   PlayersDatabase():super(_openConnection());
@@ -25,6 +37,7 @@ class PlayersDatabase extends _$PlayersDatabase{
   @override
   get schemaVersion => 1;
 }
+
 
 LazyDatabase _openConnection(){
   
