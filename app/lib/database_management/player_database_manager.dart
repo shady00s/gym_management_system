@@ -10,45 +10,43 @@ class PlayersDatabaseManager {
     await _dio
         .get("http://127.0.1.1:3000/get_players_data_from_db")
         .then((playersValue) async {
-      var playersData = playersValue.data["data"]['players'];
-      var subData = playersValue.data["data"]['subscriptions'];
+      List playersData = playersValue.data["data"]['players'];
+      List subData = playersValue.data["data"]['subscriptions'];
       int length = await _playersDatabase
           .select($PlayersTable(_playersDatabase))
           .get()
           .then((value) => value.length);
 
       if (length == 0) {
-        for (var data in playersData) {
-          await _playersDatabase.into($PlayersTable(_playersDatabase)).insert(
-              PlayersCompanion.insert(
-                  playerId: data["player_id"],
-                  playerName: data["player_name"],
-                  playerPhoneNumber: data["player_phone_number"],
-                  imagePath: data["image_path"],
-                  playerAge: data["player_age"],
-                  playerFirstJoinDate: data["player_first_join_date"] ??
-                      DateTime(2010 - 01 - 01),
-                  playerGender: data["player_gender"],
-                  subscriptionId: data["subscription_id"]));
-        }
+        Iterable<Insertable<Player>> players = playersData.map((data) =>
+            PlayersCompanion.insert(
+                playerId: data["player_id"],
+                playerName: data["player_name"],
+                playerPhoneNumber: data["player_phone_number"],
+                imagePath: data["image_path"],
+                playerAge: data["player_age"],
+                playerFirstJoinDate:
+                    data["player_first_join_date"] ?? DateTime(2010 - 01 - 01),
+                playerGender: data["player_gender"],
+                subscriptionId: data["subscription_id"]));
 
-        for (var data in subData) {
+        Iterable<PlayersSubscriptionsCompanion> subscriptions = subData.map((data) =>
+            PlayersSubscriptionsCompanion.insert(
+                playerSubscriptionId: data['player_subscription_id'],
+                beginningDate: data['beginning_date'],
+                endDate: data['end_date'],
+                billId: data['billid'],
+                duration: data['duration'],
+                billValue: data['billvalue'],
+                billCollector: data['billcollector']));
 
-          await _playersDatabase
-              .into($PlayersSubscriptionsTable(_playersDatabase))
-              .insert(PlayersSubscriptionsCompanion.insert(
-              playerSubscriptionId: data['player_subscription_id'],
-              beginningDate: data['beginning_date'],
-              endDate: data['end_date'],
-              billId: data['billid'],
-              duration: data['duration'],
-              billValue: data['billvalue'],
-              billCollector: data['billcollector']));
-        }
-        print("backup compelete");
+        await _playersDatabase.batch((batch) =>
+            batch.insertAll($PlayersTable(_playersDatabase), [...players]));
+
+        await _playersDatabase.batch((batch) => batch.insertAll(
+            $PlayersSubscriptionsTable(_playersDatabase), [...subscriptions]));
       }
-
-
+      print("backup compelete");
     }).catchError((err) {
       print(err);
     });
@@ -57,9 +55,9 @@ class PlayersDatabaseManager {
   }
 
   Future<List<Player>> getPlayersData() async {
-    var data = _playersDatabase.select($PlayersTable(_playersDatabase))
-      ..limit(300)
-      ..get();
+    var data = _playersDatabase.select($PlayersTable(_playersDatabase))..orderBy([
+      (p)=>  OrderingTerm(expression: p.playerId,mode: OrderingMode.asc)
+    ])..get();
     List<Player> responseData = await data.get();
     return responseData;
   }
@@ -78,20 +76,27 @@ class PlayersDatabaseManager {
       })
       ..get();
     return await res.get();
-    print(await res.get());
   }
 
-  Future getPlayerSubscriptionInfo(int id) async {
+  Future<PlayerProfileData> getPlayerSubscriptionInfo(int id) async {
     var playerDb = $PlayersTable(_playersDatabase);
     var subDb = $PlayersSubscriptionsTable(_playersDatabase);
 
-    var sb =  _playersDatabase.select(subDb);
+    var sb = _playersDatabase.select(subDb)..where((tbl) => tbl.playerSubscriptionId.equals(id));
 
-    var joinRes = sb.join([
-      innerJoin(playerDb,
-          playerDb.subscriptionId.equalsExp(subDb.playerSubscriptionId))
-    ]);
+      var player =   _playersDatabase.select(playerDb)..where((tbl) => tbl.playerId.equals(id)) ;
+      var playerProfileData = await player.get();
+      var subData = await sb.get();
+   return PlayerProfileData(playerProfileData[0],subData);
 
-    print(joinRes.map((row) => row.readTable(playerDb)).toString());
   }
+}
+
+class PlayerProfileData {
+  final Player profileData;
+  final List<PlayersSubscription> subData;
+
+  PlayerProfileData(this.profileData, this.subData);
+
+
 }

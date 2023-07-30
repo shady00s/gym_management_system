@@ -5,18 +5,19 @@ import 'package:gym_management/database_management/player_database_manager.dart'
 class PlayerCardInformationWidget extends StatelessWidget {
   final int playerId;
   const PlayerCardInformationWidget({super.key,required this.playerId});
-  Future getPlayerInfo()async{
-    Dio dio = Dio();
-    var res = await dio.get("http://127.0.1.1:3000/get_one_player_data_from_db",queryParameters: {
-      "playerId":playerId
-    });
-    await PlayersDatabaseManager().getPlayerSubscriptionInfo(playerId);
-    return res.data["data"];
+  Future<PlayerProfileData> getPlayerInfo()async{
+    // Dio dio = Dio();
+    // var res = await dio.get("http://127.0.1.1:3000/get_one_player_data_from_db",queryParameters: {
+    //   "playerId":playerId
+    // });
+    // res.data["data"];
+
+    return  await PlayersDatabaseManager().getPlayerSubscriptionInfo(playerId);
   }
 
   @override
   Widget build(BuildContext context) {
-    return  FutureBuilder(
+    return  FutureBuilder<PlayerProfileData>(
         future: getPlayerInfo(),
         builder: (context, snapshot){
           switch(snapshot.connectionState){
@@ -39,7 +40,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("Name:"),
-                        Text(snapshot.data["player_name"]),
+                        Text(snapshot.data!.profileData.playerName),
                       ],
                     ),
                     SizedBox(height: 14,),
@@ -47,7 +48,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("ID:"),
-                        Text((snapshot.data["player_id"]).toString()),
+                        Text((snapshot.data!.profileData.playerId).toString()),
                       ],
                     ),
                     SizedBox(height: 14,),
@@ -55,7 +56,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("Phone number:"),
-                        Text((snapshot.data["player_phone_number"] != -3?snapshot.data["player_phone_number"]:"unrecorded").toString()),
+                        Text((snapshot.data!.profileData.playerPhoneNumber != -3?snapshot.data!.profileData.playerPhoneNumber:"unrecorded").toString()),
                       ],
                     ),
 
@@ -74,7 +75,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                     SizedBox(height: 14,),
 
                     Expanded(child: ListView.builder(
-                        itemCount: snapshot.data["subscriptions"].length,
+                        itemCount: snapshot.data!.subData.length,
                         itemBuilder: (context,index)=>Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
@@ -84,7 +85,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Beginning date:"),
-                                Text(snapshot.data["subscriptions"][index]["beginning_date"])
+                                Text(snapshot.data!.subData[index].beginningDate)
                               ],),
 
                             Divider(),
@@ -92,14 +93,14 @@ class PlayerCardInformationWidget extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("end date:"),
-                                Text(snapshot.data["subscriptions"][index]["end_date"])
+                                Text(snapshot.data!.subData[index].endDate)
                               ],),
                             Divider(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Duration :"),
-                                Text(snapshot.data["subscriptions"][index]["duration"] == 1? "1 Month":snapshot.data["subscriptions"][index]["duration"] == 3?"3 Months":snapshot.data["subscriptions"][index]["duration"] == 6? "6 Months":snapshot.data["subscriptions"][index]["duration"] == 11?"1 session":snapshot.data["subscriptions"][index]["duration"] == 12?"1 Year":"Unknown")
+                                Text(snapshot.data!.subData[index].duration == 1? "1 Month":snapshot.data!.subData[index].duration == 3?"3 Months":snapshot.data!.subData[index].duration == 6? "6 Months":snapshot.data!.subData[index].duration == 11?"1 session":snapshot.data!.subData[index].duration == 12?"1 Year":"Unknown")
                               ],),
                           ],),
                         )))
