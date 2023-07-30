@@ -461,12 +461,431 @@ class PlayersCompanion extends UpdateCompanion<Player> {
   }
 }
 
+class $PlayersSubscriptionsTable extends PlayersSubscriptions
+    with TableInfo<$PlayersSubscriptionsTable, PlayersSubscription> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PlayersSubscriptionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _subIdMeta = const VerificationMeta('subId');
+  @override
+  late final GeneratedColumn<int> subId = GeneratedColumn<int>(
+      'sub_id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _playerSubscriptionIdMeta =
+      const VerificationMeta('playerSubscriptionId');
+  @override
+  late final GeneratedColumn<int> playerSubscriptionId = GeneratedColumn<int>(
+      'player_subscription_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _beginningDateMeta =
+      const VerificationMeta('beginningDate');
+  @override
+  late final GeneratedColumn<String> beginningDate = GeneratedColumn<String>(
+      'beginning_date', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _endDateMeta =
+      const VerificationMeta('endDate');
+  @override
+  late final GeneratedColumn<String> endDate = GeneratedColumn<String>(
+      'end_date', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _billIdMeta = const VerificationMeta('billId');
+  @override
+  late final GeneratedColumn<int> billId = GeneratedColumn<int>(
+      'bill_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _durationMeta =
+      const VerificationMeta('duration');
+  @override
+  late final GeneratedColumn<int> duration = GeneratedColumn<int>(
+      'duration', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _billValueMeta =
+      const VerificationMeta('billValue');
+  @override
+  late final GeneratedColumn<int> billValue = GeneratedColumn<int>(
+      'bill_value', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _billCollectorMeta =
+      const VerificationMeta('billCollector');
+  @override
+  late final GeneratedColumn<String> billCollector = GeneratedColumn<String>(
+      'bill_collector', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [
+        subId,
+        playerSubscriptionId,
+        beginningDate,
+        endDate,
+        billId,
+        duration,
+        billValue,
+        billCollector
+      ];
+  @override
+  String get aliasedName => _alias ?? 'players_subscriptions';
+  @override
+  String get actualTableName => 'players_subscriptions';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<PlayersSubscription> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('sub_id')) {
+      context.handle(
+          _subIdMeta, subId.isAcceptableOrUnknown(data['sub_id']!, _subIdMeta));
+    }
+    if (data.containsKey('player_subscription_id')) {
+      context.handle(
+          _playerSubscriptionIdMeta,
+          playerSubscriptionId.isAcceptableOrUnknown(
+              data['player_subscription_id']!, _playerSubscriptionIdMeta));
+    } else if (isInserting) {
+      context.missing(_playerSubscriptionIdMeta);
+    }
+    if (data.containsKey('beginning_date')) {
+      context.handle(
+          _beginningDateMeta,
+          beginningDate.isAcceptableOrUnknown(
+              data['beginning_date']!, _beginningDateMeta));
+    } else if (isInserting) {
+      context.missing(_beginningDateMeta);
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(_endDateMeta,
+          endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
+    } else if (isInserting) {
+      context.missing(_endDateMeta);
+    }
+    if (data.containsKey('bill_id')) {
+      context.handle(_billIdMeta,
+          billId.isAcceptableOrUnknown(data['bill_id']!, _billIdMeta));
+    } else if (isInserting) {
+      context.missing(_billIdMeta);
+    }
+    if (data.containsKey('duration')) {
+      context.handle(_durationMeta,
+          duration.isAcceptableOrUnknown(data['duration']!, _durationMeta));
+    } else if (isInserting) {
+      context.missing(_durationMeta);
+    }
+    if (data.containsKey('bill_value')) {
+      context.handle(_billValueMeta,
+          billValue.isAcceptableOrUnknown(data['bill_value']!, _billValueMeta));
+    } else if (isInserting) {
+      context.missing(_billValueMeta);
+    }
+    if (data.containsKey('bill_collector')) {
+      context.handle(
+          _billCollectorMeta,
+          billCollector.isAcceptableOrUnknown(
+              data['bill_collector']!, _billCollectorMeta));
+    } else if (isInserting) {
+      context.missing(_billCollectorMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {subId};
+  @override
+  PlayersSubscription map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PlayersSubscription(
+      subId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}sub_id'])!,
+      playerSubscriptionId: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}player_subscription_id'])!,
+      beginningDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}beginning_date'])!,
+      endDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}end_date'])!,
+      billId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}bill_id'])!,
+      duration: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}duration'])!,
+      billValue: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}bill_value'])!,
+      billCollector: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}bill_collector'])!,
+    );
+  }
+
+  @override
+  $PlayersSubscriptionsTable createAlias(String alias) {
+    return $PlayersSubscriptionsTable(attachedDatabase, alias);
+  }
+}
+
+class PlayersSubscription extends DataClass
+    implements Insertable<PlayersSubscription> {
+  final int subId;
+  final int playerSubscriptionId;
+  final String beginningDate;
+  final String endDate;
+  final int billId;
+  final int duration;
+  final int billValue;
+  final String billCollector;
+  const PlayersSubscription(
+      {required this.subId,
+      required this.playerSubscriptionId,
+      required this.beginningDate,
+      required this.endDate,
+      required this.billId,
+      required this.duration,
+      required this.billValue,
+      required this.billCollector});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['sub_id'] = Variable<int>(subId);
+    map['player_subscription_id'] = Variable<int>(playerSubscriptionId);
+    map['beginning_date'] = Variable<String>(beginningDate);
+    map['end_date'] = Variable<String>(endDate);
+    map['bill_id'] = Variable<int>(billId);
+    map['duration'] = Variable<int>(duration);
+    map['bill_value'] = Variable<int>(billValue);
+    map['bill_collector'] = Variable<String>(billCollector);
+    return map;
+  }
+
+  PlayersSubscriptionsCompanion toCompanion(bool nullToAbsent) {
+    return PlayersSubscriptionsCompanion(
+      subId: Value(subId),
+      playerSubscriptionId: Value(playerSubscriptionId),
+      beginningDate: Value(beginningDate),
+      endDate: Value(endDate),
+      billId: Value(billId),
+      duration: Value(duration),
+      billValue: Value(billValue),
+      billCollector: Value(billCollector),
+    );
+  }
+
+  factory PlayersSubscription.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PlayersSubscription(
+      subId: serializer.fromJson<int>(json['subId']),
+      playerSubscriptionId:
+          serializer.fromJson<int>(json['playerSubscriptionId']),
+      beginningDate: serializer.fromJson<String>(json['beginningDate']),
+      endDate: serializer.fromJson<String>(json['endDate']),
+      billId: serializer.fromJson<int>(json['billId']),
+      duration: serializer.fromJson<int>(json['duration']),
+      billValue: serializer.fromJson<int>(json['billValue']),
+      billCollector: serializer.fromJson<String>(json['billCollector']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'subId': serializer.toJson<int>(subId),
+      'playerSubscriptionId': serializer.toJson<int>(playerSubscriptionId),
+      'beginningDate': serializer.toJson<String>(beginningDate),
+      'endDate': serializer.toJson<String>(endDate),
+      'billId': serializer.toJson<int>(billId),
+      'duration': serializer.toJson<int>(duration),
+      'billValue': serializer.toJson<int>(billValue),
+      'billCollector': serializer.toJson<String>(billCollector),
+    };
+  }
+
+  PlayersSubscription copyWith(
+          {int? subId,
+          int? playerSubscriptionId,
+          String? beginningDate,
+          String? endDate,
+          int? billId,
+          int? duration,
+          int? billValue,
+          String? billCollector}) =>
+      PlayersSubscription(
+        subId: subId ?? this.subId,
+        playerSubscriptionId: playerSubscriptionId ?? this.playerSubscriptionId,
+        beginningDate: beginningDate ?? this.beginningDate,
+        endDate: endDate ?? this.endDate,
+        billId: billId ?? this.billId,
+        duration: duration ?? this.duration,
+        billValue: billValue ?? this.billValue,
+        billCollector: billCollector ?? this.billCollector,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('PlayersSubscription(')
+          ..write('subId: $subId, ')
+          ..write('playerSubscriptionId: $playerSubscriptionId, ')
+          ..write('beginningDate: $beginningDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('billId: $billId, ')
+          ..write('duration: $duration, ')
+          ..write('billValue: $billValue, ')
+          ..write('billCollector: $billCollector')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(subId, playerSubscriptionId, beginningDate,
+      endDate, billId, duration, billValue, billCollector);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PlayersSubscription &&
+          other.subId == this.subId &&
+          other.playerSubscriptionId == this.playerSubscriptionId &&
+          other.beginningDate == this.beginningDate &&
+          other.endDate == this.endDate &&
+          other.billId == this.billId &&
+          other.duration == this.duration &&
+          other.billValue == this.billValue &&
+          other.billCollector == this.billCollector);
+}
+
+class PlayersSubscriptionsCompanion
+    extends UpdateCompanion<PlayersSubscription> {
+  final Value<int> subId;
+  final Value<int> playerSubscriptionId;
+  final Value<String> beginningDate;
+  final Value<String> endDate;
+  final Value<int> billId;
+  final Value<int> duration;
+  final Value<int> billValue;
+  final Value<String> billCollector;
+  const PlayersSubscriptionsCompanion({
+    this.subId = const Value.absent(),
+    this.playerSubscriptionId = const Value.absent(),
+    this.beginningDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.billId = const Value.absent(),
+    this.duration = const Value.absent(),
+    this.billValue = const Value.absent(),
+    this.billCollector = const Value.absent(),
+  });
+  PlayersSubscriptionsCompanion.insert({
+    this.subId = const Value.absent(),
+    required int playerSubscriptionId,
+    required String beginningDate,
+    required String endDate,
+    required int billId,
+    required int duration,
+    required int billValue,
+    required String billCollector,
+  })  : playerSubscriptionId = Value(playerSubscriptionId),
+        beginningDate = Value(beginningDate),
+        endDate = Value(endDate),
+        billId = Value(billId),
+        duration = Value(duration),
+        billValue = Value(billValue),
+        billCollector = Value(billCollector);
+  static Insertable<PlayersSubscription> custom({
+    Expression<int>? subId,
+    Expression<int>? playerSubscriptionId,
+    Expression<String>? beginningDate,
+    Expression<String>? endDate,
+    Expression<int>? billId,
+    Expression<int>? duration,
+    Expression<int>? billValue,
+    Expression<String>? billCollector,
+  }) {
+    return RawValuesInsertable({
+      if (subId != null) 'sub_id': subId,
+      if (playerSubscriptionId != null)
+        'player_subscription_id': playerSubscriptionId,
+      if (beginningDate != null) 'beginning_date': beginningDate,
+      if (endDate != null) 'end_date': endDate,
+      if (billId != null) 'bill_id': billId,
+      if (duration != null) 'duration': duration,
+      if (billValue != null) 'bill_value': billValue,
+      if (billCollector != null) 'bill_collector': billCollector,
+    });
+  }
+
+  PlayersSubscriptionsCompanion copyWith(
+      {Value<int>? subId,
+      Value<int>? playerSubscriptionId,
+      Value<String>? beginningDate,
+      Value<String>? endDate,
+      Value<int>? billId,
+      Value<int>? duration,
+      Value<int>? billValue,
+      Value<String>? billCollector}) {
+    return PlayersSubscriptionsCompanion(
+      subId: subId ?? this.subId,
+      playerSubscriptionId: playerSubscriptionId ?? this.playerSubscriptionId,
+      beginningDate: beginningDate ?? this.beginningDate,
+      endDate: endDate ?? this.endDate,
+      billId: billId ?? this.billId,
+      duration: duration ?? this.duration,
+      billValue: billValue ?? this.billValue,
+      billCollector: billCollector ?? this.billCollector,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (subId.present) {
+      map['sub_id'] = Variable<int>(subId.value);
+    }
+    if (playerSubscriptionId.present) {
+      map['player_subscription_id'] = Variable<int>(playerSubscriptionId.value);
+    }
+    if (beginningDate.present) {
+      map['beginning_date'] = Variable<String>(beginningDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<String>(endDate.value);
+    }
+    if (billId.present) {
+      map['bill_id'] = Variable<int>(billId.value);
+    }
+    if (duration.present) {
+      map['duration'] = Variable<int>(duration.value);
+    }
+    if (billValue.present) {
+      map['bill_value'] = Variable<int>(billValue.value);
+    }
+    if (billCollector.present) {
+      map['bill_collector'] = Variable<String>(billCollector.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlayersSubscriptionsCompanion(')
+          ..write('subId: $subId, ')
+          ..write('playerSubscriptionId: $playerSubscriptionId, ')
+          ..write('beginningDate: $beginningDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('billId: $billId, ')
+          ..write('duration: $duration, ')
+          ..write('billValue: $billValue, ')
+          ..write('billCollector: $billCollector')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$PlayersDatabase extends GeneratedDatabase {
   _$PlayersDatabase(QueryExecutor e) : super(e);
   late final $PlayersTable players = $PlayersTable(this);
+  late final $PlayersSubscriptionsTable playersSubscriptions =
+      $PlayersSubscriptionsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [players];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [players, playersSubscriptions];
 }
