@@ -10,19 +10,22 @@ class CardsWithIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 12),
       child: Button(
         onPressed: (){},
-        child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(title),
-          )
-        ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(title),
+            )
+          ],
       ),
+        ),
       ),
     );
   }

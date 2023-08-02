@@ -34,9 +34,9 @@ export default async function sendDataToDBController(req: Req, res: Response) {
         CREATE TABLE IF NOT EXISTS SUBSCRIPTIONSDB (
           id SERIAL PRIMARY KEY,
           player_subscription_id INT,
-          beginning_date VARCHAR DEFAULT 'unkown end date' NOT NULL,
-          end_date VARCHAR DEFAULT 'unkown end date' NOT NULL, 
-          billId INT DEFAULT -1 ,
+          beginning_date TIMESTAMP DEFAULT '2018-01-01 00:00:00' NOT NULL,
+          end_date TIMESTAMP DEFAULT '2018-01-01 00:00:00' NOT NULL, 
+          billId INT DEFAULT -1 NOT NULL,
           billValue INT DEFAULT -1 NOT NULL,
           duration INT DEFAULT -11 NOT NULL,
           billCollector VARCHAR DEFAULT 'unkown' NOT NULL
@@ -48,9 +48,9 @@ export default async function sendDataToDBController(req: Req, res: Response) {
           player_phone_number INT DEFAULT -3,
           image_path VARCHAR DEFAULT 'no-image',
           player_age INT DEFAULT 0 NOT NULL,
-          player_first_join_date TIMESTAMP,
+          player_first_join_date TIMESTAMP NOT NULL DEFAULT '2018-02-02 00:00:00',
           player_gender VARCHAR DEFAULT 'not-recorded' NOT NULL,
-          subscription_id INT
+          subscription_id INT NOT NULL
         )
       `);
 

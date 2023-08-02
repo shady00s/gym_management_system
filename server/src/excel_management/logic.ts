@@ -24,16 +24,20 @@ async function saveXlsxFileData(req: Req, res: Response) {
         let year = finishdateVal.getFullYear();
         let month = finishdateVal.getMonth() + 1;
         let day = finishdateVal.getDate();
+        let hours = finishdateVal.getHours();
+        let minutes = finishdateVal.getMinutes();
         let begdateVal = new Date((fileJsonData[x]["__EMPTY_2"] - 25569) * 86400 * 1000)
         let begyear = begdateVal.getFullYear();
         let begmonth = begdateVal.getMonth() + 1;
         let begday = begdateVal.getDate();
+        let begHour = begdateVal.getHours();
+        let begminuite = begdateVal.getMinutes();
 
         let id:string = fileJsonData[x]["GYM PLAYER 2023"]
         let name = fileJsonData[x]["__EMPTY"]
         let subscriptionValue = fileJsonData[x]["__EMPTY_6"] == null? -1 :fileJsonData[x]["__EMPTY_6"]
-        let beginDate = `${begday + "/" + begmonth + "/" + begyear}`== "NaN/NaN/NaN" ? "no date ": `${begday + "/" + begmonth + "/" + begyear}`
-        let finishDate = `${day + "/" + month + "/" + year}` == "NaN/NaN/NaN" ? "no date ":`${day + "/" + month + "/" + year}` 
+        let beginDate = `${begday + "/" + begmonth + "/" + begyear }`== "NaN/NaN/NaN" ? "1990-01-01 00:00:00": `${ begyear + "-" + begmonth + "-" + begday+" "+ begHour+":"+begminuite+":00"}`
+        let finishDate = `${day + "/" + month + "/" + year }` == "NaN/NaN/NaN" ? "1990-01-01 00:00:00":`${ year  + "-" + month + "-" + day +" "+ hours+":"+minutes+":00"}` 
         
         let billId = fileJsonData[x]["__EMPTY_4"]== null? -1 : fileJsonData[x]["__EMPTY_4"]
 

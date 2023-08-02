@@ -1,0 +1,28 @@
+
+
+CREATE  TABLE IF NOT EXISTS Players (
+    id INT NOT NULL PRIMARY KEY AUTOINCREMENT,
+    player_id INT NOT NULL,
+    player_name TEXT NOT NULL,
+    player_phone_number INT NOT NULL,
+    image_path TEXT NOT NULL,
+    player_age INT NOT NULL,
+    player_first_join_date TEXT NOT NULL,
+    player_gender TEXT NOT NULL,
+    subscription_id  INT NOT NULL
+);
+
+CREATE  TABLE IF NOT EXISTS PlayersSubscriptions(
+    sub_id INT PRIMARY KEY AUTOINCREMENT,
+    player_subscription_id INT NOT NULL,
+    beginning_date DATETIME NOT NULL,
+    end_date DATETIME NOT NULL,
+    billId INT NOT NULL,
+    billValue INT NOT NULL,
+    duration INT NOT NULL,
+    billCollector TEXT NOT NULL
+);
+
+allPlayers: SELECT * FROM Players;
+getAllNames: SELECT player_id, player_name FROM PLAYERS ORDER BY player_id ASC;
+allSubscriptions: SELECT * FROM PlayersSubscriptions;

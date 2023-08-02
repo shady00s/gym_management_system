@@ -35,10 +35,8 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     Expanded(
                         flex: 1,
-                        child: GridView(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 5),
+                        child:SizedBox(width:630, child:     Wrap(
+
                           children: [
                             CardsWithIcon(
                               title: 'Re-new subscription',
@@ -48,7 +46,9 @@ class _MainScreenState extends State<MainScreen> {
                                 title: 'Show price list',
                                 icon: FluentIcons.list),
                           ],
-                        ))
+                        ),)
+
+)
                   ],
                 ),
               ),
