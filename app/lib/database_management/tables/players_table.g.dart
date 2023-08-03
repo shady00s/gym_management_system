@@ -52,9 +52,9 @@ class Players extends Table with TableInfo<Players, Player> {
       $customConstraints: 'NOT NULL');
   static const VerificationMeta _playerFirstJoinDateMeta =
       const VerificationMeta('playerFirstJoinDate');
-  late final GeneratedColumn<String> playerFirstJoinDate =
-      GeneratedColumn<String>('player_first_join_date', aliasedName, false,
-          type: DriftSqlType.string,
+  late final GeneratedColumn<DateTime> playerFirstJoinDate =
+      GeneratedColumn<DateTime>('player_first_join_date', aliasedName, false,
+          type: DriftSqlType.dateTime,
           requiredDuringInsert: true,
           $customConstraints: 'NOT NULL');
   static const VerificationMeta _playerGenderMeta =
@@ -175,7 +175,7 @@ class Players extends Table with TableInfo<Players, Player> {
       playerAge: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}player_age'])!,
       playerFirstJoinDate: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
+          DriftSqlType.dateTime,
           data['${effectivePrefix}player_first_join_date'])!,
       playerGender: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}player_gender'])!,
@@ -200,7 +200,7 @@ class Player extends DataClass implements Insertable<Player> {
   final int playerPhoneNumber;
   final String imagePath;
   final int playerAge;
-  final String playerFirstJoinDate;
+  final DateTime playerFirstJoinDate;
   final String playerGender;
   final int subscriptionId;
   const Player(
@@ -222,7 +222,7 @@ class Player extends DataClass implements Insertable<Player> {
     map['player_phone_number'] = Variable<int>(playerPhoneNumber);
     map['image_path'] = Variable<String>(imagePath);
     map['player_age'] = Variable<int>(playerAge);
-    map['player_first_join_date'] = Variable<String>(playerFirstJoinDate);
+    map['player_first_join_date'] = Variable<DateTime>(playerFirstJoinDate);
     map['player_gender'] = Variable<String>(playerGender);
     map['subscription_id'] = Variable<int>(subscriptionId);
     return map;
@@ -253,7 +253,7 @@ class Player extends DataClass implements Insertable<Player> {
       imagePath: serializer.fromJson<String>(json['image_path']),
       playerAge: serializer.fromJson<int>(json['player_age']),
       playerFirstJoinDate:
-          serializer.fromJson<String>(json['player_first_join_date']),
+          serializer.fromJson<DateTime>(json['player_first_join_date']),
       playerGender: serializer.fromJson<String>(json['player_gender']),
       subscriptionId: serializer.fromJson<int>(json['subscription_id']),
     );
@@ -268,7 +268,8 @@ class Player extends DataClass implements Insertable<Player> {
       'player_phone_number': serializer.toJson<int>(playerPhoneNumber),
       'image_path': serializer.toJson<String>(imagePath),
       'player_age': serializer.toJson<int>(playerAge),
-      'player_first_join_date': serializer.toJson<String>(playerFirstJoinDate),
+      'player_first_join_date':
+          serializer.toJson<DateTime>(playerFirstJoinDate),
       'player_gender': serializer.toJson<String>(playerGender),
       'subscription_id': serializer.toJson<int>(subscriptionId),
     };
@@ -281,7 +282,7 @@ class Player extends DataClass implements Insertable<Player> {
           int? playerPhoneNumber,
           String? imagePath,
           int? playerAge,
-          String? playerFirstJoinDate,
+          DateTime? playerFirstJoinDate,
           String? playerGender,
           int? subscriptionId}) =>
       Player(
@@ -336,7 +337,7 @@ class PlayersCompanion extends UpdateCompanion<Player> {
   final Value<int> playerPhoneNumber;
   final Value<String> imagePath;
   final Value<int> playerAge;
-  final Value<String> playerFirstJoinDate;
+  final Value<DateTime> playerFirstJoinDate;
   final Value<String> playerGender;
   final Value<int> subscriptionId;
   const PlayersCompanion({
@@ -357,7 +358,7 @@ class PlayersCompanion extends UpdateCompanion<Player> {
     required int playerPhoneNumber,
     required String imagePath,
     required int playerAge,
-    required String playerFirstJoinDate,
+    required DateTime playerFirstJoinDate,
     required String playerGender,
     required int subscriptionId,
   })  : playerId = Value(playerId),
@@ -375,7 +376,7 @@ class PlayersCompanion extends UpdateCompanion<Player> {
     Expression<int>? playerPhoneNumber,
     Expression<String>? imagePath,
     Expression<int>? playerAge,
-    Expression<String>? playerFirstJoinDate,
+    Expression<DateTime>? playerFirstJoinDate,
     Expression<String>? playerGender,
     Expression<int>? subscriptionId,
   }) {
@@ -400,7 +401,7 @@ class PlayersCompanion extends UpdateCompanion<Player> {
       Value<int>? playerPhoneNumber,
       Value<String>? imagePath,
       Value<int>? playerAge,
-      Value<String>? playerFirstJoinDate,
+      Value<DateTime>? playerFirstJoinDate,
       Value<String>? playerGender,
       Value<int>? subscriptionId}) {
     return PlayersCompanion(
@@ -439,7 +440,7 @@ class PlayersCompanion extends UpdateCompanion<Player> {
     }
     if (playerFirstJoinDate.present) {
       map['player_first_join_date'] =
-          Variable<String>(playerFirstJoinDate.value);
+          Variable<DateTime>(playerFirstJoinDate.value);
     }
     if (playerGender.present) {
       map['player_gender'] = Variable<String>(playerGender.value);

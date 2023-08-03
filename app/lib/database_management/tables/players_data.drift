@@ -7,7 +7,7 @@ CREATE  TABLE IF NOT EXISTS Players (
     player_phone_number INT NOT NULL,
     image_path TEXT NOT NULL,
     player_age INT NOT NULL,
-    player_first_join_date TEXT NOT NULL,
+    player_first_join_date DATETIME NOT NULL,
     player_gender TEXT NOT NULL,
     subscription_id  INT NOT NULL
 );

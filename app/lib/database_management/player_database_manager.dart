@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:gym_management/database_management/tables/players_table.dart';
 
+import 'models/backup_data_models.dart';
+
 class PlayersDatabaseManager {
   static final PlayersDatabase _playersDatabase = PlayersDatabase();
   final Dio _dio = Dio();
@@ -30,7 +32,7 @@ class PlayersDatabaseManager {
                 playerPhoneNumber: data.player_phone_number,
                 imagePath: data.image_path,
                 playerAge: data.player_age,
-                playerFirstJoinDate: data.player_first_join_date,
+                playerFirstJoinDate: DateTime.parse(data.player_first_join_date),
                 playerGender: data.player_gender,
                 subscriptionId: data.subscription_id));
 
@@ -86,7 +88,7 @@ class PlayersDatabaseManager {
     var subDb = PlayersSubscriptions(_playersDatabase);
 
     var sb = _playersDatabase.select(subDb)
-      ..where((tbl) => tbl.playerSubscriptionId.equals(id))
+      ..where((tbl) => tbl.playerSubscriptionId.equals(id))..orderBy([(tbl)=>OrderingTerm(expression: tbl.endDate,mode: OrderingMode.desc)])
       ..get();
 
     var player = _playersDatabase.select(playerDb)
@@ -97,100 +99,35 @@ class PlayersDatabaseManager {
     return PlayerProfileData(playerProfileData, subData);
   }
 
-  Future getEndedSubscriptionPlayers() async {
-    _playersDatabase.select(PlayersSubscriptions(_playersDatabase));
+
+  Future<List<Player>> getEndedSubscriptionsPlayers()async{
+    var date =  _playersDatabase.select(PlayersSubscriptions(_playersDatabase))..where((tbl) => tbl.endDate.isSmallerOrEqualValue(DateTime.now()))..get();
+    List<PlayersSubscription> listData = await date.get();
+     List<Player> date2 = [];
+    for(var data in listData){
+      var x = _playersDatabase.select(Players(_playersDatabase))..where((tbl) => tbl.playerId.equals(data.playerSubscriptionId))..get();
+      List<Player> p = await x.get();
+
+      for(var data3 in p){
+        date2.add(data3);
+      }
+
+    }
+    return date2;
+
+
+
   }
-}
 
-class PlayerProfileData {
-  final Player profileData;
-  final List<PlayersSubscription> subData;
+  Future <List<Player>> getNewPlayersSubscriptions()async{
+      DateTime date =  DateTime.now();
+      int leftDays  = date.day;
+      date = date.subtract(Duration(days: leftDays));
+    var players = _playersDatabase.select(Players(_playersDatabase))..where((tbl) => tbl.playerFirstJoinDate.isBiggerOrEqualValue(date));
 
-  PlayerProfileData(this.profileData, this.subData);
-
-
-}
-
-class SubscriptionsModel {
-  final int id;
-  final String beginning_date;
-  final String end_date;
-  final int billid;
-  final int billValue;
-  final int duration;
-  final String collector;
-  SubscriptionsModel(
-      {required this.id,
-      required this.beginning_date,
-      required this.end_date,
-      required this.billid,
-      required this.billValue,
-      required this.duration,
-      required this.collector});
-
-  factory SubscriptionsModel.fromJson(Map<String, dynamic> json) {
-    return SubscriptionsModel(
-        id: json["player_subscription_id"],
-        beginning_date: json["beginning_date"],
-        end_date: json["end_date"],
-        billid: json["billid"],
-        billValue: json['billvalue'],
-        duration: json["duration"],
-        collector: json['billcollector']);
+    return await players.get();
   }
+
+  //Future <List<Player>>
 }
 
-class PlayerFromBackupDB {
-  final int player_id;
-  final String player_name;
-  final int player_phone_number;
-  final String image_path;
-  final int player_age;
-  final String player_first_join_date;
-  final String player_gender;
-  final int subscription_id;
-
-  PlayerFromBackupDB(
-      {required this.player_id,
-      required this.player_name,
-      required this.player_phone_number,
-      required this.image_path,
-      required this.player_age,
-      required this.player_first_join_date,
-      required this.player_gender,
-      required this.subscription_id});
-
-  factory PlayerFromBackupDB.fromJson(Map<String, dynamic> json) {
-    return PlayerFromBackupDB(
-        player_id: json['player_id'],
-        player_name: json['player_name'],
-        player_phone_number: json['player_phone_number'],
-        image_path: json['image_path'],
-        player_age: json['player_age'],
-        player_first_join_date: json['player_first_join_date'],
-        player_gender: json['player_gender'],
-        subscription_id: json['subscription_id']);
-  }
-}
-
-class DataFromDB {
-  final List<PlayerFromBackupDB> players;
-  final List<SubscriptionsModel> subscriptions;
-
-  DataFromDB({required this.players, required this.subscriptions});
-
-  factory DataFromDB.fromJson(Map<String, dynamic> json) {
-
-    final playersData = (json["data"]["players"] as List<dynamic>).map((e) => PlayerFromBackupDB.fromJson(e))
-        .toList();
-    final subData = (json["data"]["subscriptions"] as List<dynamic>).map((e) => SubscriptionsModel.fromJson(e))
-        .toList();
-
-
-
-    return DataFromDB(
-        players: playersData
-            ,
-        subscriptions: subData);
-  }
-}

@@ -55,8 +55,18 @@ export default async function sendDataToDBController(req: Req, res: Response) {
       `);
 
     let subMap = []
-            
-     let players_map = results.map(e=>[e.id, e.name,e.id])
+    // sort subscription dates to get first subscription to be added later to player_first join date
+    for (let subData of results) {
+        
+    subData.subscriptions.sort((a,b) =>
+             new Date(a.beginDate).getTime() - new Date(b.beginDate).getTime());
+
+        
+    } 
+    
+
+
+     let players_map = results.map(e=>[e.id, e.name,e.id, e.subscriptions[0].beginDate])
       for (const data of results) {
                 for (const subData of data.subscriptions) {
                             if(typeof subData.subscriptionValue !== "number" ){
@@ -71,7 +81,10 @@ export default async function sendDataToDBController(req: Req, res: Response) {
                 }
       }
 
-       pool.query(format('INSERT INTO PLAYERS (player_id, player_name, subscription_id) VALUES %L',players_map),[],(err,result)=>{
+     
+      
+
+       pool.query(format('INSERT INTO PLAYERS (player_id, player_name, subscription_id, player_first_join_date) VALUES %L',players_map),[],(err,result)=>{
         if (err){
             console.log(err);
         }else{

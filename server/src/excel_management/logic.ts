@@ -9,7 +9,7 @@ export interface Req extends Request{
     session:any
 }
 async function saveXlsxFileData(req: Req, res: Response) {
-    const filepath = path.join(__dirname, "./target_excel/players_2023.xlsx")
+    const filepath = path.join(__dirname, "./target_excel/لاعبين 2023.xlsx")
     const fileData = xlsx.readFile(filepath)
     const fileJsonData = xlsx.utils.sheet_to_json(fileData.Sheets[fileData.SheetNames[0]])
 

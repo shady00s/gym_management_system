@@ -1,6 +1,7 @@
-import 'package:dio/dio.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/database_management/player_database_manager.dart';
+
+import '../../database_management/models/backup_data_models.dart';
 
 class PlayerCardInformationWidget extends StatelessWidget {
   final int playerId;
@@ -54,6 +55,14 @@ class PlayerCardInformationWidget extends StatelessWidget {
                         children: [
                           Text("Phone number:"),
                           Text((snapshot.data!.profileData.playerPhoneNumber != -3?snapshot.data!.profileData.playerPhoneNumber:"unrecorded").toString()),
+                        ],
+                      ),
+                      SizedBox(height: 14,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("First join date:"),
+                          Text((snapshot.data!.profileData.playerFirstJoinDate.toString()).toString()),
                         ],
                       ),
 
