@@ -100,8 +100,8 @@ class PlayersDatabaseManager {
   }
 
 
-  Future<List<Player>> getEndedSubscriptionsPlayers()async{
-    var date =  _playersDatabase.select(PlayersSubscriptions(_playersDatabase))..where((tbl) => tbl.endDate.isSmallerOrEqualValue(DateTime.now()))..get();
+  Future<List<Player>> getEndedSubscriptionsPlayers(int days)async{
+    var date =  _playersDatabase.select(PlayersSubscriptions(_playersDatabase))..where((tbl) => tbl.endDate.isBetweenValues(DateTime.now().subtract(Duration(days: days)),DateTime.now()))..get();
     List<PlayersSubscription> listData = await date.get();
      List<Player> date2 = [];
     for(var data in listData){

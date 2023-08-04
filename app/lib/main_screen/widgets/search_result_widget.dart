@@ -18,7 +18,6 @@ class SearchResultWidget extends StatelessWidget {
 
           Expanded(child: Consumer(builder: (BuildContext context,  ref, Widget? child) {
             AsyncValue<List<Player?>> d  =  ref.watch(searchResult);
-                debugPrint(ref.read(searchInput.notifier).state);
 
             return d.when(data:(val)=>val[0]?.playerName != null? ListView.builder(
                 itemCount: val.length,
