@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gym_management/database_management/player_database_manager.dart';
+import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 import 'package:gym_management/main_screen/widgets/search_result_widget.dart';
 class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({super.key});

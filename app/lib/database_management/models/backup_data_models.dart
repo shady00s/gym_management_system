@@ -1,4 +1,4 @@
-import '../tables/players_table.dart';
+import '../tables/generate_table.dart';
 
 class PlayerProfileData {
   final Player profileData;

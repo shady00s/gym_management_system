@@ -1,9 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gym_management/database_management/player_database_manager.dart';
+import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 import 'package:gym_management/main_screen/widgets/player_name_with_image_widget.dart';
 
-import '../../database_management/tables/players_table.dart';
+import '../../database_management/tables/generate_table.dart';
 final searchInput = StateProvider((ref) => "");
 final searchResult = FutureProvider<List<Player?>>((ref)async => await PlayersDatabaseManager().searchForPlayer(ref.watch(searchInput)));
 

@@ -2,11 +2,11 @@ import 'dart:core';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gym_management/database_management/player_database_manager.dart';
+import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 import 'package:gym_management/main_screen/widgets/combo_box_widget.dart';
 import 'package:gym_management/main_screen/widgets/player_name_widget.dart';
 
-import '../database_management/tables/players_table.dart';
+import '../database_management/tables/generate_table.dart';
 
 class DurationModel {
   final String title;
@@ -24,11 +24,11 @@ class GenderModel {
 
 List<DurationModel> durationList = [
   DurationModel("Today", DateTime.now()),
-  DurationModel("Past 10 days", DateTime.now().subtract(Duration(days: 10))),
-  DurationModel("Past 20 days", DateTime.now().subtract(Duration(days: 20))),
-  DurationModel("Past 1 month", DateTime.now().subtract(Duration(days: 30))),
-  DurationModel("Past 2 months", DateTime.now().subtract(Duration(days: 60))),
-  DurationModel("Past 3 months", DateTime.now().subtract(Duration(days: 90))),
+  DurationModel("Past 10 days", DateTime.now().subtract(const Duration(days: 10))),
+  DurationModel("Past 20 days", DateTime.now().subtract(const Duration(days: 20))),
+  DurationModel("Past 1 month", DateTime.now().subtract(const Duration(days: 30))),
+  DurationModel("Past 2 months", DateTime.now().subtract(const Duration(days: 60))),
+  DurationModel("Past 3 months", DateTime.now().subtract(const Duration(days: 90))),
 ];
 List<GenderModel> genders = [
   GenderModel("All", ""),
@@ -41,7 +41,7 @@ var newPlayersAddedDurationProvider =
 var newPlayersAddedDurationProviderLength = StateProvider<int>((ref) => 0);
 
 var endedPlayersDurationProvider =
-    StateProvider<DateTime>((ref) => DateTime.now());
+    StateProvider<DurationModel>((ref) => DurationModel("Not selected",DateTime.now()));
 
 var endedPlayersDurationProviderListLength = StateProvider<int>((ref) => 0);
 
@@ -55,25 +55,30 @@ class PlayerStatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 500,
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(14.0),
+    return Padding(
+      padding: const EdgeInsets.all(14.0),
+      child: SizedBox(
+        height: 800,
+        width: MediaQuery.sizeOf(context).width,
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  "Status",
-                  style: TextStyle(fontSize: 31, fontWeight: FontWeight.w600),
+              SizedBox(
+                width: 300,
+                height: 50,
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "Status",
+                    style: TextStyle(fontSize: 31, fontWeight: FontWeight.w600),
+                  ),
                 ),
               ),
 
               // number card
               SizedBox(
-                height: 160,
+                height: 150,
                 width: MediaQuery.of(context).size.width * 0.98,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -165,7 +170,7 @@ class PlayerStatusWidget extends StatelessWidget {
 
               // filter by widget
               SizedBox(
-                height:100,
+                height:229,
                 width: MediaQuery.of(context).size.width * 0.98,
                 child: Padding(
                   padding:
@@ -174,103 +179,223 @@ class PlayerStatusWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Wrap(
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            alignment: WrapAlignment.end,
-                            children: [
-                              SizedBox( width:150,child: Text("Filter by")),
+                        child: Expander(
 
-                              const Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                          header: Text("Filter by"), content: SizedBox(
+                          height: 140,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children:[
+                                  Row(
+                                    mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                                    children: [
+                                    Consumer(builder: (key, ref, child) {
+                                      final setDate = ref.read(
+                                          newPlayersAddedDurationProvider.notifier);
+
+                                      return ComboBoxWidget(
+                                        items: durationList,
+                                        filterTitle: 'Coach',
+                                        onChanged: (val) {
+                                          setDate.state = val.value;
+                                        },
+                                      );
+                                    }),
+                                    Text("Not selected")
+                                  ],),
+                                  const Divider(),
+                                  Row(
+                                mainAxisAlignment:MainAxisAlignment.spaceBetween,
+
                                 children: [
-                                  Text("Coach"),
-                                  ComboBox(items: [
-                                    ComboBoxItem(
-                                      value: 0,
-                                      child: Text("All"),
-                                    )
-                                  ])
+                                  Consumer(builder: (key, ref, child) {
+                                    final setDate = ref.read(
+                                        newPlayersAddedDurationProvider.notifier);
+
+                                    return ComboBoxWidget(
+                                      items: durationList,
+                                      filterTitle: 'Duration',
+                                      onChanged: (val) {
+                                        setDate.state = val.value;
+                                      },
+                                    );
+                                  }),
+                                  Text("Not selected")
                                 ],
                               ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Consumer(builder: (key, ref, child) {
-                                final setDate = ref.read(
-                                    newPlayersAddedDurationProvider.notifier);
+                                 const Divider(),
+                                  Row(
+                                mainAxisAlignment:MainAxisAlignment.spaceBetween,
 
-                                return ComboBoxWidget(
-                                  items: durationList,
-                                  filterTitle: 'Duration',
-                                  onChanged: (val) {
-                                    setDate.state = val.value;
-                                  },
-                                );
-                              }),
-                              const SizedBox(
-                                width: 8,
+                                children: [
+                                Consumer(builder: (key, ref, child) {
+                                  final setDate = ref.read(
+                                      newPlayersAddedDurationProvider.notifier);
+
+                                  return ComboBoxWidget(
+                                    items: durationList,
+                                    filterTitle: 'Sort by',
+                                    onChanged: (val) {
+                                      setDate.state = val.value;
+                                    },
+                                  );
+                                }),
+                                  Text("Not selected")
+                              ],),
+                                 const Divider(),
+                                  Row(
+                                mainAxisAlignment:MainAxisAlignment.spaceBetween,
+
+                                children: [
+                                  Consumer(builder: (key, ref, child) {
+                                    final setDate = ref.read(
+                                        newPlayersAddedDurationProvider.notifier);
+
+                                    return ComboBoxWidget(
+                                      items: durationList,
+                                      filterTitle: 'Gender',
+                                      onChanged: (val) {
+                                        setDate.state = val.value;
+                                      },
+                                    );
+                                  }),
+                                  Text("Not selected")
+                                ],
                               ),
-                              ComboBoxWidget(
-                                items: genders,
-                                filterTitle: "Gender",
-                                onChanged: (int val) {},
-                              )
-                            ],
-                          ),
-                        ),
+                                  const Divider(),
+                                  Row(
+                                mainAxisAlignment:MainAxisAlignment.spaceBetween,
+
+                                children: [
+                                  Consumer(builder: (key, ref, child) {
+                                    final setDate = ref.read(
+                                        newPlayersAddedDurationProvider.notifier);
+
+                                    return ComboBoxWidget(
+                                      items: durationList,
+                                      filterTitle: 'Subscription value',
+                                      onChanged: (val) {
+                                        setDate.state = val.value;
+                                      },
+                                    );
+                                  }),
+                                  Text("Not selected")
+                                ],
+                              ),
+                        ]),
+                            ),
+                          ),),
                       ),
+
                       SizedBox(width: 22),
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child:  Wrap(
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            alignment: WrapAlignment.end,
-                            children: [
-                              SizedBox( width:150,child: Text("Filter by")),
+                        child: Expander(header: Text("Filter by"),content:SizedBox(
+                          height: 140,
+                          child: SingleChildScrollView(
+                              child:
 
-                              const Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text("Coach"),
-                                  ComboBox(items: [
-                                    ComboBoxItem(
-                                      value: 0,
-                                      child: Text("All"),
-                                    )
-                                  ])
-                                ],
-                              ),
-                              const SizedBox(
-                                width: 8,
-                              ),
                               Consumer(builder: (key, ref, child) {
                                 final setDate = ref.read(
                                     endedPlayersDurationProvider.notifier);
-
-                                return ComboBoxWidget(
+                                DurationModel getChangedDate = ref.watch(endedPlayersDurationProvider);
+                                return Column(children: [
+                                  Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    ComboBoxWidget(
                                   items: durationList,
                                   filterTitle: 'Duration',
                                   onChanged: (val) {
-                                    setDate.state = val.value;
+                                    setDate.state = DurationModel(val.title, val.value);
                                   },
-                                );
+                                    ),
+                                    Text(getChangedDate.title)
+
+                                  ]),
+                                  Divider(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Consumer(builder: (key, ref, child) {
+                                        final setDate = ref.read(
+                                            endedPlayersDurationProvider.notifier);
+
+                                        return ComboBoxWidget(
+                                          items: durationList,
+                                          filterTitle: 'Duration',
+                                          onChanged: (val) {
+                                            setDate.state = val.value;
+                                          },
+                                        );
+                                      }),
+                                      Text("Not Selected")
+                                    ],
+                                  ),
+                                  Divider(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Consumer(builder: (key, ref, child) {
+                                        final setDate = ref.read(
+                                            endedPlayersDurationProvider.notifier);
+
+                                        return ComboBoxWidget(
+                                          items: durationList,
+                                          filterTitle: 'Duration',
+                                          onChanged: (val) {
+                                            setDate.state = val.value;
+                                          },
+                                        );
+                                      }),
+                                      Text("Not Selected")
+                                    ],
+                                  ),
+                                  Divider(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Consumer(builder: (key, ref, child) {
+                                        final setDate = ref.read(
+                                            endedPlayersDurationProvider.notifier);
+
+                                        return ComboBoxWidget(
+                                          items: durationList,
+                                          filterTitle: 'Duration',
+                                          onChanged: (val) {
+                                            setDate.state = val.value;
+                                          },
+                                        );
+                                      }),
+                                      Text("Not Selected")
+                                    ],
+                                  ),
+                                  Divider(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Consumer(builder: (key, ref, child) {
+                                        final setDate = ref.read(
+                                            endedPlayersDurationProvider.notifier);
+
+                                        return ComboBoxWidget(
+                                          items: durationList,
+                                          filterTitle: 'Duration',
+                                          onChanged: (val) {
+                                            setDate.state = val.value;
+                                          },
+                                        );
+                                      }),
+                                      Text("Not Selected")
+                                    ],
+                                  ),
+                                ],)
+                                ;
                               }),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              ComboBoxWidget(
-                                items: genders,
-                                filterTitle: "Gender",
-                                onChanged: (int val) {},
-                              )
-                            ],
-                          ),
-                        ),
+
+
+
+                            ),
+                        ) ,),
                       ),
                       SizedBox(width: 22),
 
@@ -281,32 +406,20 @@ class PlayerStatusWidget extends StatelessWidget {
                             crossAxisAlignment: WrapCrossAlignment.center,
                             alignment: WrapAlignment.end,
                             children: [
-                              SizedBox( width:250,child: Text("Filter by")),
+                             Expander(header: Text("Filter by"), content: Column(children: [
+                               Row(
+                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                 children: [
+                                 ComboBoxWidget(
+                                   items: genders,
+                                   filterTitle: "Gender",
+                                   onChanged: (int val) {},
+                                 ),
+                                  Text("Not selected")
+                               ],)
+                             ],))
 
-                              Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text("Coach"),
-                                  ComboBox(items: [
-                                    ComboBoxItem(
-                                      value: 0,
-                                      child: Text("All"),
-                                    )
-                                  ])
-                                ],
-                              ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              ComboBoxWidget(
-                                items: genders,
-                                filterTitle: "Gender",
-                                onChanged: (int val) {},
-                              )
+
                             ],
                           ),
                         ),
@@ -316,15 +429,15 @@ class PlayerStatusWidget extends StatelessWidget {
                 ),
               ),
 
-              // players list
+             // players list
               SizedBox(
-                height: 400,
+                height: 300,
                 width: MediaQuery.of(context).size.width * 0.96,
 
                 child:    Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Expanded(
+                   Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Consumer(builder: (key, ref, child) {
@@ -374,11 +487,11 @@ class PlayerStatusWidget extends StatelessWidget {
                         }),
                       ),
                     ),
-                    Expanded(
+                   Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Consumer(builder: (key, ref, child) {
-                          DateTime playersCount =
+                          var playersCount =
                           ref.watch(endedPlayersDurationProvider);
 
                           var customDateTime = ref.watch(customEndSubscriptionDateProvider);
@@ -386,7 +499,7 @@ class PlayerStatusWidget extends StatelessWidget {
                               endedPlayersDurationProviderListLength.notifier);
                           return FutureBuilder<List<Player>>(
                               future:customDateTime == null? PlayersDatabaseManager()
-                                  .getEndedSubscriptionsPlayers(playersCount,DateTime.now()): PlayersDatabaseManager()
+                                  .getEndedSubscriptionsPlayers(playersCount.value,DateTime.now()): PlayersDatabaseManager()
                                   .getEndedSubscriptionsPlayers(customDateTime.begDate,customDateTime.endDate),
                               builder: (context, snapshot) {
                                 switch (snapshot.connectionState) {
@@ -427,7 +540,7 @@ class PlayerStatusWidget extends StatelessWidget {
                         }),
                       ),
                     ),
-                    Expanded(
+                   Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Consumer(builder: (key, ref, child) {

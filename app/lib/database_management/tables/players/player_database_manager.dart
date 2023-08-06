@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
-import 'package:gym_management/database_management/tables/players_table.dart';
+import 'package:gym_management/database_management/tables/generate_table.dart';
 
-import 'models/backup_data_models.dart';
+import '../../models/backup_data_models.dart';
 
 class PlayersDatabaseManager {
-  static final PlayersDatabase _playersDatabase = PlayersDatabase();
+  static final SystemDatabase _playersDatabase = SystemDatabase();
   final Dio _dio = Dio();
 
   Future getDataFromBackup() async {

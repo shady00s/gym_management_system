@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'players_table.dart';
+part of 'generate_table.dart';
 
 // ignore_for_file: type=lint
 class Players extends Table with TableInfo<Players, Player> {
@@ -895,11 +895,387 @@ class PlayersSubscriptionsCompanion
   }
 }
 
-abstract class _$PlayersDatabase extends GeneratedDatabase {
-  _$PlayersDatabase(QueryExecutor e) : super(e);
+class $SubscriptionsInformationTable extends SubscriptionsInformation
+    with
+        TableInfo<$SubscriptionsInformationTable,
+            SubscriptionsInformationData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SubscriptionsInformationTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _subscriptionNameMeta =
+      const VerificationMeta('subscriptionName');
+  @override
+  late final GeneratedColumn<String> subscriptionName = GeneratedColumn<String>(
+      'subscription_name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _subscriptionValueMeta =
+      const VerificationMeta('subscriptionValue');
+  @override
+  late final GeneratedColumn<String> subscriptionValue =
+      GeneratedColumn<String>('subscription_value', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _subscriptionDurationMeta =
+      const VerificationMeta('subscriptionDuration');
+  @override
+  late final GeneratedColumn<String> subscriptionDuration =
+      GeneratedColumn<String>('subscription_duration', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _subscriptionFreezeLimitMeta =
+      const VerificationMeta('subscriptionFreezeLimit');
+  @override
+  late final GeneratedColumn<int> subscriptionFreezeLimit =
+      GeneratedColumn<int>('subscription_freeze_limit', aliasedName, false,
+          type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _subscriptionInvitationLimitMeta =
+      const VerificationMeta('subscriptionInvitationLimit');
+  @override
+  late final GeneratedColumn<int> subscriptionInvitationLimit =
+      GeneratedColumn<int>('subscription_invitation_limit', aliasedName, false,
+          type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        subscriptionName,
+        subscriptionValue,
+        subscriptionDuration,
+        subscriptionFreezeLimit,
+        subscriptionInvitationLimit
+      ];
+  @override
+  String get aliasedName => _alias ?? 'subscriptions_information';
+  @override
+  String get actualTableName => 'subscriptions_information';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<SubscriptionsInformationData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('subscription_name')) {
+      context.handle(
+          _subscriptionNameMeta,
+          subscriptionName.isAcceptableOrUnknown(
+              data['subscription_name']!, _subscriptionNameMeta));
+    } else if (isInserting) {
+      context.missing(_subscriptionNameMeta);
+    }
+    if (data.containsKey('subscription_value')) {
+      context.handle(
+          _subscriptionValueMeta,
+          subscriptionValue.isAcceptableOrUnknown(
+              data['subscription_value']!, _subscriptionValueMeta));
+    } else if (isInserting) {
+      context.missing(_subscriptionValueMeta);
+    }
+    if (data.containsKey('subscription_duration')) {
+      context.handle(
+          _subscriptionDurationMeta,
+          subscriptionDuration.isAcceptableOrUnknown(
+              data['subscription_duration']!, _subscriptionDurationMeta));
+    } else if (isInserting) {
+      context.missing(_subscriptionDurationMeta);
+    }
+    if (data.containsKey('subscription_freeze_limit')) {
+      context.handle(
+          _subscriptionFreezeLimitMeta,
+          subscriptionFreezeLimit.isAcceptableOrUnknown(
+              data['subscription_freeze_limit']!,
+              _subscriptionFreezeLimitMeta));
+    } else if (isInserting) {
+      context.missing(_subscriptionFreezeLimitMeta);
+    }
+    if (data.containsKey('subscription_invitation_limit')) {
+      context.handle(
+          _subscriptionInvitationLimitMeta,
+          subscriptionInvitationLimit.isAcceptableOrUnknown(
+              data['subscription_invitation_limit']!,
+              _subscriptionInvitationLimitMeta));
+    } else if (isInserting) {
+      context.missing(_subscriptionInvitationLimitMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SubscriptionsInformationData map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SubscriptionsInformationData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      subscriptionName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}subscription_name'])!,
+      subscriptionValue: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}subscription_value'])!,
+      subscriptionDuration: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}subscription_duration'])!,
+      subscriptionFreezeLimit: attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}subscription_freeze_limit'])!,
+      subscriptionInvitationLimit: attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}subscription_invitation_limit'])!,
+    );
+  }
+
+  @override
+  $SubscriptionsInformationTable createAlias(String alias) {
+    return $SubscriptionsInformationTable(attachedDatabase, alias);
+  }
+}
+
+class SubscriptionsInformationData extends DataClass
+    implements Insertable<SubscriptionsInformationData> {
+  final int id;
+  final String subscriptionName;
+  final String subscriptionValue;
+  final String subscriptionDuration;
+  final int subscriptionFreezeLimit;
+  final int subscriptionInvitationLimit;
+  const SubscriptionsInformationData(
+      {required this.id,
+      required this.subscriptionName,
+      required this.subscriptionValue,
+      required this.subscriptionDuration,
+      required this.subscriptionFreezeLimit,
+      required this.subscriptionInvitationLimit});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['subscription_name'] = Variable<String>(subscriptionName);
+    map['subscription_value'] = Variable<String>(subscriptionValue);
+    map['subscription_duration'] = Variable<String>(subscriptionDuration);
+    map['subscription_freeze_limit'] = Variable<int>(subscriptionFreezeLimit);
+    map['subscription_invitation_limit'] =
+        Variable<int>(subscriptionInvitationLimit);
+    return map;
+  }
+
+  SubscriptionsInformationCompanion toCompanion(bool nullToAbsent) {
+    return SubscriptionsInformationCompanion(
+      id: Value(id),
+      subscriptionName: Value(subscriptionName),
+      subscriptionValue: Value(subscriptionValue),
+      subscriptionDuration: Value(subscriptionDuration),
+      subscriptionFreezeLimit: Value(subscriptionFreezeLimit),
+      subscriptionInvitationLimit: Value(subscriptionInvitationLimit),
+    );
+  }
+
+  factory SubscriptionsInformationData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SubscriptionsInformationData(
+      id: serializer.fromJson<int>(json['id']),
+      subscriptionName: serializer.fromJson<String>(json['subscriptionName']),
+      subscriptionValue: serializer.fromJson<String>(json['subscriptionValue']),
+      subscriptionDuration:
+          serializer.fromJson<String>(json['subscriptionDuration']),
+      subscriptionFreezeLimit:
+          serializer.fromJson<int>(json['subscriptionFreezeLimit']),
+      subscriptionInvitationLimit:
+          serializer.fromJson<int>(json['subscriptionInvitationLimit']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'subscriptionName': serializer.toJson<String>(subscriptionName),
+      'subscriptionValue': serializer.toJson<String>(subscriptionValue),
+      'subscriptionDuration': serializer.toJson<String>(subscriptionDuration),
+      'subscriptionFreezeLimit':
+          serializer.toJson<int>(subscriptionFreezeLimit),
+      'subscriptionInvitationLimit':
+          serializer.toJson<int>(subscriptionInvitationLimit),
+    };
+  }
+
+  SubscriptionsInformationData copyWith(
+          {int? id,
+          String? subscriptionName,
+          String? subscriptionValue,
+          String? subscriptionDuration,
+          int? subscriptionFreezeLimit,
+          int? subscriptionInvitationLimit}) =>
+      SubscriptionsInformationData(
+        id: id ?? this.id,
+        subscriptionName: subscriptionName ?? this.subscriptionName,
+        subscriptionValue: subscriptionValue ?? this.subscriptionValue,
+        subscriptionDuration: subscriptionDuration ?? this.subscriptionDuration,
+        subscriptionFreezeLimit:
+            subscriptionFreezeLimit ?? this.subscriptionFreezeLimit,
+        subscriptionInvitationLimit:
+            subscriptionInvitationLimit ?? this.subscriptionInvitationLimit,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('SubscriptionsInformationData(')
+          ..write('id: $id, ')
+          ..write('subscriptionName: $subscriptionName, ')
+          ..write('subscriptionValue: $subscriptionValue, ')
+          ..write('subscriptionDuration: $subscriptionDuration, ')
+          ..write('subscriptionFreezeLimit: $subscriptionFreezeLimit, ')
+          ..write('subscriptionInvitationLimit: $subscriptionInvitationLimit')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      subscriptionName,
+      subscriptionValue,
+      subscriptionDuration,
+      subscriptionFreezeLimit,
+      subscriptionInvitationLimit);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SubscriptionsInformationData &&
+          other.id == this.id &&
+          other.subscriptionName == this.subscriptionName &&
+          other.subscriptionValue == this.subscriptionValue &&
+          other.subscriptionDuration == this.subscriptionDuration &&
+          other.subscriptionFreezeLimit == this.subscriptionFreezeLimit &&
+          other.subscriptionInvitationLimit ==
+              this.subscriptionInvitationLimit);
+}
+
+class SubscriptionsInformationCompanion
+    extends UpdateCompanion<SubscriptionsInformationData> {
+  final Value<int> id;
+  final Value<String> subscriptionName;
+  final Value<String> subscriptionValue;
+  final Value<String> subscriptionDuration;
+  final Value<int> subscriptionFreezeLimit;
+  final Value<int> subscriptionInvitationLimit;
+  const SubscriptionsInformationCompanion({
+    this.id = const Value.absent(),
+    this.subscriptionName = const Value.absent(),
+    this.subscriptionValue = const Value.absent(),
+    this.subscriptionDuration = const Value.absent(),
+    this.subscriptionFreezeLimit = const Value.absent(),
+    this.subscriptionInvitationLimit = const Value.absent(),
+  });
+  SubscriptionsInformationCompanion.insert({
+    this.id = const Value.absent(),
+    required String subscriptionName,
+    required String subscriptionValue,
+    required String subscriptionDuration,
+    required int subscriptionFreezeLimit,
+    required int subscriptionInvitationLimit,
+  })  : subscriptionName = Value(subscriptionName),
+        subscriptionValue = Value(subscriptionValue),
+        subscriptionDuration = Value(subscriptionDuration),
+        subscriptionFreezeLimit = Value(subscriptionFreezeLimit),
+        subscriptionInvitationLimit = Value(subscriptionInvitationLimit);
+  static Insertable<SubscriptionsInformationData> custom({
+    Expression<int>? id,
+    Expression<String>? subscriptionName,
+    Expression<String>? subscriptionValue,
+    Expression<String>? subscriptionDuration,
+    Expression<int>? subscriptionFreezeLimit,
+    Expression<int>? subscriptionInvitationLimit,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (subscriptionName != null) 'subscription_name': subscriptionName,
+      if (subscriptionValue != null) 'subscription_value': subscriptionValue,
+      if (subscriptionDuration != null)
+        'subscription_duration': subscriptionDuration,
+      if (subscriptionFreezeLimit != null)
+        'subscription_freeze_limit': subscriptionFreezeLimit,
+      if (subscriptionInvitationLimit != null)
+        'subscription_invitation_limit': subscriptionInvitationLimit,
+    });
+  }
+
+  SubscriptionsInformationCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? subscriptionName,
+      Value<String>? subscriptionValue,
+      Value<String>? subscriptionDuration,
+      Value<int>? subscriptionFreezeLimit,
+      Value<int>? subscriptionInvitationLimit}) {
+    return SubscriptionsInformationCompanion(
+      id: id ?? this.id,
+      subscriptionName: subscriptionName ?? this.subscriptionName,
+      subscriptionValue: subscriptionValue ?? this.subscriptionValue,
+      subscriptionDuration: subscriptionDuration ?? this.subscriptionDuration,
+      subscriptionFreezeLimit:
+          subscriptionFreezeLimit ?? this.subscriptionFreezeLimit,
+      subscriptionInvitationLimit:
+          subscriptionInvitationLimit ?? this.subscriptionInvitationLimit,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (subscriptionName.present) {
+      map['subscription_name'] = Variable<String>(subscriptionName.value);
+    }
+    if (subscriptionValue.present) {
+      map['subscription_value'] = Variable<String>(subscriptionValue.value);
+    }
+    if (subscriptionDuration.present) {
+      map['subscription_duration'] =
+          Variable<String>(subscriptionDuration.value);
+    }
+    if (subscriptionFreezeLimit.present) {
+      map['subscription_freeze_limit'] =
+          Variable<int>(subscriptionFreezeLimit.value);
+    }
+    if (subscriptionInvitationLimit.present) {
+      map['subscription_invitation_limit'] =
+          Variable<int>(subscriptionInvitationLimit.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SubscriptionsInformationCompanion(')
+          ..write('id: $id, ')
+          ..write('subscriptionName: $subscriptionName, ')
+          ..write('subscriptionValue: $subscriptionValue, ')
+          ..write('subscriptionDuration: $subscriptionDuration, ')
+          ..write('subscriptionFreezeLimit: $subscriptionFreezeLimit, ')
+          ..write('subscriptionInvitationLimit: $subscriptionInvitationLimit')
+          ..write(')'))
+        .toString();
+  }
+}
+
+abstract class _$SystemDatabase extends GeneratedDatabase {
+  _$SystemDatabase(QueryExecutor e) : super(e);
   late final Players players = Players(this);
   late final PlayersSubscriptions playersSubscriptions =
       PlayersSubscriptions(this);
+  late final $SubscriptionsInformationTable subscriptionsInformation =
+      $SubscriptionsInformationTable(this);
   Selectable<Player> allPlayers() {
     return customSelect('SELECT * FROM Players', variables: [], readsFrom: {
       players,
@@ -933,7 +1309,7 @@ abstract class _$PlayersDatabase extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [players, playersSubscriptions];
+      [players, playersSubscriptions, subscriptionsInformation];
 }
 
 class GetAllNamesResult {
