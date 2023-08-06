@@ -105,11 +105,11 @@ class PlayersDatabaseManager {
   }
 
 
-  Future<List<Player>> getEndedSubscriptionsPlayers(int days) async {
+  Future<List<Player>> getEndedSubscriptionsPlayers(DateTime dateTime,DateTime endDate) async {
     var date = _playersDatabase.select(PlayersSubscriptions(_playersDatabase))
       ..where((tbl) =>
           tbl.endDate.isBetweenValues(
-              DateTime.now().subtract(Duration(days: days)), DateTime.now()))
+              dateTime, endDate))
       ..get();
     List<PlayersSubscription> listData = await date.get();
     List<Player> date2 = [];
@@ -126,20 +126,18 @@ class PlayersDatabaseManager {
     return date2;
   }
 
-  Future <List<Player>> getNewPlayersSubscriptions(int days) async {
-    DateTime date = DateTime.now();
-    int leftDays = date.day;
-    date = date.subtract(Duration(days: leftDays));
+  Future <List<Player>> getNewPlayersSubscriptions(DateTime date) async {
+
     var players = _playersDatabase.select(Players(_playersDatabase))
       ..where((tbl) =>
           tbl.playerFirstJoinDate.isBetweenValues(
-              DateTime.now().subtract(Duration(days: days)), DateTime.now()));
+              date, DateTime.now()));
 
     return await players.get();
   }
 
 
-  Future <List<Player>> getActivePlayersSubscriptions(int days) async {
+  Future <List<Player>> getActivePlayersSubscriptions() async {
     var date = _playersDatabase.select(PlayersSubscriptions(_playersDatabase))
       ..where((tbl) =>
           tbl.endDate.isBiggerOrEqualValue(DateTime.now()))
