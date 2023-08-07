@@ -8,4 +8,4 @@ CREATE TABLE IF NOT EXISTS SubscriptionsInfoTable (
     subscription_freeze_limit INT NOT NULL,
     subscription_invitation_limit INT NOT NULL
 
-)
+);

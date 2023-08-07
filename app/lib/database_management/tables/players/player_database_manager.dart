@@ -5,7 +5,7 @@ import 'package:gym_management/database_management/tables/generate_table.dart';
 import '../../models/backup_data_models.dart';
 
 class PlayersDatabaseManager {
-  static final SystemDatabase _playersDatabase = SystemDatabase();
+   static  SystemDatabase playersDatabase = SystemDatabase();
   final Dio _dio = Dio();
 
   Future getDataFromBackup() async {
@@ -18,8 +18,8 @@ class PlayersDatabaseManager {
 
       //  List playersData = dataFromDB.players;
       List<SubscriptionsModel> subData = dataFromDB.subscriptions;
-      int length = await _playersDatabase
-          .select(Players(_playersDatabase))
+      int length = await playersDatabase
+          .select(Players(playersDatabase))
           .get()
           .then((value) => value.length);
 
@@ -48,12 +48,12 @@ class PlayersDatabaseManager {
               billCollector: data.collector);
         });
 
-        await _playersDatabase.batch((batch) =>
-            batch.insertAll(Players(_playersDatabase), [...players]));
+        await playersDatabase.batch((batch) =>
+            batch.insertAll(Players(playersDatabase), [...players]));
 
-        await _playersDatabase.batch((batch) =>
+        await playersDatabase.batch((batch) =>
             batch.insertAll(
-                PlayersSubscriptions(_playersDatabase), [...subscriptions]));
+                PlayersSubscriptions(playersDatabase), [...subscriptions]));
       }
 
       print("backup compelete");
@@ -65,15 +65,15 @@ class PlayersDatabaseManager {
   }
 
   Future<List<GetAllNamesResult>> getPlayersData() async {
-    return await _playersDatabase.getAllNames().get();
+    return await playersDatabase.getAllNames().get();
   }
 
-  Future searchForPlayer(String searchInput) async {
-    var res = _playersDatabase.select(Players(_playersDatabase))
+  Future<List<Player>> searchForPlayer(String searchInput) async {
+    var res = playersDatabase.select(Players(playersDatabase))
       ..where((player) {
         int? value = int.tryParse(searchInput);
         if (value == null) {
-          return player.playerName.equals(searchInput);
+          return player.playerName.like('%$searchInput%');
         } else if (searchInput.length < 11) {
           return player.playerId.equals(value);
         } else {
@@ -85,10 +85,10 @@ class PlayersDatabaseManager {
   }
 
   Future<PlayerProfileData> getPlayerSubscriptionInfo(int id) async {
-    var playerDb = Players(_playersDatabase);
-    var subDb = PlayersSubscriptions(_playersDatabase);
+    var playerDb = Players(playersDatabase);
+    var subDb = PlayersSubscriptions(playersDatabase);
 
-    var sb = _playersDatabase.select(subDb)
+    var sb = playersDatabase.select(subDb)
       ..where((tbl) => tbl.playerSubscriptionId.equals(id))
       ..orderBy([
             (tbl) =>
@@ -96,7 +96,7 @@ class PlayersDatabaseManager {
       ])
       ..get();
 
-    var player = _playersDatabase.select(playerDb)
+    var player = playersDatabase.select(playerDb)
       ..where((tbl) => tbl.playerId.equals(id))
       ..get();
     Player playerProfileData = await player.getSingle();
@@ -106,7 +106,7 @@ class PlayersDatabaseManager {
 
 
   Future<List<Player>> getEndedSubscriptionsPlayers(DateTime dateTime,DateTime endDate) async {
-    var date = _playersDatabase.select(PlayersSubscriptions(_playersDatabase))
+    var date = playersDatabase.select(PlayersSubscriptions(playersDatabase))
       ..where((tbl) =>
           tbl.endDate.isBetweenValues(
               dateTime, endDate))
@@ -114,7 +114,7 @@ class PlayersDatabaseManager {
     List<PlayersSubscription> listData = await date.get();
     List<Player> date2 = [];
     for (var data in listData) {
-      var x = _playersDatabase.select(Players(_playersDatabase))
+      var x = playersDatabase.select(Players(playersDatabase))
         ..where((tbl) => tbl.playerId.equals(data.playerSubscriptionId))
         ..get();
       List<Player> p = await x.get();
@@ -128,7 +128,7 @@ class PlayersDatabaseManager {
 
   Future <List<Player>> getNewPlayersSubscriptions(DateTime date) async {
 
-    var players = _playersDatabase.select(Players(_playersDatabase))
+    var players = playersDatabase.select(Players(playersDatabase))
       ..where((tbl) =>
           tbl.playerFirstJoinDate.isBetweenValues(
               date, DateTime.now()));
@@ -138,14 +138,14 @@ class PlayersDatabaseManager {
 
 
   Future <List<Player>> getActivePlayersSubscriptions() async {
-    var date = _playersDatabase.select(PlayersSubscriptions(_playersDatabase))
+    var date = playersDatabase.select(PlayersSubscriptions(playersDatabase))
       ..where((tbl) =>
           tbl.endDate.isBiggerOrEqualValue(DateTime.now()))
       ..get();
     List<PlayersSubscription> listData = await date.get();
     List<Player> date2 = [];
     for (var data in listData) {
-      var x = _playersDatabase.select(Players(_playersDatabase))
+      var x = playersDatabase.select(Players(playersDatabase))
         ..where((tbl) => tbl.playerId.equals(data.playerSubscriptionId))
         ..get();
       List<Player> p = await x.get();
