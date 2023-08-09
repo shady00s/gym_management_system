@@ -16,21 +16,24 @@ async function getExcelDataFromFile(req:Req,res:Response){
       const fileName:string = file.file[0].originalFilename
       const newPath = path.join(__dirname,"/target_excel/",fileName)
 
-
        if(fs.existsSync(fileName)){
         fs.unlink(newPath,function(err){
           if(err){
             console.log(err);
             res.json(err)
           }
+          req.session.filePath = newPath;
+
             res.redirect(`/get_excel_file`)})
         
        }else{
         fs.copyFile(file.file[0].filepath,newPath,(err)=>{
           if(err){
-              console.log(err);
+              console.log(err); 
           }    
           console.log("done");
+          req.session.filePath = newPath;
+
             res.redirect(`/get_excel_sheets?fileName=${fileName}`)
         })
        }

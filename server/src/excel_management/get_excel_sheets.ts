@@ -3,7 +3,7 @@ import { Request, Response, json } from 'express';
 import path from "path";
 import { Req } from './data_from_excel_handeling_logic';
 import * as xlsx from 'xlsx';
-export default function getExcelSheets(req:Request,res:Response){
+export default function getExcelSheets(req:Req,res:Response){
     const fileName  = req.query.fileName
         const filePath = path.join(__dirname,'/target_excel/',fileName.toString())
         fs.readFile(filePath,function(err,file){
@@ -15,10 +15,15 @@ export default function getExcelSheets(req:Request,res:Response){
           const sheetNames =  xlsx.readFile(filePath).SheetNames
           const sheetNamesList =[]
                 for (let index = 0; index < sheetNames.length; index++) {
-                   
+                    if(sheetNames[index]!=="Sheet1"){
                         sheetNamesList.push({id:index,name:sheetNames[index]})
+
+                    }
                 }
-          res.json(sheetNames)
+
+                req.session.sheets = sheetNamesList
+
+          res.json(sheetNamesList)
         })
 
 }
