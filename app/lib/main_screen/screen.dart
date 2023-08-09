@@ -3,6 +3,8 @@ import 'package:gym_management/main_screen/add_new_subscription_value_widget.dar
 import 'package:gym_management/main_screen/home_widget.dart';
 import 'package:gym_management/main_screen/player_status_widget.dart';
 
+import '../manage_excel/ui_widget.dart';
+
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -36,6 +38,7 @@ class _MainScreenState extends State<MainScreen> {
                PaneItemSeparator(),
 
                PaneItem(icon: const Icon(FluentIcons.pencil_reply),title: Text("Add new subscription"), body:const AddNewSubscriptionValueWidget()),
+               PaneItem(icon: const Icon(FluentIcons.office_logo),title: Text("Get excel data"), body:const ImportExcelScreen()),
 
 
              ]

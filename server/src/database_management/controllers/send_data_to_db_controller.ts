@@ -1,6 +1,6 @@
 
 import { Request, Response } from 'express';
-import { Req } from '../../excel_management/logic';
+import { Req } from '../../excel_management/data_from_excel_handeling_logic';
 import { Client, Pool } from "pg";
 import IExcelDataModel from '../../excel_management/excel_data_model';
 import format from 'pg-format';
@@ -108,9 +108,5 @@ export default async function sendDataToDBController(req: Req, res: Response) {
         res.json({ message: "redirect succssessfully", results   })
 
     });
-
-
-  //  pool.query("SELECT * FROM SUBSCRIPTIONSDB").then(val => { console.log(val.rows); })
-
 }
 

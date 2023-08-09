@@ -13,10 +13,12 @@ async function saveXlsxFileData(req: Req, res: Response) {
     const fileData = xlsx.readFile(filepath)
     const fileJsonData = xlsx.utils.sheet_to_json(fileData.Sheets[fileData.SheetNames[0]])
 
-
+    const 
     const playersMap:IExcelDataModel[] = []
 
+    for (let x = 0;x < fileJsonData.length; x++){
 
+    }
 
     for (let x = 0; x < fileJsonData.length; x++) {
         // get begin date and end date

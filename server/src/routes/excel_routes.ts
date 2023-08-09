@@ -1,39 +1,17 @@
 
 import { Request,Response, json } from "express";
 import express from "express";
-import formidable from "formidable";
-import fs from "fs";
-import path from "path";
-import { jsonModifier, saveXlsxFileData, } from "../excel_management/logic";
+
+import { jsonModifier, saveXlsxFileData, } from "../excel_management/data_from_excel_handeling_logic";
+import getExcelSheets from "../excel_management/get_excel_sheets";
+import getExcelDataFromFile from "../excel_management/get_excel_data_from_file";
 const excelRouter = express.Router();
 
-excelRouter.post("/excel_file",(req:Request,res:Response)=>{
+excelRouter.post("/get_excel_file",getExcelDataFromFile)
 
-  let form =  formidable({});
-  
-  form.parse(req,function(err,feilds,file){
-    if(err){
-        res.json({message:"there is an error please try again"})
-    }
-    const fileName:string = file.file[0].originalFilename
-    const type:string = file.file[0].mimetype
-    const newPath = path.join(__dirname,"../../excel_management/target_excel/",fileName)
-   console.log(file.file[0]);
+excelRouter.get("/get_excel_sheets",getExcelSheets)
 
-   fs.rename(file.file[0].filepath,newPath,(err)=>{
-    if(err){console.log( );
-
-        console.log(err);
-    }
-    console.log("done");
-   })
-    //file.PersistentFile[0].originalFilename;
-    //console.log( file.file[0]);
-
-  })
-})
-
-excelRouter.get("/convert_to_json",saveXlsxFileData)
+excelRouter.get("/get_data_form_excel",saveXlsxFileData)
 
 excelRouter.get("/modified_data",jsonModifier)
 
