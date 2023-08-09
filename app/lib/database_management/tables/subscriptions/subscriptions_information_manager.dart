@@ -1,17 +1,35 @@
 import 'package:drift/drift.dart';
 import 'package:gym_management/database_management/tables/generate_table.dart';
-class SubscriptionInformationManager{
-static final SystemDatabase _database = SystemDatabase();
-  insertSubscriptionInformation(SubscriptionsInformationData data)async{
-    _database.into($SubscriptionsInformationTable(_database)).insert(SubscriptionsInformationCompanion.insert(subscriptionName: data.subscriptionName, subscriptionValue: data.subscriptionValue, subscriptionDuration: data.subscriptionDuration, subscriptionFreezeLimit: data.subscriptionFreezeLimit, subscriptionInvitationLimit: data.subscriptionInvitationLimit));
+import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
+class SubscriptionInformationManager extends PlayersDatabaseManager{
+
+  SystemDatabase db = PlayersDatabaseManager.playersDatabase;
+ Future insertSubscriptionInformation(SubscriptionsInfoTableData data)async{
+   db.into(SubscriptionsInfoTable(db)).insert(SubscriptionsInfoTableCompanion.insert(subscriptionName: data.subscriptionName, subscriptionValue: data.subscriptionValue, subscriptionDuration: data.subscriptionDuration, subscriptionFreezeLimit: data.subscriptionFreezeLimit, subscriptionInvitationLimit: data.subscriptionInvitationLimit));
   }
 
- Future<List<SubscriptionsInformationData>> getAllSubscriptions()async{
-    List<SubscriptionsInformationData> subscriptions =  await _database.select($SubscriptionsInformationTable(_database)).get();
+ Future<List<SubscriptionsInfoTableData>> getAllSubscriptions()async{
+    List<SubscriptionsInfoTableData> subscriptions =  await db.select(SubscriptionsInfoTable(db)).get();
     return subscriptions;
   }
 
-  
+
+  Future editSubscriptionData (int id ,SubscriptionsInfoTableData data)async{
+
+      await db.update(SubscriptionsInfoTable(db)).replace(SubscriptionsInfoTableCompanion(
+        id: Value(id),
+          subscriptionName:Value(data.subscriptionName),
+          subscriptionDuration: Value(data.subscriptionDuration),
+          subscriptionFreezeLimit: Value(data.subscriptionFreezeLimit),
+          subscriptionInvitationLimit: Value(data.subscriptionInvitationLimit),
+          subscriptionValue: Value(data.subscriptionValue)
+
+      ));
+  }
+
+  Future deleteSubscriptionData(int id)async{
+     db.delete(SubscriptionsInfoTable(db))..where((tbl) => tbl.id.equals(id))..go();
+  }
 
 
 

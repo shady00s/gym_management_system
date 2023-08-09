@@ -1,12 +1,11 @@
 import 'dart:io';
 import 'package:drift/native.dart';
-import 'package:gym_management/database_management/tables/subscriptions/subscription_table.dart';
 import 'package:path/path.dart' as p;
 import 'package:drift/drift.dart';
 
 part 'generate_table.g.dart';
 
-@DriftDatabase(tables:[SubscriptionsInformation],include:{'./players/players_data.drift'})
+@DriftDatabase(include:{'./players/players_data.drift','./subscriptions/subscriptions_info_table.drift'})
 
 class SystemDatabase extends _$SystemDatabase{
   SystemDatabase():super(_openConnection());
