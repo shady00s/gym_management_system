@@ -1,6 +1,5 @@
 
 import { Request, Response } from 'express';
-import { Req } from '../../excel_management/data_from_excel_handeling_logic';
 import { Client, Pool } from "pg";
 import IExcelDataModel from '../../excel_management/excel_data_model';
 import format from 'pg-format';
@@ -25,8 +24,8 @@ export const pool = new Pool({
     connectionString: "postgres://shady:gTxyDyzytUOEfRL080FX0epSmDnN0uXr@dpg-cir98s5ph6ev5rae7at0-a.oregon-postgres.render.com/gym_database_8ope",
 
 })
-export default async function sendDataToDBController(req: Req, res: Response) {
-    let results: IExcelDataModel[] = req.session.result
+export default async function sendDataToDBController(req: Request, res: Response) {
+    let results: IExcelDataModel[] = req.session.playerList
     await client.connect().then(async () => {
         await pool.query("DROP TABLE IF EXISTS SUBSCRIPTIONSDB CASCADE")
         await pool.query("DROP TABLE IF EXISTS PLAYERS CASCADE")

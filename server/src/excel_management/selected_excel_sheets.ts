@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 
-export default function selectExcelSheets(req:Request,res:Response){
+export default function selectedExcelSheets(req:Request,res:Response){
 
    const selectedSheets = req.query.selectedSheets
 

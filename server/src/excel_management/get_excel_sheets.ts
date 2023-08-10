@@ -1,12 +1,12 @@
-import { Request, Response, json } from 'express';
+import { Request, Response} from 'express';
  import fs from "fs";
 import path from "path";
-import { Req } from './data_from_excel_handeling_logic';
 import * as xlsx from 'xlsx';
-export default function getExcelSheets(req:Req,res:Response){
+export default async function getExcelSheets(req:Request,res:Response){
+
     const fileName  = req.query.fileName
         const filePath = path.join(__dirname,'/target_excel/',fileName.toString())
-        fs.readFile(filePath,function(err,file){
+        await fs.readFile(filePath,function(err,file){
             if(err){
                 res.json(err)
 
@@ -20,8 +20,6 @@ export default function getExcelSheets(req:Req,res:Response){
 
                     }
                 }
-
-                req.session.sheets = sheetNamesList
 
           res.json(sheetNamesList)
         })

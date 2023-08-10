@@ -14,7 +14,8 @@ class ImportExcelStep extends StatefulWidget {
 }
 
 class _ImportExcelStepState extends State<ImportExcelStep> {
-  PlatformFile? selectedFile;
+  File? selectedFile;
+  dynamic fileDetails;
   bool fileErr = false;
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,16 @@ class _ImportExcelStepState extends State<ImportExcelStep> {
               child: Text("Please add excel file with extension .csv or with .xlsx"),
             ),
             DropTarget(
+                onDragDone: (details){
 
+                  setState(() {
+                    fileDetails = details.files[0];
+
+                    selectedFile = File(details.files[0].path) ;
+                  });
+                 ExcelFileCubit.get(context).selectFile(PlatformFile(path:details.files[0].path,name: fileDetails.name, size: 0));
+
+                },
                 child: SizedBox(
                   width: MediaQuery.sizeOf(context).width * 0.95,
                   height: MediaQuery.sizeOf(context).height * 0.5,
@@ -68,7 +78,7 @@ class _ImportExcelStepState extends State<ImportExcelStep> {
                             Text("Name: "),
                               SizedBox(width: 60,),
 
-                              Text(selectedFile?.name??"",),
+                              Text(fileDetails?.name??"",),
                           ],),
                           SizedBox(height: 20,),
                           Row(
@@ -82,12 +92,7 @@ class _ImportExcelStepState extends State<ImportExcelStep> {
                           ],),
                           SizedBox(height: 20,),
 
-                          Row(
-                            children: [
-                            Text("Size: "),
-                              SizedBox(width: 60,),
-                              Text(selectedFile?.size.toString()??"" " KB"),
-                          ],),
+
                         ],),
                       ),
                         SizedBox(height: 20,),
@@ -95,7 +100,7 @@ class _ImportExcelStepState extends State<ImportExcelStep> {
                         Row(
                           mainAxisSize:MainAxisSize.min,
                           children: [
-                            Text(selectedFile?.name??"Choose Excel file"),
+                            Text(fileDetails?.name??"Choose Excel file"),
                             SizedBox(width: 12,),
                             SizedBox(width: 12,),
                             Button(child: Text(selectedFile== null? "Select file":"Change file"), onPressed: ()async{
@@ -103,9 +108,11 @@ class _ImportExcelStepState extends State<ImportExcelStep> {
                                  type: FileType.custom ,
                                   allowMultiple:false,allowedExtensions: ["csv","xlsx"]).then((value) {
                                     setState(() {
-                                      selectedFile = value!.files[0];
-                                      ExcelFileCubit.get(context).selectFile(File(value!.files[0].path!));
+                                      fileDetails =value!.files[0];
+                                      selectedFile = File(value.files[0].path!) ;
                                     });
+                                    ExcelFileCubit.get(context).selectFile(PlatformFile(path:value!.files[0].path,name: fileDetails.name, size: 0));
+
                               }).catchError((err){
                                   print(err);
                               });

@@ -1,20 +1,23 @@
-import { Request, Response } from "express";
+import { Response,Request } from "express";
 import path from "path";
 import * as xlsx from "xlsx"
 import fs from "fs"
 import IExcelDataModel from "./excel_data_model";
+import session, { Session } from "express-session";
+import * as Express from "express";
 
-export interface Req extends Request {
-    session: any
-}
-async function saveXlsxFileData(req: Req, res: Response) {
-    const filepath = path.join(req.session.filePath)
-    const fileData = xlsx.readFile(filepath)
+
+async function saveXlsxFileData(req:Request, res: Response) {
+    console.log( req.body.selectedSheets);
+    req.session.fileData = req.session.fileData || {fileName:"",filePath:""};
+console.log(req.session.fileData);
+    //const filepath = path.join(req.session.fileData.filePath, req.session.fileData.fileName)
+    const fileData = xlsx.readFile(req.session.fileData.filePath)
     const playersMap: IExcelDataModel[] = []
   let currentListLength = 0
-   while (currentListLength < req.session.sheets.length) {
+   while (currentListLength < req.body.selectedSheets.length) {
        
-        let  fileJsonData = xlsx.utils.sheet_to_json(fileData.Sheets[req.session.sheets[currentListLength].name])
+        let  fileJsonData = xlsx.utils.sheet_to_json(fileData.Sheets[ req.body.selectedSheets[currentListLength].name])
         for (let x = 0; x < fileJsonData.length; x++) {
             let indexId = x + 1;
             // get begin date and end date
@@ -152,13 +155,11 @@ async function saveXlsxFileData(req: Req, res: Response) {
 
 
 
-    req.session.result = result;
+    req.session.playerList = result;
 
     res.redirect('/send_json_to_db')
 
-    let fileJsonData1 = xlsx.utils.sheet_to_json(fileData.Sheets[fileData.SheetNames[1]])
 
-   // res.json({ result })
 }
 
 
