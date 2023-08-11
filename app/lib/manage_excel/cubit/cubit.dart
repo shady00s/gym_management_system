@@ -1,8 +1,12 @@
 
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_management/manage_excel/cubit/state.dart';
+import 'package:cookie_jar/cookie_jar.dart';
 
 import '../model/sheets_model.dart';
 
@@ -10,7 +14,7 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
   ExcelFileCubit():super(InitialState());
 
   static ExcelFileCubit get(context) => BlocProvider.of(context);
-  final Dio _dio = Dio();
+  final Dio _dio = Dio()..interceptors.add( CookieManager(CookieJar()));
 
   int currentIndex = 0;
   List<SheetsModel> listOfSheets = [];
@@ -26,8 +30,9 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
     emit(SelectNewExcelFile());
   }
 
-  Future sendFileToServer() async {
-    emit(UploadExcelFile());
+  Future<int> sendFileToServer() async {
+    int responseStatus = 0;
+    emit(LoadingState());
     FormData formData = FormData.fromMap({
       "file": await MultipartFile.fromFile(excelFile!.path!, filename: excelFile!.name),
     });
@@ -40,7 +45,6 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
       }),
     ).then((response) async {
 
-
       if (response.statusCode == 302) {
         String redirectedLocation = response.headers['location']![0];
           String url =  "http://127.0.0.1:3000$redirectedLocation";
@@ -51,25 +55,42 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
             return status! < 500;
           }),
         ).then((processedResponse) {
+
+          print( processedResponse.headers['cookie']);
           if (processedResponse.statusCode == 200) {
             dynamic processedData = processedResponse.data;
             print("Processed data: $processedData");
             emit(SuccessfulUploading());
               listOfSheets =parseSheetList(processedData);
+              responseStatus = processedResponse.statusCode!;
+
           } else {
             print("Error getting processed data");
+
           }
         });
       }
     });
-
-   
+ return responseStatus;
   }
 
-  Future sendSelectedSheets()async{
+  Future<int>  sendSelectedSheets()async{
+    int responseCode = 0;
+    emit(LoadingState());
 
-        List convertedList = listOfSheets.map((e) => SheetsModel.toJson(e)).toList() ;
-          await _dio.post("http://127.0.0.1:3000/get_data_form_excel",data: {"selectedSheets":convertedList}).then((response) async{
+    List convertedList = listOfSheets.map((e) => SheetsModel.toJson(e)).toList() ;
+
+    FormData formData = FormData.fromMap(
+  {"selectedSheet":json.encode(convertedList)},
+);
+
+          await _dio.post("http://127.0.0.1:3000/get_data_form_excel",
+              options: Options(
+                 followRedirects: true,
+                  validateStatus: (status) {
+                return status! < 500;
+              }),
+              data: formData).then((response) async{
             if (response.statusCode == 302) {
               String redirectedLocation = response.headers['location']![0];
               print(redirectedLocation);
@@ -83,17 +104,20 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
               ).then((processedResponse) {
                 if (processedResponse.statusCode == 200) {
                   dynamic processedData = processedResponse.data;
+                  responseCode = processedResponse.statusCode!;
                   print("Processed data: $processedData");
 
                 } else {
                   print("Error getting processed data");
+                  responseCode = processedResponse.statusCode!;
+
                 }
               });
             }
           });
-
+    return responseCode;
   }
-  
+
 }
 List<SheetsModel> parseSheetList(List<dynamic> list) {
   return list.map((item) => SheetsModel.fromJson(item)).toList();

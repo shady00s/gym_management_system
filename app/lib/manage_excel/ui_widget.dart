@@ -31,52 +31,104 @@ class StepsWidget extends StatefulWidget {
 }
 
 class _StepsWidgetState extends State<StepsWidget> {
+
   @override
   Widget build(BuildContext context) {
     return material.Scaffold(
         body: BlocProvider<ExcelFileCubit>(
       create: (context) => ExcelFileCubit(),
-      child: BlocConsumer<ExcelFileCubit, ImportExcelState>(
-        listener: (context, state) {
+      child: BlocBuilder<ExcelFileCubit, ImportExcelState>(
 
-        },
         builder: (context, currentState) {
           ExcelFileCubit state = ExcelFileCubit.get(context);
+          Future loadingDialog(context ,newNumber,function)async{
 
+            int? status;
+            await Future.delayed(const Duration(seconds: 0),() {
+
+
+              function.then((value)async {
+                status = value;
+                if(status == 200){
+                  state.incrementNumber(newNumber+1);
+
+                }else{
+                  await showDialog(context:context,  builder:(context){
+
+                    return  ContentDialog(
+                      actions: [
+                        Button(child: const Text("CLose"), onPressed: (){
+                          Navigator.pop(context);
+                        })
+                      ],
+                      content:const Text("Error occured"),);
+                  },
+
+                  );
+                }
+
+
+              });
+            });
+            await showDialog(context:context,  builder:(context){
+              Future.delayed(const Duration(seconds: 1),(){
+                if(status !=null){
+                  Navigator.pop(context);
+                }
+              });
+
+              return const ContentDialog(content: ProgressBar(),);
+            }
+            );
+          }
           int newIndex = state.currentIndex;
           int newNumber = newIndex;
           return material.Stepper(
         controlsBuilder: (context,details){
+          if(state is LoadingState){
             return Padding(
               padding: const EdgeInsets.all(8.0),
+
               child: Row(children: [
 
-                state is UploadExcelFile? ProgressRing() :FilledButton(onPressed:details.onStepContinue,
+                ProgressRing() ,
+                SizedBox( width: 14,),
+                Button(onPressed: details.onStepCancel,
+                  child: Text("Cancel"),)
+              ],),
+            );
+          }
+          else{
+            return Padding(
+
+              padding: const EdgeInsets.all(8.0),
+
+              child: Row(children: [
+
+                FilledButton(onPressed:details.onStepContinue,
                   child: Text("Continue"),),
                 SizedBox( width: 14,),
                 Button(onPressed: details.onStepCancel,
-                child: Text("Cancel"),)
+                  child: Text("Cancel"),)
               ],),
             );
-
+          }
         },
             onStepTapped: (index){
 
 
               state.incrementNumber(index);
             },
-              onStepContinue:(){
+              onStepContinue:() async{
               if(state.excelFile !=null && state.currentIndex == 0 && state.listOfSheets.isEmpty){
-                ExcelFileCubit.get(context).sendFileToServer().then((_){
-                  state.incrementNumber(newNumber+1);
 
-                });
+              await  loadingDialog(context ,newNumber,ExcelFileCubit.get(context).sendFileToServer());
               }else if(state.excelFile ==null){
-                showDialog(context: context, builder:(context)=> ContentDialog(content: Text("please select one file to continue"),actions: [Button(child: Text("Okay"), onPressed: (){Navigator.pop(context);})],));
+                material.showDialog(context: context, builder:(context)=> ContentDialog(content: Text("please select one file to continue"),actions: [Button(child: Text("Okay"), onPressed: (){Navigator.pop(context);})],));
               }
 
               else if(state.selectedList.isNotEmpty){
-                ExcelFileCubit.get(context).sendSelectedSheets();
+                await  loadingDialog(context ,newNumber,ExcelFileCubit.get(context).sendSelectedSheets());
               }
               },
               currentStep: state.currentIndex,
@@ -105,3 +157,6 @@ class _StepsWidgetState extends State<StepsWidget> {
     ));
   }
 }
+
+
+

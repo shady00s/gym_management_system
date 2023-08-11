@@ -3,23 +3,27 @@ import path from "path";
 import * as xlsx from "xlsx"
 import fs from "fs"
 import IExcelDataModel from "./excel_data_model";
-import session, { Session } from "express-session";
-import * as Express from "express";
+import formidable from "formidable";
+
 
 
 async function saveXlsxFileData(req:Request, res: Response) {
-    console.log( req.body.selectedSheets);
-    req.session.fileData = req.session.fileData || {fileName:"",filePath:""};
-console.log(req.session.fileData);
-    //const filepath = path.join(req.session.fileData.filePath, req.session.fileData.fileName)
+    let form =  formidable({multiples:false});
+    form.parse(req,function(err,fields){
+
+        if(err){
+            res.json(err)
+        }
+  if(fields.selectedSheet !== undefined){
+    const selectedSheets = JSON.parse(fields.selectedSheet[0]);
+    req.session.fileData = req.session.fileData || {fileName:"",filePath:""}; 
     const fileData = xlsx.readFile(req.session.fileData.filePath)
     const playersMap: IExcelDataModel[] = []
   let currentListLength = 0
-   while (currentListLength < req.body.selectedSheets.length) {
+   while (currentListLength < selectedSheets.length) {
        
-        let  fileJsonData = xlsx.utils.sheet_to_json(fileData.Sheets[ req.body.selectedSheets[currentListLength].name])
+        let  fileJsonData = xlsx.utils.sheet_to_json(fileData.Sheets[ selectedSheets[currentListLength].name])
         for (let x = 0; x < fileJsonData.length; x++) {
-            let indexId = x + 1;
             // get begin date and end date
             let finishdateVal = new Date((fileJsonData[x]["__EMPTY_3"] - 25569) * 86400 * 1000)
             let year = finishdateVal.getFullYear();
@@ -67,6 +71,7 @@ console.log(req.session.fileData);
             if (name !== "  "
                 && name !== " "
                 && id !== "-"
+                 && id !=="الا"
                 && id !== "  "
                 && id !== "لاغى"
                 && id !== "ID"
@@ -88,13 +93,12 @@ console.log(req.session.fileData);
                
                 playersMap.push({ playerId, id: id, team: team, name, subscriptions: [{ subscriptionValue: subscriptionValue, beginDate: beginDate, finishDate: finishDate, billId: billId, subscriptionDuration: subscriptionDuration }] })
 
-            }
+            } 
 
         }
         currentListLength ++;
 
     }
-
 
 
     let processedPlayer = new Set();
@@ -103,8 +107,7 @@ console.log(req.session.fileData);
     let playerId;
     for (const player of playersMap) {
          playerId = player.playerId;
-        
-
+    
         if (player.id !== undefined) {
      
 
@@ -153,12 +156,17 @@ console.log(req.session.fileData);
 
     }
 
-
-
     req.session.playerList = result;
 
     res.redirect('/send_json_to_db')
+  }else{
+       res.json("no sheets added") 
+  }
+       
 
+
+    })
+    
 
 }
 

@@ -6,7 +6,12 @@ import IExcelDataModel from "./excel_management/excel_data_model";
 
 const app = express();
 app.use(express.urlencoded({extended:true}));
-
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", '*');
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  next();
+});
 declare module "express-session" {
   interface SessionData {
     fileData:{
@@ -20,9 +25,9 @@ declare module "express-session" {
 app.use(session({
 
     secret:"test",
-    resave: true,
+    resave: false,
   saveUninitialized: true,
-  cookie: {sameSite:"lax", maxAge: 60000, secure:false}
+  cookie: {sameSite:"strict", maxAge: 60000, secure:false}
 }))
 
 app.use('/',excelRouter)
