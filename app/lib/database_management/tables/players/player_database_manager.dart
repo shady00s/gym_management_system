@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import 'package:gym_management/database_management/tables/generate_table.dart';
 
 import '../../models/backup_data_models.dart';
+import '../../models/need_to_resubscribe_model.dart';
 
 class PlayersDatabaseManager {
    static  SystemDatabase playersDatabase = SystemDatabase();
@@ -34,7 +35,7 @@ class PlayersDatabaseManager {
                 playerFirstJoinDate: DateTime.parse(
                     data.player_first_join_date),
                 playerGender: data.player_gender,
-                subscriptionId: data.subscription_id));
+                subscriptionId: data.subscription_id, playerIndexId: data.playerIndexId));
 
         Iterable<Insertable<PlayersSubscription>> subscriptions =
         subData.map((data) {
@@ -85,23 +86,64 @@ class PlayersDatabaseManager {
   }
 
   Future<PlayerProfileData> getPlayerSubscriptionInfo(int id) async {
-    var playerDb = Players(playersDatabase);
-    var subDb = PlayersSubscriptions(playersDatabase);
+    // var playerDb = Players(playersDatabase);
+    // var subDb = PlayersSubscriptions(playersDatabase);
+    //
+    // var sb = playersDatabase.select(subDb)
+    //   ..where((tbl) => tbl.playerSubscriptionId.equals(id))
+    //   ..orderBy([
+    //         (tbl) =>
+    //         OrderingTerm(expression: tbl.endDate, mode: OrderingMode.desc)
+    //   ])
+    //   ..get();
+    //
+    //
+    // var player = playersDatabase.select(playerDb)
+    //   ..where((tbl) => tbl.playerIndexId.equals(id))
+    //   ..get();
+    //
+    //
+    // List<Player> playerProfileData = await player.get();
+    List<GetPlayerSubscriptionResult>result =  await playersDatabase.getPlayerSubscription(id).get();
+     print( result.length);
+     print( id);
 
-    var sb = playersDatabase.select(subDb)
-      ..where((tbl) => tbl.playerSubscriptionId.equals(id))
-      ..orderBy([
-            (tbl) =>
-            OrderingTerm(expression: tbl.endDate, mode: OrderingMode.desc)
-      ])
-      ..get();
+    List<PlayersSubscription> subData = [];
+    Player playerProfileData = Player(id:0,
+        playerIndexId:0,
+        playerId:0,
+        playerName:"",
+        playerPhoneNumber:0,
+        imagePath:"",
+        playerAge:0,
+        playerFirstJoinDate:DateTime(1990),
+        playerGender:"",
+        subscriptionId:0);
+    for (var element in result) {
+      print(element.playerName);
+      print(element.beginningDate);
+     playerProfileData = Player(id: element.id,
+         playerIndexId:element.playerIndexId,
+         playerId:element.playerId,
+         playerName:element.playerName,
+         playerPhoneNumber:element.playerPhoneNumber,
+         imagePath:element.imagePath,
+         playerAge:element.playerAge,
+         playerFirstJoinDate:element.playerFirstJoinDate,
+         playerGender:element.playerGender,
+         subscriptionId:element.subscriptionId);
+      subData.add(PlayersSubscription(
+          playerSubscriptionId: element.subscriptionId,
+          beginningDate: element.beginningDate,
+          endDate: element.endDate, billId: element.billId, billValue: element.billValue,
+          duration: element.duration, billCollector:element.billCollector));
 
-    var player = playersDatabase.select(playerDb)
-      ..where((tbl) => tbl.playerId.equals(id))
-      ..get();
-    Player playerProfileData = await player.getSingle();
-    List<PlayersSubscription> subData = await sb.get();
+
+    }
+    //List<PlayersSubscription> subData = await sb.get();
     return PlayerProfileData(playerProfileData, subData);
+
+
   }
 
 
@@ -115,7 +157,7 @@ class PlayersDatabaseManager {
     List<Player> date2 = [];
     for (var data in listData) {
       var x = playersDatabase.select(Players(playersDatabase))
-        ..where((tbl) => tbl.playerId.equals(data.playerSubscriptionId))
+        ..where((tbl) => tbl.playerIndexId.equals(data.playerSubscriptionId))
         ..get();
       List<Player> p = await x.get();
 
@@ -146,7 +188,7 @@ class PlayersDatabaseManager {
     List<Player> date2 = [];
     for (var data in listData) {
       var x = playersDatabase.select(Players(playersDatabase))
-        ..where((tbl) => tbl.playerId.equals(data.playerSubscriptionId))
+        ..where((tbl) => tbl.playerIndexId.equals(data.playerSubscriptionId))
         ..get();
       List<Player> p = await x.get();
 
@@ -156,4 +198,36 @@ class PlayersDatabaseManager {
     }
     return date2;
   }
+
+
+   Future <List<NeedToReSubscribeModel>> getNeedToResubscribePlayersSubscriptions() async {
+     var date = playersDatabase.select(PlayersSubscriptions(playersDatabase))
+       ..where((tbl) =>
+           tbl.endDate.isBetweenValues((DateTime.now().subtract(Duration(days:30))),DateTime.now()))..orderBy([(u)=>OrderingTerm(expression: u.endDate,mode: OrderingMode.desc)])
+       ..get();
+     List<PlayersSubscription> listData = await date.get();
+     List<NeedToReSubscribeModel> players = [];
+     for (var data in listData) {
+       var x = playersDatabase.select(Players(playersDatabase))
+         ..where((tbl) => tbl.playerIndexId.equals(data.playerSubscriptionId))
+         ..get();
+       List<Player> playersList = await x.get();
+
+       for (var data3 in playersList) {
+         NeedToReSubscribeModel needToReSubscribeModel =   NeedToReSubscribeModel(
+
+             playerId: data3.id,
+             playerName: data3.playerName,
+             playerGender: data3.playerGender,
+             playerPhoneNumber: data3.playerPhoneNumber,
+             imagePath: data3.imagePath,
+             playerAge: data3.playerAge,
+             playerFirstJoinDate: data3.playerFirstJoinDate,
+             subscriptionId: data3.subscriptionId,
+             endedSub: data.endDate, playerIndexId: data3.playerIndexId);
+         players.add(needToReSubscribeModel);
+       }
+     }
+     return players;
+   }
 }

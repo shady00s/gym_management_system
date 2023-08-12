@@ -466,7 +466,10 @@ class PlayerStatusWidget extends StatelessWidget {
                                             return PlayerNameWidget(
                                                 snapshot
                                                     .data![index].playerName,
-                                                snapshot.data![index].playerId);
+                                                snapshot.data![index].playerId,
+                                                snapshot.data![index].playerIndexId
+
+                                            );
                                           });
                                     }
 
@@ -518,7 +521,10 @@ class PlayerStatusWidget extends StatelessWidget {
                                             return PlayerNameWidget(
                                                 snapshot
                                                     .data![index].playerName,
-                                                snapshot.data![index].playerId);
+                                                snapshot.data![index].playerId,
+                                              snapshot.data![index].playerIndexId,
+
+                                            );
                                           });
                                     }
 
@@ -566,7 +572,9 @@ class PlayerStatusWidget extends StatelessWidget {
                                             return PlayerNameWidget(
                                                 snapshot
                                                     .data![index].playerName,
-                                                snapshot.data![index].playerId);
+                                                snapshot.data![index].playerId,
+                                              snapshot.data![index].playerIndexId,
+                                            );
                                           });
                                     }
                                     Future.delayed(const Duration(seconds: 0),

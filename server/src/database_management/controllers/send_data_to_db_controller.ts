@@ -29,6 +29,9 @@ export default async function sendDataToDBController(req: Request, res: Response
     await client.connect().then(async () => {
         await pool.query("DROP TABLE IF EXISTS SUBSCRIPTIONSDB CASCADE")
         await pool.query("DROP TABLE IF EXISTS PLAYERS CASCADE")
+        await pool.query("DROP TABLE IF EXISTS Teams CASCADE")
+
+        
         await pool.query(`
         CREATE TABLE IF NOT EXISTS SUBSCRIPTIONSDB (
           id SERIAL PRIMARY KEY,
@@ -42,8 +45,10 @@ export default async function sendDataToDBController(req: Request, res: Response
                 )`)
         await pool.query(`
         CREATE TABLE IF NOT EXISTS PLAYERS (
-          player_id INT PRIMARY KEY,
-          player_name VARCHAR,
+            id SERIAL PRIMARY KEY,
+          player_index_id INT NOT NULL,
+          player_id INT NOT NULL,
+          player_name VARCHAR NOT NULL,
           player_phone_number INT DEFAULT -3,
           image_path VARCHAR DEFAULT 'no-image',
           player_age INT DEFAULT 0 NOT NULL,
@@ -65,7 +70,8 @@ export default async function sendDataToDBController(req: Request, res: Response
     
 
 
-     let players_map = results.map(e=>[e.id, e.name,e.id, e.subscriptions[0].beginDate])
+     let players_map = results.map(e=>[e.id,e.playerIndexId, e.name, e.playerIndexId, e.subscriptions[0].beginDate])
+
       for (const data of results) {
                 for (const subData of data.subscriptions) {
                             if(typeof subData.subscriptionValue !== "number" ){
@@ -73,7 +79,7 @@ export default async function sendDataToDBController(req: Request, res: Response
                             } if (subData.billId === null){
                                 subData.billId = -1
                             }else{
-                                subMap.push([data.id, subData.beginDate, subData.finishDate, subData.billId, subData.subscriptionValue, subData.subscriptionDuration])
+                                subMap.push([data.playerIndexId, subData.beginDate, subData.finishDate, subData.billId, subData.subscriptionValue, subData.subscriptionDuration])
 
                             }
 
@@ -83,7 +89,7 @@ export default async function sendDataToDBController(req: Request, res: Response
      
       
 
-       pool.query(format('INSERT INTO PLAYERS (player_id, player_name, subscription_id, player_first_join_date) VALUES %L',players_map),[],(err,result)=>{
+       pool.query(format('INSERT INTO PLAYERS (player_id,player_index_id, player_name, subscription_id, player_first_join_date) VALUES %L',players_map),[],(err,result)=>{
         if (err){
             console.log(err);
         }else{
@@ -103,7 +109,7 @@ export default async function sendDataToDBController(req: Request, res: Response
      })
      
 
-     await pool.end();
+    
 
         res.json({ message: "redirect succssessfully", results   })
 

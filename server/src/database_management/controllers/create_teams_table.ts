@@ -7,7 +7,6 @@ export default async function createTeamsTable(){
                 id INT PRIMARY KEY AUTOINCREMENT,
                 team_name TEXT NOT NULL,
                 team_captain_id INT NOT NULL,
-                 
             );
     `)
 }

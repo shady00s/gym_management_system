@@ -3,6 +3,7 @@ import excelRouter from "./routes/excel_routes";
 import database_router from "./database_management/routes";
 import session from 'express-session';
 import IExcelDataModel from "./excel_management/excel_data_model";
+import IselectedTeams from "./excel_management/selected_team_model";
 
 const app = express();
 app.use(express.urlencoded({extended:true}));
@@ -18,7 +19,7 @@ declare module "express-session" {
       fileName:string,
       filePath:string
     },
-
+    selected_teams_list:IselectedTeams[]
     playerList:IExcelDataModel[]
   }
 }

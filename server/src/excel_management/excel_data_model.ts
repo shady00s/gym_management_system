@@ -1,7 +1,8 @@
 interface IExcelDataModel{
+    playerIndexId:number,
     id:number,
     playerId:number,
-    team:string,
+    team:number,
     name:string,
     subscriptions?: ISubscriptions[]
 

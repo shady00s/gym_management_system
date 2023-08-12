@@ -7,8 +7,6 @@ class PlayerCardInformationWidget extends StatelessWidget {
   final int playerId;
   const PlayerCardInformationWidget({super.key,required this.playerId});
   Future<PlayerProfileData> getPlayerInfo()async{
-  debugPrint(playerId.toString());
-
     return  await PlayersDatabaseManager().getPlayerSubscriptionInfo(playerId);
   }
 
@@ -22,6 +20,8 @@ class PlayerCardInformationWidget extends StatelessWidget {
               return Center(child: ProgressRing(),);
             case ConnectionState.done:
               if(snapshot.hasData){
+                int date = DateTime.now().difference(snapshot.data!.subData[0].endDate).inDays;
+
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
@@ -71,8 +71,15 @@ class PlayerCardInformationWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("Status:"),
-                          Text("Valid",style: TextStyle(color:Color.fromRGBO(
-                              2, 176, 18, 0.8), fontWeight: FontWeight.bold, fontSize: 18),),
+                          Text(date < 0 ?"Valid": date == 0? "Ended today" :"Ended $date day ago" ,style:
+
+                          TextStyle(color:
+
+                          date < 0 ?Color.fromRGBO(
+                              2, 176, 18, 0.8) : date <= 10?Color.fromRGBO(
+                              176, 173, 2, 0.8) :date <= 30?Color.fromRGBO(
+                              176, 80, 2, 0.8):Color.fromRGBO(
+                              176, 2, 2, 0.8) , fontWeight: FontWeight.bold, fontSize: 18),),
                         ],
                       ),
                       SizedBox(height: 30,),

@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 import 'package:gym_management/main_screen/widgets/cards_with_icons.dart';
 import 'package:gym_management/main_screen/widgets/onboard_players.dart';
 import 'package:gym_management/main_screen/widgets/search_widget.dart';
@@ -13,7 +14,7 @@ class HomeWidget extends StatelessWidget {
       children: [
         Expanded(
             flex: 2,
-            child: OnBoardPlayers(title: "Active players for today:")),
+            child:Center(child: Text("No Players added")) ),//OnBoardPlayers(title: "Active players for today:")),
         Expanded(
           flex: 3,
           child: Column(
@@ -47,7 +48,7 @@ class HomeWidget extends StatelessWidget {
         ),
         Expanded(
             flex: 2,
-            child: OnBoardPlayers(title: "Players need to subscribe:")),
+            child: OnBoardPlayers(title: "Players need to subscribe:", data: PlayersDatabaseManager().getNeedToResubscribePlayersSubscriptions(),)),
       ],
     );
   }

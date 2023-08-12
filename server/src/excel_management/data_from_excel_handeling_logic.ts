@@ -4,6 +4,7 @@ import * as xlsx from "xlsx"
 import fs from "fs"
 import IExcelDataModel from "./excel_data_model";
 import formidable from "formidable";
+import generateUniqueId from "generate-unique-id";
 
 
 
@@ -14,6 +15,7 @@ async function saveXlsxFileData(req:Request, res: Response) {
         if(err){
             res.json(err)
         }
+
   if(fields.selectedSheet !== undefined){
     const selectedSheets = JSON.parse(fields.selectedSheet[0]);
     req.session.fileData = req.session.fileData || {fileName:"",filePath:""}; 
@@ -24,6 +26,7 @@ async function saveXlsxFileData(req:Request, res: Response) {
        
         let  fileJsonData = xlsx.utils.sheet_to_json(fileData.Sheets[ selectedSheets[currentListLength].name])
         for (let x = 0; x < fileJsonData.length; x++) {
+            let playerIndexId =parseInt( generateUniqueId({useLetters:false,useNumbers:true,length:8,includeSymbols:[]}));
             // get begin date and end date
             let finishdateVal = new Date((fileJsonData[x]["__EMPTY_3"] - 25569) * 86400 * 1000)
             let year = finishdateVal.getFullYear();
@@ -56,7 +59,7 @@ async function saveXlsxFileData(req:Request, res: Response) {
             fileJsonData[x]["ك/مهيمن ديكان  بوكس(عمولات)"] +333: fileJsonData[x]["ك/اسراء -مدربه بنات بريفت-2023"] !== undefined ?
             fileJsonData[x]["ك/اسراء -مدربه بنات بريفت-2023"] +444:null;
             let name = fileJsonData[x]["__EMPTY"]
-            let team: string = fileJsonData[x]["GYM PLAYER 2023"] != undefined ? "gym" : fileJsonData[x]["swimmming players2023"] != undefined ? "swimming" : fileJsonData[x]["ك/بكرMMA"] != undefined ? 'ك/بكرMMA' : fileJsonData[x]["ك/مهيمن ديكان  بوكس(عمولات)"] != undefined ? "ك/مهيمن ديكان" : fileJsonData[x]["ك/اسراء -مدربه بنات بريفت-2023"] !== undefined ? "ك/اسراء" :fileJsonData[x]["ك/اسلام"]!== undefined?  "ك/اسلام":undefined;
+            let team:number = fileJsonData[x]["GYM PLAYER 2023"] != undefined ?  selectedSheets.findIndex("gym") : fileJsonData[x]["swimmming players2023"] != undefined ? selectedSheets.findIndex("swim"): fileJsonData[x]["ك/بكرMMA"] != undefined ? selectedSheets.findIndex("بكرMMA") : fileJsonData[x]["ك/مهيمن ديكان  بوكس(عمولات)"] != undefined ? selectedSheets.findIndex("مهيمنBOX") : fileJsonData[x]["ك/اسراء -مدربه بنات بريفت-2023"] !== undefined ? selectedSheets.findIndex("ك-اسراء")  :-1;
 
             let subscriptionValue = fileJsonData[x]["__EMPTY_6"] == null ? -1 : fileJsonData[x]["__EMPTY_6"]
             let beginDate = `${begday + "/" + begmonth + "/" + begyear}` == "NaN/NaN/NaN" ? "1990-01-01 00:00:00" : `${begyear + "-" + begmonth + "-" + begday + " " + begHour + ":" + begminuite + ":00"}`
@@ -68,30 +71,13 @@ async function saveXlsxFileData(req:Request, res: Response) {
             if(id ==="*"){
                 id = Math.round(Math.random() * (99000 - 88800))
              }
-            if (name !== "  "
-                && name !== " "
-                && id !== "-"
-                 && id !=="الا"
-                && id !== "  "
-                && id !== "لاغى"
-                && id !== "ID"
-                && id !== null
-                && name !== null
-                && name !== "ديسمبر"
-                && name !== "نوفمبر"
-                && name !== "اكتوبر"
-                && name !== "سبتمبر"
-                && name !== "اغسطس"
-                && name !== "يوليو"
-                && name !== "يونيه"
-                && name !== "مايو"
-                && name !== "ابريل"
-                && name !== "مارس"
-                && name !== "فبراير"
-                && name !== "يناير"
+             const invalidNames = /^(?! *$|^ *$|^ديسمبر$|^نوفمبر$|^اكتوبر$|^سبتمبر$|^اغسطس$|^يوليو$|^يونيه$|^مايو$|^ابريل$|^مارس$|^فبراير$|^يناير$).*/;
+            const invalidIds = /^(?! *$|^ *$|^-$|^الا$|^لاغى$|^ID$).*$/;
+            if (
+                invalidNames.test(name) && invalidIds.test(id)
             ) {
                
-                playersMap.push({ playerId, id: id, team: team, name, subscriptions: [{ subscriptionValue: subscriptionValue, beginDate: beginDate, finishDate: finishDate, billId: billId, subscriptionDuration: subscriptionDuration }] })
+                playersMap.push({playerIndexId, playerId, id: id, team: team, name, subscriptions: [{ subscriptionValue: subscriptionValue, beginDate: beginDate, finishDate: finishDate, billId: billId, subscriptionDuration: subscriptionDuration }] })
 
             } 
 
@@ -108,7 +94,7 @@ async function saveXlsxFileData(req:Request, res: Response) {
     for (const player of playersMap) {
          playerId = player.playerId;
     
-        if (player.id !== undefined) {
+        if (player.id !== undefined && player.id !== null && player.name !==null) {
      
 
             if (playerData[playerId]) {
@@ -157,7 +143,7 @@ async function saveXlsxFileData(req:Request, res: Response) {
     }
 
     req.session.playerList = result;
-
+    req.session.selected_teams_list =  selectedSheets;   
     res.redirect('/send_json_to_db')
   }else{
        res.json("no sheets added") 

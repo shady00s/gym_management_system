@@ -1,7 +1,7 @@
 import { pool } from "./send_data_to_db_controller";
 
-export default function createEmployeesTable(){
-    pool.query(`
+export default async function createEmployeesTable(){
+   await pool.query(`
             CREATE TABLE IF NOT EXISTS Employees(
                 id INT PRIMARY KEY AUTOINCREMENT,
                 employee_name TEXT NOT NULL,

@@ -28,7 +28,7 @@ class PlayersListWidget extends StatelessWidget {
                     SliverFixedExtentList(
 
                         delegate: SliverChildBuilderDelegate((context, index){
-                        return PlayerNameWidget("${playersList[index].playerName}", playersList[index].playerId );
+                        return PlayerNameWidget("${playersList[index].playerName}", playersList[index].playerId, playersList[index].playerIndexId );
                     }
                     ,childCount: playersList.length,
                     ), itemExtent:70 )

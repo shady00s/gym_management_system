@@ -49,6 +49,7 @@ class PlayerFromBackupDB {
   final String player_first_join_date;
   final String player_gender;
   final int subscription_id;
+  final int playerIndexId;
 
   PlayerFromBackupDB(
       {required this.player_id,
@@ -58,7 +59,8 @@ class PlayerFromBackupDB {
         required this.player_age,
         required this.player_first_join_date,
         required this.player_gender,
-        required this.subscription_id});
+        required this.subscription_id,
+        required this.playerIndexId});
 
   factory PlayerFromBackupDB.fromJson(Map<String, dynamic> json) {
     return PlayerFromBackupDB(
@@ -69,7 +71,7 @@ class PlayerFromBackupDB {
         player_age: json['player_age'],
         player_first_join_date: json['player_first_join_date'],
         player_gender: json['player_gender'],
-        subscription_id: json['subscription_id']);
+        subscription_id: json['subscription_id'], playerIndexId: json['player_index_id']);
   }
 }
 

@@ -1,7 +1,8 @@
 
 
-CREATE  TABLE IF NOT EXISTS Players (
+CREATE TABLE IF NOT EXISTS Players (
     id INT NOT NULL PRIMARY KEY AUTOINCREMENT,
+    player_index_id INT NOT NULL,
     player_id INT NOT NULL,
     player_name TEXT NOT NULL,
     player_phone_number INT NOT NULL,
@@ -12,7 +13,7 @@ CREATE  TABLE IF NOT EXISTS Players (
     subscription_id  INT NOT NULL
 );
 
-CREATE  TABLE IF NOT EXISTS PlayersSubscriptions(
+CREATE TABLE IF NOT EXISTS PlayersSubscriptions(
     sub_id INT PRIMARY KEY AUTOINCREMENT,
     player_subscription_id INT NOT NULL,
     beginning_date DATETIME NOT NULL,
@@ -24,5 +25,7 @@ CREATE  TABLE IF NOT EXISTS PlayersSubscriptions(
 );
 
 allPlayers: SELECT * FROM Players;
-getAllNames: SELECT player_id, player_name FROM PLAYERS ORDER BY player_id ASC;
+getAllNames: SELECT player_id, player_index_id, player_name FROM PLAYERS ORDER BY player_id ASC;
 allSubscriptions: SELECT * FROM PlayersSubscriptions;
+
+getPlayerSubscription: SELECT Players.*, PlayersSubscriptions.* FROM Players INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id WHERE Players.player_index_id = :player_index_id;

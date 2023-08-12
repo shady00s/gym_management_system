@@ -3,8 +3,9 @@ import 'package:gym_management/main_screen/widgets/player_card_information.dart'
 class PlayerNameWidget extends StatelessWidget {
   final  String playerName;
   final int playerId;
+  final int playerIndexId;
 
-    PlayerNameWidget(this.playerName,this.playerId,{super.key});
+    PlayerNameWidget(this.playerName,this.playerId,this.playerIndexId,{super.key});
   final menuController = FlyoutController();
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class PlayerNameWidget extends StatelessWidget {
                 )
               ],
             ),
-            content: PlayerCardInformationWidget(playerId: playerId,),
+            content: PlayerCardInformationWidget(playerId: playerIndexId,),
             actions: [
               Button(child:Text("Re-new") ,onPressed: (){},),
               Button(child:Text("Invitation") ,onPressed: (){},),
