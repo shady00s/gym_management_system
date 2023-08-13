@@ -1,0 +1,11 @@
+import '../players/players_data.drift';
+import 'teams.drift';
+
+CREATE TABLE IF NOT EXISTS PlayersAndTeamsTable(
+    id INT PRIMARY KEY AUTOINCREMENT,
+    team_id INT NOT NULL,
+    team_player_id INT NOT NULL,
+    FOREIGN KEY (team_player_id) REFERENCES Players (player_index_id),
+    FOREIGN KEY (team_id) REFERENCES TeamsDataTable (team_id)
+
+);

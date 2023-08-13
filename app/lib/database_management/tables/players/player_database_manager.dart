@@ -49,13 +49,21 @@ class PlayersDatabaseManager {
               billCollector: data.collector);
         });
 
-        await playersDatabase.batch((batch) =>
-            batch.insertAll(Players(playersDatabase), [...players]));
+        Iterable<TeamsDataTableCompanion> teams = dataFromDB.teams.map((e) => TeamsDataTableCompanion.insert(teamName: e.teamName!, teamCaptainId: e.teamCaptainId!));
+        Iterable<EmployeesTableCompanion> employees = dataFromDB.employees.map((e) => EmployeesTableCompanion.insert(employeeName: e.employeeName!, employeePhoneNumber: e.employeePhoneNumber!, employeeSpecialization:e.employeeSpecialization!, employeePosition:e.employeePosition!, employeeSalary: e.employeeSalary!, employeeAddress: e.employeeAddress!));
+        Iterable<PlayersAndTeamsTableCompanion> playerTable = dataFromDB.playersTeam.map((e) => PlayersAndTeamsTableCompanion.insert(teamId: e.teamId!, teamPlayerId: e.teamPlayerId!));
 
-        await playersDatabase.batch((batch) =>
-            batch.insertAll(
-                PlayersSubscriptions(playersDatabase), [...subscriptions]));
+
+        await playersDatabase.batch((batch) => batch.insertAll(EmployeesTable(playersDatabase), employees));
+        await playersDatabase.batch((batch) => batch.insertAll(TeamsDataTable(playersDatabase), teams));
+        await playersDatabase.batch((batch) => batch.insertAll(Players(playersDatabase), [...players]));
+        await playersDatabase.batch((batch) => batch.insertAll(PlayersSubscriptions(playersDatabase), [...subscriptions]));
+        await playersDatabase.batch((batch) => batch.insertAll(PlayersAndTeamsTable(playersDatabase), playerTable));
+
+
       }
+
+
 
       print("backup compelete");
     }).catchError((err) {
@@ -86,28 +94,8 @@ class PlayersDatabaseManager {
   }
 
   Future<PlayerProfileData> getPlayerSubscriptionInfo(int id) async {
-    // var playerDb = Players(playersDatabase);
-    // var subDb = PlayersSubscriptions(playersDatabase);
-    //
-    // var sb = playersDatabase.select(subDb)
-    //   ..where((tbl) => tbl.playerSubscriptionId.equals(id))
-    //   ..orderBy([
-    //         (tbl) =>
-    //         OrderingTerm(expression: tbl.endDate, mode: OrderingMode.desc)
-    //   ])
-    //   ..get();
-    //
-    //
-    // var player = playersDatabase.select(playerDb)
-    //   ..where((tbl) => tbl.playerIndexId.equals(id))
-    //   ..get();
-    //
-    //
-    // List<Player> playerProfileData = await player.get();
-    List<GetPlayerSubscriptionResult>result =  await playersDatabase.getPlayerSubscription(id).get();
-     print( result.length);
-     print( id);
 
+    List<GetPlayerSubscriptionResult>result =  await playersDatabase.getPlayerSubscription(id).get();
     List<PlayersSubscription> subData = [];
     Player playerProfileData = Player(id:0,
         playerIndexId:0,

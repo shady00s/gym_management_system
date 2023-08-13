@@ -5,7 +5,7 @@ import 'package:drift/drift.dart';
 
 part 'generate_table.g.dart';
 
-@DriftDatabase(include:{'./players/players_data.drift','./subscriptions/subscriptions_info_table.drift'})
+@DriftDatabase(include:{'./employees/employees.drift','./teams/teams.drift','./players/players_data.drift','./teams/players_teams.drift','./subscriptions/subscriptions_info_table.drift'})
 
 class SystemDatabase extends _$SystemDatabase{
   SystemDatabase():super(_openConnection());

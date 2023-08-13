@@ -75,11 +75,110 @@ class PlayerFromBackupDB {
   }
 }
 
+class TeamsFromDB {
+  int? id;
+  int? teamId;
+  String? teamName;
+  int? teamCaptainId;
+
+  TeamsFromDB({this.id, this.teamId, this.teamName, this.teamCaptainId});
+
+  TeamsFromDB.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    teamId = json['team_id'];
+    teamName = json['team_name'];
+    teamCaptainId = json['team_captain_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['team_id'] = teamId;
+    data['team_name'] = teamName;
+    data['team_captain_id'] = teamCaptainId;
+    return data;
+  }
+
+
+}
+
+
+class EmployeesData {
+  int? id;
+  int? employeeId;
+  String? employeeName;
+  int? employeePhoneNumber;
+  String? employeeSpecialization;
+  String? employeePosition;
+  double? employeeSalary;
+  String? employeeAddress;
+
+  EmployeesData(
+      {this.id,
+        this.employeeId,
+        this.employeeName,
+        this.employeePhoneNumber,
+        this.employeeSpecialization,
+        this.employeePosition,
+        this.employeeSalary,
+        this.employeeAddress});
+
+  EmployeesData.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    employeeId = json['employee_id'];
+    employeeName = json['employee_name'];
+    employeePhoneNumber = json['employee_phone_number'];
+    employeeSpecialization = json['employee_specialization'];
+    employeePosition = json['employee_position'];
+    employeeSalary = json['employee_salary'];
+    employeeAddress = json['employee_address'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['employee_id'] = this.employeeId;
+    data['employee_name'] = this.employeeName;
+    data['employee_phone_number'] = this.employeePhoneNumber;
+    data['employee_specialization'] = this.employeeSpecialization;
+    data['employee_position'] = this.employeePosition;
+    data['employee_salary'] = this.employeeSalary;
+    data['employee_address'] = this.employeeAddress;
+    return data;
+  }
+}
+
+class PlayerTeamFromDB {
+  int? id;
+  int? teamId;
+  int? teamPlayerId;
+
+  PlayerTeamFromDB({this.id, this.teamId, this.teamPlayerId});
+
+  PlayerTeamFromDB.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    teamId = json['team_id'];
+    teamPlayerId = json['team_player_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['team_id'] = this.teamId;
+    data['team_player_id'] = this.teamPlayerId;
+    return data;
+  }
+}
+
+
+
 class DataFromDB {
   final List<PlayerFromBackupDB> players;
   final List<SubscriptionsModel> subscriptions;
-
-  DataFromDB({required this.players, required this.subscriptions});
+  final List<TeamsFromDB> teams;
+  final List<EmployeesData> employees;
+  final List<PlayerTeamFromDB> playersTeam;
+  DataFromDB({required this.players, required this.subscriptions ,required this.teams,required this.employees,required this.playersTeam});
 
   factory DataFromDB.fromJson(Map<String, dynamic> json) {
 
@@ -88,11 +187,22 @@ class DataFromDB {
     final subData = (json["data"]["subscriptions"] as List<dynamic>).map((e) => SubscriptionsModel.fromJson(e))
         .toList();
 
+    final teamsData = (json["data"]["teams"] as List<dynamic>).map((e) => TeamsFromDB.fromJson(e))
+        .toList();
 
+    final employeesData = (json["data"]["employees"] as List<dynamic>).map((e) => EmployeesData.fromJson(e))
+        .toList();
+    final playerTeamsData = (json["data"]["playerteam"] as List<dynamic>).map((e) => PlayerTeamFromDB.fromJson(e))
+        .toList();
 
     return DataFromDB(
-        players: playersData
-        ,
-        subscriptions: subData);
+        players: playersData,
+        employees: employeesData,
+         playersTeam: playerTeamsData,
+        subscriptions: subData, teams: teamsData);
   }
 }
+
+
+
+

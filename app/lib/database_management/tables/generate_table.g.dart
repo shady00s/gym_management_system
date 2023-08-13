@@ -895,6 +895,861 @@ class PlayersCompanion extends UpdateCompanion<Player> {
   }
 }
 
+class EmployeesTable extends Table
+    with TableInfo<EmployeesTable, EmployeesTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  EmployeesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _employeeIdMeta =
+      const VerificationMeta('employeeId');
+  late final GeneratedColumn<int> employeeId = GeneratedColumn<int>(
+      'employee_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL PRIMARY KEY');
+  static const VerificationMeta _employeeNameMeta =
+      const VerificationMeta('employeeName');
+  late final GeneratedColumn<String> employeeName = GeneratedColumn<String>(
+      'employee_name', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _employeePhoneNumberMeta =
+      const VerificationMeta('employeePhoneNumber');
+  late final GeneratedColumn<int> employeePhoneNumber = GeneratedColumn<int>(
+      'employee_phone_number', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _employeeSpecializationMeta =
+      const VerificationMeta('employeeSpecialization');
+  late final GeneratedColumn<String> employeeSpecialization =
+      GeneratedColumn<String>('employee_specialization', aliasedName, false,
+          type: DriftSqlType.string,
+          requiredDuringInsert: true,
+          $customConstraints: 'NOT NULL');
+  static const VerificationMeta _employeePositionMeta =
+      const VerificationMeta('employeePosition');
+  late final GeneratedColumn<String> employeePosition = GeneratedColumn<String>(
+      'employee_position', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _employeeSalaryMeta =
+      const VerificationMeta('employeeSalary');
+  late final GeneratedColumn<double> employeeSalary = GeneratedColumn<double>(
+      'employee_salary', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _employeeAddressMeta =
+      const VerificationMeta('employeeAddress');
+  late final GeneratedColumn<String> employeeAddress = GeneratedColumn<String>(
+      'employee_address', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns => [
+        employeeId,
+        employeeName,
+        employeePhoneNumber,
+        employeeSpecialization,
+        employeePosition,
+        employeeSalary,
+        employeeAddress
+      ];
+  @override
+  String get aliasedName => _alias ?? 'EmployeesTable';
+  @override
+  String get actualTableName => 'EmployeesTable';
+  @override
+  VerificationContext validateIntegrity(Insertable<EmployeesTableData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('employee_id')) {
+      context.handle(
+          _employeeIdMeta,
+          employeeId.isAcceptableOrUnknown(
+              data['employee_id']!, _employeeIdMeta));
+    }
+    if (data.containsKey('employee_name')) {
+      context.handle(
+          _employeeNameMeta,
+          employeeName.isAcceptableOrUnknown(
+              data['employee_name']!, _employeeNameMeta));
+    } else if (isInserting) {
+      context.missing(_employeeNameMeta);
+    }
+    if (data.containsKey('employee_phone_number')) {
+      context.handle(
+          _employeePhoneNumberMeta,
+          employeePhoneNumber.isAcceptableOrUnknown(
+              data['employee_phone_number']!, _employeePhoneNumberMeta));
+    } else if (isInserting) {
+      context.missing(_employeePhoneNumberMeta);
+    }
+    if (data.containsKey('employee_specialization')) {
+      context.handle(
+          _employeeSpecializationMeta,
+          employeeSpecialization.isAcceptableOrUnknown(
+              data['employee_specialization']!, _employeeSpecializationMeta));
+    } else if (isInserting) {
+      context.missing(_employeeSpecializationMeta);
+    }
+    if (data.containsKey('employee_position')) {
+      context.handle(
+          _employeePositionMeta,
+          employeePosition.isAcceptableOrUnknown(
+              data['employee_position']!, _employeePositionMeta));
+    } else if (isInserting) {
+      context.missing(_employeePositionMeta);
+    }
+    if (data.containsKey('employee_salary')) {
+      context.handle(
+          _employeeSalaryMeta,
+          employeeSalary.isAcceptableOrUnknown(
+              data['employee_salary']!, _employeeSalaryMeta));
+    } else if (isInserting) {
+      context.missing(_employeeSalaryMeta);
+    }
+    if (data.containsKey('employee_address')) {
+      context.handle(
+          _employeeAddressMeta,
+          employeeAddress.isAcceptableOrUnknown(
+              data['employee_address']!, _employeeAddressMeta));
+    } else if (isInserting) {
+      context.missing(_employeeAddressMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {employeeId};
+  @override
+  EmployeesTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return EmployeesTableData(
+      employeeId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}employee_id'])!,
+      employeeName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}employee_name'])!,
+      employeePhoneNumber: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}employee_phone_number'])!,
+      employeeSpecialization: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}employee_specialization'])!,
+      employeePosition: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}employee_position'])!,
+      employeeSalary: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}employee_salary'])!,
+      employeeAddress: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}employee_address'])!,
+    );
+  }
+
+  @override
+  EmployeesTable createAlias(String alias) {
+    return EmployeesTable(attachedDatabase, alias);
+  }
+
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class EmployeesTableData extends DataClass
+    implements Insertable<EmployeesTableData> {
+  final int employeeId;
+  final String employeeName;
+  final int employeePhoneNumber;
+  final String employeeSpecialization;
+  final String employeePosition;
+  final double employeeSalary;
+  final String employeeAddress;
+  const EmployeesTableData(
+      {required this.employeeId,
+      required this.employeeName,
+      required this.employeePhoneNumber,
+      required this.employeeSpecialization,
+      required this.employeePosition,
+      required this.employeeSalary,
+      required this.employeeAddress});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['employee_id'] = Variable<int>(employeeId);
+    map['employee_name'] = Variable<String>(employeeName);
+    map['employee_phone_number'] = Variable<int>(employeePhoneNumber);
+    map['employee_specialization'] = Variable<String>(employeeSpecialization);
+    map['employee_position'] = Variable<String>(employeePosition);
+    map['employee_salary'] = Variable<double>(employeeSalary);
+    map['employee_address'] = Variable<String>(employeeAddress);
+    return map;
+  }
+
+  EmployeesTableCompanion toCompanion(bool nullToAbsent) {
+    return EmployeesTableCompanion(
+      employeeId: Value(employeeId),
+      employeeName: Value(employeeName),
+      employeePhoneNumber: Value(employeePhoneNumber),
+      employeeSpecialization: Value(employeeSpecialization),
+      employeePosition: Value(employeePosition),
+      employeeSalary: Value(employeeSalary),
+      employeeAddress: Value(employeeAddress),
+    );
+  }
+
+  factory EmployeesTableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return EmployeesTableData(
+      employeeId: serializer.fromJson<int>(json['employee_id']),
+      employeeName: serializer.fromJson<String>(json['employee_name']),
+      employeePhoneNumber:
+          serializer.fromJson<int>(json['employee_phone_number']),
+      employeeSpecialization:
+          serializer.fromJson<String>(json['employee_specialization']),
+      employeePosition: serializer.fromJson<String>(json['employee_position']),
+      employeeSalary: serializer.fromJson<double>(json['employee_salary']),
+      employeeAddress: serializer.fromJson<String>(json['employee_address']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'employee_id': serializer.toJson<int>(employeeId),
+      'employee_name': serializer.toJson<String>(employeeName),
+      'employee_phone_number': serializer.toJson<int>(employeePhoneNumber),
+      'employee_specialization':
+          serializer.toJson<String>(employeeSpecialization),
+      'employee_position': serializer.toJson<String>(employeePosition),
+      'employee_salary': serializer.toJson<double>(employeeSalary),
+      'employee_address': serializer.toJson<String>(employeeAddress),
+    };
+  }
+
+  EmployeesTableData copyWith(
+          {int? employeeId,
+          String? employeeName,
+          int? employeePhoneNumber,
+          String? employeeSpecialization,
+          String? employeePosition,
+          double? employeeSalary,
+          String? employeeAddress}) =>
+      EmployeesTableData(
+        employeeId: employeeId ?? this.employeeId,
+        employeeName: employeeName ?? this.employeeName,
+        employeePhoneNumber: employeePhoneNumber ?? this.employeePhoneNumber,
+        employeeSpecialization:
+            employeeSpecialization ?? this.employeeSpecialization,
+        employeePosition: employeePosition ?? this.employeePosition,
+        employeeSalary: employeeSalary ?? this.employeeSalary,
+        employeeAddress: employeeAddress ?? this.employeeAddress,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('EmployeesTableData(')
+          ..write('employeeId: $employeeId, ')
+          ..write('employeeName: $employeeName, ')
+          ..write('employeePhoneNumber: $employeePhoneNumber, ')
+          ..write('employeeSpecialization: $employeeSpecialization, ')
+          ..write('employeePosition: $employeePosition, ')
+          ..write('employeeSalary: $employeeSalary, ')
+          ..write('employeeAddress: $employeeAddress')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      employeeId,
+      employeeName,
+      employeePhoneNumber,
+      employeeSpecialization,
+      employeePosition,
+      employeeSalary,
+      employeeAddress);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is EmployeesTableData &&
+          other.employeeId == this.employeeId &&
+          other.employeeName == this.employeeName &&
+          other.employeePhoneNumber == this.employeePhoneNumber &&
+          other.employeeSpecialization == this.employeeSpecialization &&
+          other.employeePosition == this.employeePosition &&
+          other.employeeSalary == this.employeeSalary &&
+          other.employeeAddress == this.employeeAddress);
+}
+
+class EmployeesTableCompanion extends UpdateCompanion<EmployeesTableData> {
+  final Value<int> employeeId;
+  final Value<String> employeeName;
+  final Value<int> employeePhoneNumber;
+  final Value<String> employeeSpecialization;
+  final Value<String> employeePosition;
+  final Value<double> employeeSalary;
+  final Value<String> employeeAddress;
+  const EmployeesTableCompanion({
+    this.employeeId = const Value.absent(),
+    this.employeeName = const Value.absent(),
+    this.employeePhoneNumber = const Value.absent(),
+    this.employeeSpecialization = const Value.absent(),
+    this.employeePosition = const Value.absent(),
+    this.employeeSalary = const Value.absent(),
+    this.employeeAddress = const Value.absent(),
+  });
+  EmployeesTableCompanion.insert({
+    this.employeeId = const Value.absent(),
+    required String employeeName,
+    required int employeePhoneNumber,
+    required String employeeSpecialization,
+    required String employeePosition,
+    required double employeeSalary,
+    required String employeeAddress,
+  })  : employeeName = Value(employeeName),
+        employeePhoneNumber = Value(employeePhoneNumber),
+        employeeSpecialization = Value(employeeSpecialization),
+        employeePosition = Value(employeePosition),
+        employeeSalary = Value(employeeSalary),
+        employeeAddress = Value(employeeAddress);
+  static Insertable<EmployeesTableData> custom({
+    Expression<int>? employeeId,
+    Expression<String>? employeeName,
+    Expression<int>? employeePhoneNumber,
+    Expression<String>? employeeSpecialization,
+    Expression<String>? employeePosition,
+    Expression<double>? employeeSalary,
+    Expression<String>? employeeAddress,
+  }) {
+    return RawValuesInsertable({
+      if (employeeId != null) 'employee_id': employeeId,
+      if (employeeName != null) 'employee_name': employeeName,
+      if (employeePhoneNumber != null)
+        'employee_phone_number': employeePhoneNumber,
+      if (employeeSpecialization != null)
+        'employee_specialization': employeeSpecialization,
+      if (employeePosition != null) 'employee_position': employeePosition,
+      if (employeeSalary != null) 'employee_salary': employeeSalary,
+      if (employeeAddress != null) 'employee_address': employeeAddress,
+    });
+  }
+
+  EmployeesTableCompanion copyWith(
+      {Value<int>? employeeId,
+      Value<String>? employeeName,
+      Value<int>? employeePhoneNumber,
+      Value<String>? employeeSpecialization,
+      Value<String>? employeePosition,
+      Value<double>? employeeSalary,
+      Value<String>? employeeAddress}) {
+    return EmployeesTableCompanion(
+      employeeId: employeeId ?? this.employeeId,
+      employeeName: employeeName ?? this.employeeName,
+      employeePhoneNumber: employeePhoneNumber ?? this.employeePhoneNumber,
+      employeeSpecialization:
+          employeeSpecialization ?? this.employeeSpecialization,
+      employeePosition: employeePosition ?? this.employeePosition,
+      employeeSalary: employeeSalary ?? this.employeeSalary,
+      employeeAddress: employeeAddress ?? this.employeeAddress,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (employeeId.present) {
+      map['employee_id'] = Variable<int>(employeeId.value);
+    }
+    if (employeeName.present) {
+      map['employee_name'] = Variable<String>(employeeName.value);
+    }
+    if (employeePhoneNumber.present) {
+      map['employee_phone_number'] = Variable<int>(employeePhoneNumber.value);
+    }
+    if (employeeSpecialization.present) {
+      map['employee_specialization'] =
+          Variable<String>(employeeSpecialization.value);
+    }
+    if (employeePosition.present) {
+      map['employee_position'] = Variable<String>(employeePosition.value);
+    }
+    if (employeeSalary.present) {
+      map['employee_salary'] = Variable<double>(employeeSalary.value);
+    }
+    if (employeeAddress.present) {
+      map['employee_address'] = Variable<String>(employeeAddress.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EmployeesTableCompanion(')
+          ..write('employeeId: $employeeId, ')
+          ..write('employeeName: $employeeName, ')
+          ..write('employeePhoneNumber: $employeePhoneNumber, ')
+          ..write('employeeSpecialization: $employeeSpecialization, ')
+          ..write('employeePosition: $employeePosition, ')
+          ..write('employeeSalary: $employeeSalary, ')
+          ..write('employeeAddress: $employeeAddress')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class TeamsDataTable extends Table
+    with TableInfo<TeamsDataTable, TeamsDataTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  TeamsDataTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _teamIdMeta = const VerificationMeta('teamId');
+  late final GeneratedColumn<int> teamId = GeneratedColumn<int>(
+      'team_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'PRIMARY KEY NOT NULL');
+  static const VerificationMeta _teamNameMeta =
+      const VerificationMeta('teamName');
+  late final GeneratedColumn<String> teamName = GeneratedColumn<String>(
+      'team_name', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _teamCaptainIdMeta =
+      const VerificationMeta('teamCaptainId');
+  late final GeneratedColumn<int> teamCaptainId = GeneratedColumn<int>(
+      'team_captain_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns => [teamId, teamName, teamCaptainId];
+  @override
+  String get aliasedName => _alias ?? 'TeamsDataTable';
+  @override
+  String get actualTableName => 'TeamsDataTable';
+  @override
+  VerificationContext validateIntegrity(Insertable<TeamsDataTableData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('team_id')) {
+      context.handle(_teamIdMeta,
+          teamId.isAcceptableOrUnknown(data['team_id']!, _teamIdMeta));
+    }
+    if (data.containsKey('team_name')) {
+      context.handle(_teamNameMeta,
+          teamName.isAcceptableOrUnknown(data['team_name']!, _teamNameMeta));
+    } else if (isInserting) {
+      context.missing(_teamNameMeta);
+    }
+    if (data.containsKey('team_captain_id')) {
+      context.handle(
+          _teamCaptainIdMeta,
+          teamCaptainId.isAcceptableOrUnknown(
+              data['team_captain_id']!, _teamCaptainIdMeta));
+    } else if (isInserting) {
+      context.missing(_teamCaptainIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {teamId};
+  @override
+  TeamsDataTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TeamsDataTableData(
+      teamId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}team_id'])!,
+      teamName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}team_name'])!,
+      teamCaptainId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}team_captain_id'])!,
+    );
+  }
+
+  @override
+  TeamsDataTable createAlias(String alias) {
+    return TeamsDataTable(attachedDatabase, alias);
+  }
+
+  @override
+  List<String> get customConstraints => const [
+        'FOREIGN KEY(team_captain_id)REFERENCES EmployeesTable(employee_id)'
+      ];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class TeamsDataTableData extends DataClass
+    implements Insertable<TeamsDataTableData> {
+  final int teamId;
+  final String teamName;
+  final int teamCaptainId;
+  const TeamsDataTableData(
+      {required this.teamId,
+      required this.teamName,
+      required this.teamCaptainId});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['team_id'] = Variable<int>(teamId);
+    map['team_name'] = Variable<String>(teamName);
+    map['team_captain_id'] = Variable<int>(teamCaptainId);
+    return map;
+  }
+
+  TeamsDataTableCompanion toCompanion(bool nullToAbsent) {
+    return TeamsDataTableCompanion(
+      teamId: Value(teamId),
+      teamName: Value(teamName),
+      teamCaptainId: Value(teamCaptainId),
+    );
+  }
+
+  factory TeamsDataTableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TeamsDataTableData(
+      teamId: serializer.fromJson<int>(json['team_id']),
+      teamName: serializer.fromJson<String>(json['team_name']),
+      teamCaptainId: serializer.fromJson<int>(json['team_captain_id']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'team_id': serializer.toJson<int>(teamId),
+      'team_name': serializer.toJson<String>(teamName),
+      'team_captain_id': serializer.toJson<int>(teamCaptainId),
+    };
+  }
+
+  TeamsDataTableData copyWith(
+          {int? teamId, String? teamName, int? teamCaptainId}) =>
+      TeamsDataTableData(
+        teamId: teamId ?? this.teamId,
+        teamName: teamName ?? this.teamName,
+        teamCaptainId: teamCaptainId ?? this.teamCaptainId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('TeamsDataTableData(')
+          ..write('teamId: $teamId, ')
+          ..write('teamName: $teamName, ')
+          ..write('teamCaptainId: $teamCaptainId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(teamId, teamName, teamCaptainId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TeamsDataTableData &&
+          other.teamId == this.teamId &&
+          other.teamName == this.teamName &&
+          other.teamCaptainId == this.teamCaptainId);
+}
+
+class TeamsDataTableCompanion extends UpdateCompanion<TeamsDataTableData> {
+  final Value<int> teamId;
+  final Value<String> teamName;
+  final Value<int> teamCaptainId;
+  const TeamsDataTableCompanion({
+    this.teamId = const Value.absent(),
+    this.teamName = const Value.absent(),
+    this.teamCaptainId = const Value.absent(),
+  });
+  TeamsDataTableCompanion.insert({
+    this.teamId = const Value.absent(),
+    required String teamName,
+    required int teamCaptainId,
+  })  : teamName = Value(teamName),
+        teamCaptainId = Value(teamCaptainId);
+  static Insertable<TeamsDataTableData> custom({
+    Expression<int>? teamId,
+    Expression<String>? teamName,
+    Expression<int>? teamCaptainId,
+  }) {
+    return RawValuesInsertable({
+      if (teamId != null) 'team_id': teamId,
+      if (teamName != null) 'team_name': teamName,
+      if (teamCaptainId != null) 'team_captain_id': teamCaptainId,
+    });
+  }
+
+  TeamsDataTableCompanion copyWith(
+      {Value<int>? teamId,
+      Value<String>? teamName,
+      Value<int>? teamCaptainId}) {
+    return TeamsDataTableCompanion(
+      teamId: teamId ?? this.teamId,
+      teamName: teamName ?? this.teamName,
+      teamCaptainId: teamCaptainId ?? this.teamCaptainId,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (teamId.present) {
+      map['team_id'] = Variable<int>(teamId.value);
+    }
+    if (teamName.present) {
+      map['team_name'] = Variable<String>(teamName.value);
+    }
+    if (teamCaptainId.present) {
+      map['team_captain_id'] = Variable<int>(teamCaptainId.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TeamsDataTableCompanion(')
+          ..write('teamId: $teamId, ')
+          ..write('teamName: $teamName, ')
+          ..write('teamCaptainId: $teamCaptainId')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class PlayersAndTeamsTable extends Table
+    with TableInfo<PlayersAndTeamsTable, PlayersAndTeamsTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  PlayersAndTeamsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, true,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  static const VerificationMeta _teamIdMeta = const VerificationMeta('teamId');
+  late final GeneratedColumn<int> teamId = GeneratedColumn<int>(
+      'team_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _teamPlayerIdMeta =
+      const VerificationMeta('teamPlayerId');
+  late final GeneratedColumn<int> teamPlayerId = GeneratedColumn<int>(
+      'team_player_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns => [id, teamId, teamPlayerId];
+  @override
+  String get aliasedName => _alias ?? 'PlayersAndTeamsTable';
+  @override
+  String get actualTableName => 'PlayersAndTeamsTable';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<PlayersAndTeamsTableData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('team_id')) {
+      context.handle(_teamIdMeta,
+          teamId.isAcceptableOrUnknown(data['team_id']!, _teamIdMeta));
+    } else if (isInserting) {
+      context.missing(_teamIdMeta);
+    }
+    if (data.containsKey('team_player_id')) {
+      context.handle(
+          _teamPlayerIdMeta,
+          teamPlayerId.isAcceptableOrUnknown(
+              data['team_player_id']!, _teamPlayerIdMeta));
+    } else if (isInserting) {
+      context.missing(_teamPlayerIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PlayersAndTeamsTableData map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PlayersAndTeamsTableData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      teamId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}team_id'])!,
+      teamPlayerId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}team_player_id'])!,
+    );
+  }
+
+  @override
+  PlayersAndTeamsTable createAlias(String alias) {
+    return PlayersAndTeamsTable(attachedDatabase, alias);
+  }
+
+  @override
+  List<String> get customConstraints => const [
+        'FOREIGN KEY(team_player_id)REFERENCES Players(player_index_id)',
+        'FOREIGN KEY(team_id)REFERENCES TeamsDataTable(team_id)'
+      ];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class PlayersAndTeamsTableData extends DataClass
+    implements Insertable<PlayersAndTeamsTableData> {
+  final int? id;
+  final int teamId;
+  final int teamPlayerId;
+  const PlayersAndTeamsTableData(
+      {this.id, required this.teamId, required this.teamPlayerId});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<int>(id);
+    }
+    map['team_id'] = Variable<int>(teamId);
+    map['team_player_id'] = Variable<int>(teamPlayerId);
+    return map;
+  }
+
+  PlayersAndTeamsTableCompanion toCompanion(bool nullToAbsent) {
+    return PlayersAndTeamsTableCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      teamId: Value(teamId),
+      teamPlayerId: Value(teamPlayerId),
+    );
+  }
+
+  factory PlayersAndTeamsTableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PlayersAndTeamsTableData(
+      id: serializer.fromJson<int?>(json['id']),
+      teamId: serializer.fromJson<int>(json['team_id']),
+      teamPlayerId: serializer.fromJson<int>(json['team_player_id']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int?>(id),
+      'team_id': serializer.toJson<int>(teamId),
+      'team_player_id': serializer.toJson<int>(teamPlayerId),
+    };
+  }
+
+  PlayersAndTeamsTableData copyWith(
+          {Value<int?> id = const Value.absent(),
+          int? teamId,
+          int? teamPlayerId}) =>
+      PlayersAndTeamsTableData(
+        id: id.present ? id.value : this.id,
+        teamId: teamId ?? this.teamId,
+        teamPlayerId: teamPlayerId ?? this.teamPlayerId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('PlayersAndTeamsTableData(')
+          ..write('id: $id, ')
+          ..write('teamId: $teamId, ')
+          ..write('teamPlayerId: $teamPlayerId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, teamId, teamPlayerId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PlayersAndTeamsTableData &&
+          other.id == this.id &&
+          other.teamId == this.teamId &&
+          other.teamPlayerId == this.teamPlayerId);
+}
+
+class PlayersAndTeamsTableCompanion
+    extends UpdateCompanion<PlayersAndTeamsTableData> {
+  final Value<int?> id;
+  final Value<int> teamId;
+  final Value<int> teamPlayerId;
+  const PlayersAndTeamsTableCompanion({
+    this.id = const Value.absent(),
+    this.teamId = const Value.absent(),
+    this.teamPlayerId = const Value.absent(),
+  });
+  PlayersAndTeamsTableCompanion.insert({
+    this.id = const Value.absent(),
+    required int teamId,
+    required int teamPlayerId,
+  })  : teamId = Value(teamId),
+        teamPlayerId = Value(teamPlayerId);
+  static Insertable<PlayersAndTeamsTableData> custom({
+    Expression<int>? id,
+    Expression<int>? teamId,
+    Expression<int>? teamPlayerId,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (teamId != null) 'team_id': teamId,
+      if (teamPlayerId != null) 'team_player_id': teamPlayerId,
+    });
+  }
+
+  PlayersAndTeamsTableCompanion copyWith(
+      {Value<int?>? id, Value<int>? teamId, Value<int>? teamPlayerId}) {
+    return PlayersAndTeamsTableCompanion(
+      id: id ?? this.id,
+      teamId: teamId ?? this.teamId,
+      teamPlayerId: teamPlayerId ?? this.teamPlayerId,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (teamId.present) {
+      map['team_id'] = Variable<int>(teamId.value);
+    }
+    if (teamPlayerId.present) {
+      map['team_player_id'] = Variable<int>(teamPlayerId.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlayersAndTeamsTableCompanion(')
+          ..write('id: $id, ')
+          ..write('teamId: $teamId, ')
+          ..write('teamPlayerId: $teamPlayerId')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class PlayersSubscriptions extends Table
     with TableInfo<PlayersSubscriptions, PlayersSubscription> {
   @override
@@ -1327,6 +2182,10 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
   late final SubscriptionsInfoTable subscriptionsInfoTable =
       SubscriptionsInfoTable(this);
   late final Players players = Players(this);
+  late final EmployeesTable employeesTable = EmployeesTable(this);
+  late final TeamsDataTable teamsDataTable = TeamsDataTable(this);
+  late final PlayersAndTeamsTable playersAndTeamsTable =
+      PlayersAndTeamsTable(this);
   late final PlayersSubscriptions playersSubscriptions =
       PlayersSubscriptions(this);
   Selectable<Player> allPlayers() {
@@ -1396,8 +2255,14 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [subscriptionsInfoTable, players, playersSubscriptions];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+        subscriptionsInfoTable,
+        players,
+        employeesTable,
+        teamsDataTable,
+        playersAndTeamsTable,
+        playersSubscriptions
+      ];
 }
 
 class GetAllNamesResult {

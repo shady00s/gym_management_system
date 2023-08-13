@@ -2,7 +2,7 @@ import { pool } from "./send_data_to_db_controller";
 import { Response, Request } from "express";
 export default async function getPlayerInformationData(req:Request,res:Response){
     const playerId= req.query.playerId;
-
+// player info
     let playerInfo = {
                 player_name:"",
                 player_id:"",
@@ -33,5 +33,8 @@ export default async function getPlayerInformationData(req:Request,res:Response)
             playerInfo.subscriptions.reverse()
         
     }
+
+
+
     res.json({message:"succssess",data:playerInfo})
 }
