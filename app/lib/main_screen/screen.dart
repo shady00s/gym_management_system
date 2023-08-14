@@ -19,7 +19,6 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return
          NavigationView(
-
            appBar: const NavigationAppBar(
              automaticallyImplyLeading: false
            ),
@@ -43,6 +42,7 @@ class _MainScreenState extends State<MainScreen> {
 
              ]
            ),
+
          );
   }
 }

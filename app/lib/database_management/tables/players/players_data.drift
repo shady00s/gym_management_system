@@ -1,4 +1,6 @@
+import '../teams/players_teams.drift';
 
+import 'players_data.drift';
 
 CREATE TABLE IF NOT EXISTS Players (
     id INT NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -25,7 +27,19 @@ CREATE TABLE IF NOT EXISTS PlayersSubscriptions(
 );
 
 allPlayers: SELECT * FROM Players;
-getAllNames: SELECT player_id, player_index_id, player_name FROM PLAYERS ORDER BY player_id ASC;
+getAllNames: SELECT player_id, player_index_id, player_name FROM Players ORDER BY player_id ASC;
 allSubscriptions: SELECT * FROM PlayersSubscriptions;
 
-getPlayerSubscription: SELECT Players.*, PlayersSubscriptions.* FROM Players INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id WHERE Players.player_index_id = :player_index_id;
+getPlayerSubscription: SELECT Players.*, PlayersSubscriptions.* FROM Players INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id WHERE Players.player_index_id = :player_index_id  ORDER BY end_date DESC;
+
+getPlayersByTeam: SELECT Players.* From Players INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id WHERE PlayersAndTeamsTable.team_id = :team_id;
+
+
+getEndedSubscriptionByTeam: SELECT DISTINCT Players.*, PlayersSubscriptions.*
+                            from Players INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id
+                            INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id
+                            WHERE PlayersAndTeamsTable.team_id = :team_id
+                            AND Players.player_index_id = PlayersSubscriptions.player_subscription_id
+                            AND PlayersSubscriptions.end_date
+                            BETWEEN :beginDateTime AND :secondDateTime
+                            ORDER BY PlayersSubscriptions.end_date DESC;

@@ -1307,12 +1307,19 @@ class TeamsDataTable extends Table
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   TeamsDataTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, true,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'PRIMARY KEY AUTOINCREMENT');
   static const VerificationMeta _teamIdMeta = const VerificationMeta('teamId');
   late final GeneratedColumn<int> teamId = GeneratedColumn<int>(
       'team_id', aliasedName, false,
       type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      $customConstraints: 'PRIMARY KEY NOT NULL');
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
   static const VerificationMeta _teamNameMeta =
       const VerificationMeta('teamName');
   late final GeneratedColumn<String> teamName = GeneratedColumn<String>(
@@ -1328,7 +1335,7 @@ class TeamsDataTable extends Table
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   @override
-  List<GeneratedColumn> get $columns => [teamId, teamName, teamCaptainId];
+  List<GeneratedColumn> get $columns => [id, teamId, teamName, teamCaptainId];
   @override
   String get aliasedName => _alias ?? 'TeamsDataTable';
   @override
@@ -1338,9 +1345,14 @@ class TeamsDataTable extends Table
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
     if (data.containsKey('team_id')) {
       context.handle(_teamIdMeta,
           teamId.isAcceptableOrUnknown(data['team_id']!, _teamIdMeta));
+    } else if (isInserting) {
+      context.missing(_teamIdMeta);
     }
     if (data.containsKey('team_name')) {
       context.handle(_teamNameMeta,
@@ -1360,11 +1372,13 @@ class TeamsDataTable extends Table
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {teamId};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   TeamsDataTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return TeamsDataTableData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
       teamId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}team_id'])!,
       teamName: attachedDatabase.typeMapping
@@ -1389,16 +1403,21 @@ class TeamsDataTable extends Table
 
 class TeamsDataTableData extends DataClass
     implements Insertable<TeamsDataTableData> {
+  final int? id;
   final int teamId;
   final String teamName;
   final int teamCaptainId;
   const TeamsDataTableData(
-      {required this.teamId,
+      {this.id,
+      required this.teamId,
       required this.teamName,
       required this.teamCaptainId});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<int>(id);
+    }
     map['team_id'] = Variable<int>(teamId);
     map['team_name'] = Variable<String>(teamName);
     map['team_captain_id'] = Variable<int>(teamCaptainId);
@@ -1407,6 +1426,7 @@ class TeamsDataTableData extends DataClass
 
   TeamsDataTableCompanion toCompanion(bool nullToAbsent) {
     return TeamsDataTableCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       teamId: Value(teamId),
       teamName: Value(teamName),
       teamCaptainId: Value(teamCaptainId),
@@ -1417,6 +1437,7 @@ class TeamsDataTableData extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return TeamsDataTableData(
+      id: serializer.fromJson<int?>(json['id']),
       teamId: serializer.fromJson<int>(json['team_id']),
       teamName: serializer.fromJson<String>(json['team_name']),
       teamCaptainId: serializer.fromJson<int>(json['team_captain_id']),
@@ -1426,6 +1447,7 @@ class TeamsDataTableData extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'id': serializer.toJson<int?>(id),
       'team_id': serializer.toJson<int>(teamId),
       'team_name': serializer.toJson<String>(teamName),
       'team_captain_id': serializer.toJson<int>(teamCaptainId),
@@ -1433,8 +1455,12 @@ class TeamsDataTableData extends DataClass
   }
 
   TeamsDataTableData copyWith(
-          {int? teamId, String? teamName, int? teamCaptainId}) =>
+          {Value<int?> id = const Value.absent(),
+          int? teamId,
+          String? teamName,
+          int? teamCaptainId}) =>
       TeamsDataTableData(
+        id: id.present ? id.value : this.id,
         teamId: teamId ?? this.teamId,
         teamName: teamName ?? this.teamName,
         teamCaptainId: teamCaptainId ?? this.teamCaptainId,
@@ -1442,6 +1468,7 @@ class TeamsDataTableData extends DataClass
   @override
   String toString() {
     return (StringBuffer('TeamsDataTableData(')
+          ..write('id: $id, ')
           ..write('teamId: $teamId, ')
           ..write('teamName: $teamName, ')
           ..write('teamCaptainId: $teamCaptainId')
@@ -1450,37 +1477,44 @@ class TeamsDataTableData extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(teamId, teamName, teamCaptainId);
+  int get hashCode => Object.hash(id, teamId, teamName, teamCaptainId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is TeamsDataTableData &&
+          other.id == this.id &&
           other.teamId == this.teamId &&
           other.teamName == this.teamName &&
           other.teamCaptainId == this.teamCaptainId);
 }
 
 class TeamsDataTableCompanion extends UpdateCompanion<TeamsDataTableData> {
+  final Value<int?> id;
   final Value<int> teamId;
   final Value<String> teamName;
   final Value<int> teamCaptainId;
   const TeamsDataTableCompanion({
+    this.id = const Value.absent(),
     this.teamId = const Value.absent(),
     this.teamName = const Value.absent(),
     this.teamCaptainId = const Value.absent(),
   });
   TeamsDataTableCompanion.insert({
-    this.teamId = const Value.absent(),
+    this.id = const Value.absent(),
+    required int teamId,
     required String teamName,
     required int teamCaptainId,
-  })  : teamName = Value(teamName),
+  })  : teamId = Value(teamId),
+        teamName = Value(teamName),
         teamCaptainId = Value(teamCaptainId);
   static Insertable<TeamsDataTableData> custom({
+    Expression<int>? id,
     Expression<int>? teamId,
     Expression<String>? teamName,
     Expression<int>? teamCaptainId,
   }) {
     return RawValuesInsertable({
+      if (id != null) 'id': id,
       if (teamId != null) 'team_id': teamId,
       if (teamName != null) 'team_name': teamName,
       if (teamCaptainId != null) 'team_captain_id': teamCaptainId,
@@ -1488,10 +1522,12 @@ class TeamsDataTableCompanion extends UpdateCompanion<TeamsDataTableData> {
   }
 
   TeamsDataTableCompanion copyWith(
-      {Value<int>? teamId,
+      {Value<int?>? id,
+      Value<int>? teamId,
       Value<String>? teamName,
       Value<int>? teamCaptainId}) {
     return TeamsDataTableCompanion(
+      id: id ?? this.id,
       teamId: teamId ?? this.teamId,
       teamName: teamName ?? this.teamName,
       teamCaptainId: teamCaptainId ?? this.teamCaptainId,
@@ -1501,6 +1537,9 @@ class TeamsDataTableCompanion extends UpdateCompanion<TeamsDataTableData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
     if (teamId.present) {
       map['team_id'] = Variable<int>(teamId.value);
     }
@@ -1516,6 +1555,7 @@ class TeamsDataTableCompanion extends UpdateCompanion<TeamsDataTableData> {
   @override
   String toString() {
     return (StringBuffer('TeamsDataTableCompanion(')
+          ..write('id: $id, ')
           ..write('teamId: $teamId, ')
           ..write('teamName: $teamName, ')
           ..write('teamCaptainId: $teamCaptainId')
@@ -2196,7 +2236,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
 
   Selectable<GetAllNamesResult> getAllNames() {
     return customSelect(
-        'SELECT player_id, player_index_id, player_name FROM PLAYERS ORDER BY player_id ASC',
+        'SELECT player_id, player_index_id, player_name FROM Players ORDER BY player_id ASC',
         variables: [],
         readsFrom: {
           players,
@@ -2220,7 +2260,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
   Selectable<GetPlayerSubscriptionResult> getPlayerSubscription(
       int playerIndexId) {
     return customSelect(
-        'SELECT Players.*, PlayersSubscriptions.* FROM Players INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id WHERE Players.player_index_id = ?1',
+        'SELECT Players.*, PlayersSubscriptions.* FROM Players INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id WHERE Players.player_index_id = ?1 ORDER BY end_date DESC',
         variables: [
           Variable<int>(playerIndexId)
         ],
@@ -2229,6 +2269,55 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           playersSubscriptions,
         }).map((QueryRow row) {
       return GetPlayerSubscriptionResult(
+        id: row.read<int>('id'),
+        playerIndexId: row.read<int>('player_index_id'),
+        playerId: row.read<int>('player_id'),
+        playerName: row.read<String>('player_name'),
+        playerPhoneNumber: row.read<int>('player_phone_number'),
+        imagePath: row.read<String>('image_path'),
+        playerAge: row.read<int>('player_age'),
+        playerFirstJoinDate: row.read<DateTime>('player_first_join_date'),
+        playerGender: row.read<String>('player_gender'),
+        subscriptionId: row.read<int>('subscription_id'),
+        subId: row.readNullable<int>('sub_id'),
+        playerSubscriptionId: row.read<int>('player_subscription_id'),
+        beginningDate: row.read<DateTime>('beginning_date'),
+        endDate: row.read<DateTime>('end_date'),
+        billId: row.read<int>('billId'),
+        billValue: row.read<int>('billValue'),
+        duration: row.read<int>('duration'),
+        billCollector: row.read<String>('billCollector'),
+      );
+    });
+  }
+
+  Selectable<Player> getPlayersByTeam(int teamId) {
+    return customSelect(
+        'SELECT Players.* FROM Players INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id WHERE PlayersAndTeamsTable.team_id = ?1',
+        variables: [
+          Variable<int>(teamId)
+        ],
+        readsFrom: {
+          players,
+          playersAndTeamsTable,
+        }).asyncMap(players.mapFromRow);
+  }
+
+  Selectable<GetEndedSubscriptionByTeamResult> getEndedSubscriptionByTeam(
+      int teamId, DateTime beginDateTime, DateTime secondDateTime) {
+    return customSelect(
+        'SELECT DISTINCT Players.*, PlayersSubscriptions.* FROM Players INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id WHERE PlayersAndTeamsTable.team_id = ?1 AND Players.player_index_id = PlayersSubscriptions.player_subscription_id AND PlayersSubscriptions.end_date BETWEEN ?2 AND ?3 ORDER BY PlayersSubscriptions.end_date DESC',
+        variables: [
+          Variable<int>(teamId),
+          Variable<DateTime>(beginDateTime),
+          Variable<DateTime>(secondDateTime)
+        ],
+        readsFrom: {
+          players,
+          playersSubscriptions,
+          playersAndTeamsTable,
+        }).map((QueryRow row) {
+      return GetEndedSubscriptionByTeamResult(
         id: row.read<int>('id'),
         playerIndexId: row.read<int>('player_index_id'),
         playerId: row.read<int>('player_id'),
@@ -2296,6 +2385,47 @@ class GetPlayerSubscriptionResult {
   final int duration;
   final String billCollector;
   GetPlayerSubscriptionResult({
+    required this.id,
+    required this.playerIndexId,
+    required this.playerId,
+    required this.playerName,
+    required this.playerPhoneNumber,
+    required this.imagePath,
+    required this.playerAge,
+    required this.playerFirstJoinDate,
+    required this.playerGender,
+    required this.subscriptionId,
+    this.subId,
+    required this.playerSubscriptionId,
+    required this.beginningDate,
+    required this.endDate,
+    required this.billId,
+    required this.billValue,
+    required this.duration,
+    required this.billCollector,
+  });
+}
+
+class GetEndedSubscriptionByTeamResult {
+  final int id;
+  final int playerIndexId;
+  final int playerId;
+  final String playerName;
+  final int playerPhoneNumber;
+  final String imagePath;
+  final int playerAge;
+  final DateTime playerFirstJoinDate;
+  final String playerGender;
+  final int subscriptionId;
+  final int? subId;
+  final int playerSubscriptionId;
+  final DateTime beginningDate;
+  final DateTime endDate;
+  final int billId;
+  final int billValue;
+  final int duration;
+  final String billCollector;
+  GetEndedSubscriptionByTeamResult({
     required this.id,
     required this.playerIndexId,
     required this.playerId,

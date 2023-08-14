@@ -155,6 +155,7 @@ export default async function sendDataToDBController(req: Request, res: Response
 
         res.json({ message: "redirect succssessfully", results   })
 
-    });
+    }).catch(e=>res.json(e));
 }
+
 

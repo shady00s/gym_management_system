@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 import 'package:gym_management/main_screen/screen.dart';
@@ -19,8 +18,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return
        FluentApp(
+         title:"Gym management system",
+          themeMode: ThemeMode.dark,
+          color: Colors.black,
           theme: FluentThemeData.dark(),
-          home: const MainScreen(),
+
+          home: Card( backgroundColor:Colors.black,child: const MainScreen()),
       );
   }
 }

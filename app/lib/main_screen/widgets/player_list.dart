@@ -4,14 +4,15 @@ import 'package:gym_management/main_screen/widgets/player_name_widget.dart';
 
 import '../../database_management/tables/generate_table.dart';
 class PlayersListWidget extends StatelessWidget {
-  PlayersListWidget({super.key});
+  final int teamId;
+  PlayersListWidget({super.key,required this.teamId});
 
   ScrollController controller = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<GetAllNamesResult>>(
-        future: PlayersDatabaseManager().getPlayersData(),
+    return FutureBuilder<List<Player>>(
+        future: PlayersDatabaseManager().getPlayersByTeam(teamId),
         builder: (context, snapshot) {
 
           switch(snapshot.connectionState){
@@ -20,7 +21,7 @@ class PlayersListWidget extends StatelessWidget {
 
             case ConnectionState.done:
               if(snapshot.hasData){
-                List<GetAllNamesResult> playersList = snapshot.data!;
+                List<Player> playersList = snapshot.data!;
                 return CustomScrollView(
                   shrinkWrap: false,
                   physics: const AlwaysScrollableScrollPhysics (),
@@ -28,7 +29,7 @@ class PlayersListWidget extends StatelessWidget {
                     SliverFixedExtentList(
 
                         delegate: SliverChildBuilderDelegate((context, index){
-                        return PlayerNameWidget("${playersList[index].playerName}", playersList[index].playerId, playersList[index].playerIndexId );
+                        return PlayerNameWidget(playersList[index].playerName, playersList[index].playerId, playersList[index].playerIndexId );
                     }
                     ,childCount: playersList.length,
                     ), itemExtent:70 )

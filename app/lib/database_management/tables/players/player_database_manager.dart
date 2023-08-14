@@ -49,7 +49,7 @@ class PlayersDatabaseManager {
               billCollector: data.collector);
         });
 
-        Iterable<TeamsDataTableCompanion> teams = dataFromDB.teams.map((e) => TeamsDataTableCompanion.insert(teamName: e.teamName!, teamCaptainId: e.teamCaptainId!));
+        Iterable<TeamsDataTableCompanion> teams = dataFromDB.teams.map((e) => TeamsDataTableCompanion.insert(teamName: e.teamName!, teamCaptainId: e.teamCaptainId!, teamId: e.teamId!));
         Iterable<EmployeesTableCompanion> employees = dataFromDB.employees.map((e) => EmployeesTableCompanion.insert(employeeName: e.employeeName!, employeePhoneNumber: e.employeePhoneNumber!, employeeSpecialization:e.employeeSpecialization!, employeePosition:e.employeePosition!, employeeSalary: e.employeeSalary!, employeeAddress: e.employeeAddress!));
         Iterable<PlayersAndTeamsTableCompanion> playerTable = dataFromDB.playersTeam.map((e) => PlayersAndTeamsTableCompanion.insert(teamId: e.teamId!, teamPlayerId: e.teamPlayerId!));
 
@@ -77,6 +77,11 @@ class PlayersDatabaseManager {
     return await playersDatabase.getAllNames().get();
   }
 
+  Future<List<Player>> getPlayersByTeam(int id) async{
+  List<Player> players =  await  playersDatabase.getPlayersByTeam(id).get();
+   return players;
+
+  }
   Future<List<Player>> searchForPlayer(String searchInput) async {
     var res = playersDatabase.select(Players(playersDatabase))
       ..where((player) {
@@ -188,34 +193,38 @@ class PlayersDatabaseManager {
   }
 
 
-   Future <List<NeedToReSubscribeModel>> getNeedToResubscribePlayersSubscriptions() async {
-     var date = playersDatabase.select(PlayersSubscriptions(playersDatabase))
-       ..where((tbl) =>
-           tbl.endDate.isBetweenValues((DateTime.now().subtract(Duration(days:30))),DateTime.now()))..orderBy([(u)=>OrderingTerm(expression: u.endDate,mode: OrderingMode.desc)])
-       ..get();
-     List<PlayersSubscription> listData = await date.get();
-     List<NeedToReSubscribeModel> players = [];
-     for (var data in listData) {
-       var x = playersDatabase.select(Players(playersDatabase))
-         ..where((tbl) => tbl.playerIndexId.equals(data.playerSubscriptionId))
-         ..get();
-       List<Player> playersList = await x.get();
+   Future<List<GetEndedSubscriptionByTeamResult>> getNeedToResubscribePlayersSubscriptions(teamId) async {
 
-       for (var data3 in playersList) {
-         NeedToReSubscribeModel needToReSubscribeModel =   NeedToReSubscribeModel(
-
-             playerId: data3.id,
-             playerName: data3.playerName,
-             playerGender: data3.playerGender,
-             playerPhoneNumber: data3.playerPhoneNumber,
-             imagePath: data3.imagePath,
-             playerAge: data3.playerAge,
-             playerFirstJoinDate: data3.playerFirstJoinDate,
-             subscriptionId: data3.subscriptionId,
-             endedSub: data.endDate, playerIndexId: data3.playerIndexId);
-         players.add(needToReSubscribeModel);
-       }
-     }
-     return players;
+     List<GetEndedSubscriptionByTeamResult>  data = await playersDatabase.getEndedSubscriptionByTeam(teamId, DateTime.now().subtract(Duration(days: 40)),DateTime.now()).get();
+     // var date = playersDatabase.select(PlayersSubscriptions(playersDatabase))
+     //   ..where((tbl) =>
+     //       tbl.endDate.isBetweenValues((DateTime.now().subtract(const Duration(days:30))),DateTime.now()))..orderBy([(u)=>OrderingTerm(expression: u.endDate,mode: OrderingMode.desc)])
+     //   ..get();
+     // List<PlayersSubscription> listData = await date.get();
+     // List<NeedToReSubscribeModel> players = [];
+     // for (var data in listData) {
+     //   var x = playersDatabase.select(Players(playersDatabase))
+     //     ..where((tbl) => tbl.playerIndexId.equals(data.playerSubscriptionId))
+     //     ..get();
+     //   List<Player> playersList = await x.get();
+     //
+     //   for (var data3 in playersList) {
+     //     NeedToReSubscribeModel needToReSubscribeModel =   NeedToReSubscribeModel(
+     //
+     //         playerId: data3.playerId,
+     //         playerName: data3.playerName,
+     //         playerGender: data3.playerGender,
+     //         playerPhoneNumber: data3.playerPhoneNumber,
+     //         imagePath: data3.imagePath,
+     //         playerAge: data3.playerAge,
+     //         playerFirstJoinDate: data3.playerFirstJoinDate,
+     //         subscriptionId: data3.subscriptionId,
+     //         endedSub: data.endDate, playerIndexId: data3.playerIndexId);
+     //     players.add(needToReSubscribeModel);
+     //   }
+     // }
+     // return players;
+      print(data);
+     return data;
    }
 }

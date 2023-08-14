@@ -1,7 +1,8 @@
 import '../employees/employees.drift';
 
 CREATE TABLE IF NOT EXISTS TeamsDataTable(
-    team_id INT PRIMARY KEY NOT NULL,
+    id INT PRIMARY KEY AUTOINCREMENT,
+    team_id INT NOT NULL,
     team_name TEXT NOT NULL,
     team_captain_id INT NOT NULL,
     FOREIGN KEY (team_captain_id) REFERENCES EmployeesTable(employee_id)

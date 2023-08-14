@@ -20,8 +20,8 @@ class OnBoardPlayers extends StatelessWidget {
         child: Card(
           child: Padding(
               padding: const EdgeInsets.all(12.0),
-              child: FutureBuilder<List<NeedToReSubscribeModel>>(
-                  future: data as Future<List<NeedToReSubscribeModel>>,
+              child: FutureBuilder<List<GetEndedSubscriptionByTeamResult>>(
+                  future: data as Future<List<GetEndedSubscriptionByTeamResult>>,
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
@@ -47,13 +47,13 @@ class OnBoardPlayers extends StatelessWidget {
                                     thumbVisibility: true,
                                     child: ListView.builder(
                                         controller: _firstController,
-                                        itemCount: 40,
+                                        itemCount: snapshot.data!.length,
                                         shrinkWrap: false,
                                         itemBuilder: (context, index) =>
                    NeedToResubscribePlayerNameWidget(
                        playerName: snapshot.data![index].playerName,
                      playerId:snapshot.data![index].playerId,
-                     endDate:snapshot.data![index].endedSub, playerIndexId: snapshot.data![index].playerIndexId ,))))
+                     endDate:snapshot.data![index].endDate, playerIndexId: snapshot.data![index].playerIndexId ,))))
                           ]);
                         } else {
                           return Center(

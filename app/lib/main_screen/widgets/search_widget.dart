@@ -3,7 +3,8 @@ import 'package:gym_management/main_screen/widgets/player_list.dart';
 import 'package:gym_management/main_screen/widgets/search_bar_widget.dart';
 
 class SearchWidget extends StatelessWidget {
-  const SearchWidget({super.key});
+  final int teamId;
+  const SearchWidget({super.key ,required this.teamId});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,7 @@ class SearchWidget extends StatelessWidget {
         Text("Search"),
 
        const SearchBarWidget(),
-           Expanded(child: PlayersListWidget())
+           Expanded(child: PlayersListWidget(teamId: teamId,))
       ],
     );
   }
