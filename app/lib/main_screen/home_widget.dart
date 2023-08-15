@@ -2,8 +2,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 import 'package:gym_management/database_management/tables/teams/teams_database_manager.dart';
 import 'package:gym_management/main_screen/widgets/cards_with_icons.dart';
-import 'package:gym_management/main_screen/widgets/onboard_players.dart';
-import 'package:gym_management/main_screen/widgets/search_widget.dart';
+import 'package:gym_management/main_screen/widgets/player_widgets/add_new_player.dart';
+import 'package:gym_management/main_screen/widgets/player_widgets/onboard_players.dart';
+import 'package:gym_management/main_screen/widgets/search_widgets/search_widget.dart';
 
 import '../database_management/tables/generate_table.dart';
 
@@ -68,7 +69,7 @@ class HomeTabWidget extends StatelessWidget {
                 flex: 2,
                 child:Center(child: Text("No Players added")) ),//OnBoardPlayers(title: "Active players for today:")),
             Expanded(
-              flex: 3,
+              flex: 4,
               child: Column(
                 children: [
                   Expanded(flex: 4, child: SearchWidget(teamId: teamId,)),
@@ -81,16 +82,21 @@ class HomeTabWidget extends StatelessWidget {
                   ),
                   Expanded(
                       flex: 1,
-                      child:SizedBox(width:630, child:     Wrap(
+                      child:SizedBox(width:700, child:     Wrap(
 
                         children: [
                           CardsWithIcon(
                             title: 'Re-new subscription',
-                            icon: FluentIcons.refresh,
+                            icon: FluentIcons.refresh, onTap: (){},
                           ),
                           CardsWithIcon(
                               title: 'Show price list',
-                              icon: FluentIcons.list),
+                              icon: FluentIcons.list, onTap: (){},),
+                          CardsWithIcon(
+                              title: 'Add new player',
+                              icon: FluentIcons.add_friend, onTap: () async{
+                                await showDialog(context: context, builder: (context)=>const AddNewPlayerWidget());
+                          },),
                         ],
                       ),)
 

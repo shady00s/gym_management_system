@@ -5,14 +5,17 @@ import 'package:flutter/material.dart'as m;
 class CardsWithIcon extends StatelessWidget {
   final String title;
   final IconData icon;
-  const CardsWithIcon({super.key,required this.title,required this.icon});
+  final Function onTap;
+  const CardsWithIcon({super.key,required this.title,required this.icon,required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 12),
       child: Button(
-        onPressed: (){},
+        onPressed: (){
+          onTap();
+        },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

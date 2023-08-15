@@ -3,10 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 import 'package:gym_management/main_screen/screen.dart';
 
+import 'image_delegate.dart';
+
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await PlayersDatabaseManager().getDataFromBackup();
+  setUpCameraDelegate();
   runApp(const ProviderScope(child:  MyApp()));
 }
 

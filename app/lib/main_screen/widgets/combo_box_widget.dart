@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as m;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gym_management/main_screen/player_status_widget.dart';
+import 'package:gym_management/main_screen/widgets/player_widgets/player_status_widget.dart';
 
 class CustomDateModel {
   final DateTime begDate;

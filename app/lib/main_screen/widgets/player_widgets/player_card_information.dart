@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 
-import '../../database_management/models/backup_data_models.dart';
+import '../../../database_management/models/backup_data_models.dart';
 
 class PlayerCardInformationWidget extends StatelessWidget {
   final int playerId;

@@ -4,9 +4,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 import 'package:gym_management/main_screen/widgets/combo_box_widget.dart';
-import 'package:gym_management/main_screen/widgets/player_name_widget.dart';
+import 'package:gym_management/main_screen/widgets/player_widgets/player_name_widget.dart';
 
-import '../database_management/tables/generate_table.dart';
+import '../../../database_management/tables/generate_table.dart';
 
 class DurationModel {
   final String title;

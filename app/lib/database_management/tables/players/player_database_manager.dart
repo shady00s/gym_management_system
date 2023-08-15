@@ -224,7 +224,7 @@ class PlayersDatabaseManager {
      //   }
      // }
      // return players;
-      print(data);
+
      return data;
    }
 }

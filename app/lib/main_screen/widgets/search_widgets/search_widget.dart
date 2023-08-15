@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:gym_management/main_screen/widgets/player_list.dart';
-import 'package:gym_management/main_screen/widgets/search_bar_widget.dart';
+import 'package:gym_management/main_screen/widgets/player_widgets/player_list.dart';
+import 'package:gym_management/main_screen/widgets/search_widgets/search_bar_widget.dart';
 
 class SearchWidget extends StatelessWidget {
   final int teamId;

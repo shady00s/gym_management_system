@@ -49,6 +49,10 @@ dependencies:
   intl: ^0.18.0
   dio_cookie_manager: ^3.1.0+1
   cookie_jar: ^4.0.8
+  camera_platform_interface: ^2.5.1
+  camera_windows: ^0.2.1+7
+  image_picker: ^1.0.2
+  image_picker_windows: ^0.2.1
 
 
 dev_dependencies:
@@ -79,6 +83,7 @@ flutter:
   assets:
     - assets/
   #   - images/a_dot_ham.jpeg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

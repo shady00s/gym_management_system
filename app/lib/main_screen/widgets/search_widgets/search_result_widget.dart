@@ -1,23 +1,51 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
-import 'package:gym_management/main_screen/widgets/search_result_widget.dart';
-class SearchBarWidget extends StatefulWidget {
-  const SearchBarWidget({super.key});
+import 'package:gym_management/main_screen/widgets/player_widgets/player_name_with_image_widget.dart';
+
+import '../../../database_management/tables/generate_table.dart';
+final searchInput = StateProvider((ref) => "");
+final searchResult = FutureProvider<List<Player?>>((ref)async => await PlayersDatabaseManager().searchForPlayer(ref.watch(searchInput)));
+
+
+class SearchResultWidget extends StatelessWidget {
+  const SearchResultWidget({super.key});
 
   @override
-  State<SearchBarWidget> createState() => _SearchBarWidgetState();
+  Widget build(BuildContext context) {
+    return Column(children: [
+          const PopupSearch(),
+
+          Expanded(child: Consumer(builder: (BuildContext context,  ref, Widget? child) {
+            AsyncValue<List<Player?>> d  =  ref.watch(searchResult);
+
+            return d.when(data:(val)=>val[0]?.playerName != null? ListView.builder(
+                itemCount: val.length,
+                itemBuilder: (context,index)=>FluentTheme(data: FluentThemeData.dark(),
+                child: PlayerNameWithImage(playerName: val[index]!.playerName, playerId: val[index]!.playerId, imagePath:val[index]!.imagePath),) )  :Text("no result"), error: (err,stack)=>Text(err.toString()), loading:()=> Center(child: ProgressBar(),));
+          },))
+
+        ],);
+
+  }
 }
 
 
 
-class _SearchBarWidgetState extends State<SearchBarWidget> {
-   final TextEditingController _controller = TextEditingController();
-    bool changed = false;
-    bool showHint = false;
+class PopupSearch extends StatefulWidget {
+  const PopupSearch({super.key});
+
+  @override
+  State<PopupSearch> createState() => _PopupSearchState();
+}
+
+class _PopupSearchState extends State<PopupSearch> {
+  final TextEditingController _controller = TextEditingController();
+  bool changed = false;
+  bool showHint = false;
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return  Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -60,22 +88,6 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
             return IconButton(onPressed: () async{
               changeName.state = _controller.text;
 
-
-              await showDialog(context: context, builder: (context)=> ContentDialog(
-
-                title:Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("Search"),
-                    IconButton(onPressed: (){
-                      Navigator.of(context).pop();
-                    },
-                      icon:const Icon(FluentIcons.cancel),
-                    ),
-                  ],
-                ) ,
-
-                content: const SearchResultWidget(),));
             }, icon: const Icon(FluentIcons.search));
           },)
 

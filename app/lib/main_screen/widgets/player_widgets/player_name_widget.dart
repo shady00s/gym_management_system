@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:gym_management/main_screen/widgets/player_card_information.dart';
+import 'package:gym_management/main_screen/widgets/player_widgets/player_card_information.dart';
 class PlayerNameWidget extends StatelessWidget {
   final  String playerName;
   final int playerId;

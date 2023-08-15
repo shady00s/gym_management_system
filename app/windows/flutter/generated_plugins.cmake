@@ -3,7 +3,9 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  camera_windows
   desktop_drop
+  file_selector_windows
   sqlite3_flutter_libs
 )
 
