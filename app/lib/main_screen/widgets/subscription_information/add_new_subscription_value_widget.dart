@@ -6,109 +6,94 @@ import 'package:gym_management/main_screen/widgets/subscription_information/edit
 
 import 'create_new_subscription_widget.dart';
 
-final listOfSubscriptionsProvider =
-    StateProvider<List<SubscriptionsInfoTableData?>>((ref) => []);
 
-class AddNewSubscriptionValueWidget extends StatefulWidget {
+final allSubscriptionsProvider = FutureProvider.autoDispose<List<SubscriptionsInfoTableData>>((ref) =>  SubscriptionInformationManager()
+    .getAllSubscriptions());
+
+
+class AddNewSubscriptionValueWidget extends StatelessWidget {
   const AddNewSubscriptionValueWidget({super.key});
 
   @override
-  State<AddNewSubscriptionValueWidget> createState() =>
-      _AddNewSubscriptionValueWidgetState();
-}
-
-class _AddNewSubscriptionValueWidgetState
-    extends State<AddNewSubscriptionValueWidget> {
-  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                "Subscription Information Manager",
-                style: TextStyle(fontSize: 41, fontWeight: FontWeight.w600),
+    return const Padding(
+      padding:  EdgeInsets.symmetric(vertical: 8.0),
+      child: Card(
+        backgroundColor: Colors.black,
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+               Padding(
+                padding:  EdgeInsets.all(12.0),
+                child: Text(
+                  "Subscription Information Manager",
+                  style: TextStyle(fontSize: 41, fontWeight: FontWeight.w600),
+                ),
               ),
-            ),
-            Row(
-              children: [
-                const CreateNewSubscriptionWidget(),
-                //  current subscriptions
-                Expanded(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Current subscription",
-                        style: TextStyle(
-                            fontSize: 31, fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Consumer(builder:
-                          (BuildContext context, WidgetRef ref, Widget? child) {
-                        var getListOfSubscriptions =
-                            ref.read(listOfSubscriptionsProvider.notifier);
-                        var listOfSubscriptions =
-                            ref.watch(listOfSubscriptionsProvider);
-
-                        return SizedBox(
-                            height: 450,
-                            width: 400,
-                            child: FutureBuilder(
-                                future: SubscriptionInformationManager()
-                                    .getAllSubscriptions(),
-                                builder: (context, snapshot) {
-                                  switch (snapshot.connectionState) {
-                                    case ConnectionState.waiting:
-                                      return const Center(child: ProgressBar());
-
-                                    case ConnectionState.done:
-                                      if (listOfSubscriptions.isEmpty) {
-                                        Future.delayed(
-                                            const Duration(seconds: 0), () {
-                                          getListOfSubscriptions.state =
-                                              snapshot.data!;
-                                        });
-                                      }
-
-                                      if (snapshot.data!.isNotEmpty &&
-                                          snapshot.hasData) {
-                                        return ListView.builder(
-                                            itemCount:
-                                                listOfSubscriptions.length,
-                                            itemBuilder: (context, index) =>
-                                                SubscriptionCard(
-                                                    data: listOfSubscriptions[
-                                                        index]!));
-                                      } else {
-                                        return Center(
-                                          child: Text("No subscriptions found"),
-                                        );
-                                      }
-
-                                    default:
-                                      return const Center(child: ProgressBar());
-                                  }
-                                }));
-                      })
-                    ],
-                  ),
-                ))
-              ],
-            ),
-          ],
+              Row(
+                children: [
+                   CreateNewSubscriptionWidget(),
+                  //  current subscriptions
+                  CurrentSubscriptions()
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
+class CurrentSubscriptions extends ConsumerWidget {
+  const CurrentSubscriptions({super.key});
+
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var allSubscriptions =  ref.watch(allSubscriptionsProvider);
+      print( allSubscriptions.value?.length);
+    return Expanded(
+        child: Padding(
+          padding:const  EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Current subscription",
+                style: TextStyle(
+                    fontSize: 31, fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              SizedBox(
+                  height: 450,
+                  width: 400,
+                  child: allSubscriptions.when(
+                      data: (snapshot){
+
+                        if(snapshot.isNotEmpty){
+                          List<Widget> data = snapshot.map((e) => SubscriptionCard(data: e)).toList();
+                          return ListView(
+                            children: data,
+                          );
+                        }else{
+                         return const Center(child: Text("No subscriptions found"));
+                        }
+                      }
+
+                        ,
+                      error: (err,state)=>  const Center(child:  Text("Error occured")),
+                      loading: ()=>const Center(child: ProgressBar())))
+            ],
+          ),
+        ));
+  }
+}
+
+
+
 

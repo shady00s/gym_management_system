@@ -1,9 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:gym_management/database_management/tables/generate_table.dart';
-
 import '../../models/backup_data_models.dart';
-import '../../models/need_to_resubscribe_model.dart';
 
 class PlayersDatabaseManager {
    static  SystemDatabase playersDatabase = SystemDatabase();
@@ -195,36 +193,7 @@ class PlayersDatabaseManager {
 
    Future<List<GetEndedSubscriptionByTeamResult>> getNeedToResubscribePlayersSubscriptions(teamId) async {
 
-     List<GetEndedSubscriptionByTeamResult>  data = await playersDatabase.getEndedSubscriptionByTeam(teamId, DateTime.now().subtract(Duration(days: 40)),DateTime.now()).get();
-     // var date = playersDatabase.select(PlayersSubscriptions(playersDatabase))
-     //   ..where((tbl) =>
-     //       tbl.endDate.isBetweenValues((DateTime.now().subtract(const Duration(days:30))),DateTime.now()))..orderBy([(u)=>OrderingTerm(expression: u.endDate,mode: OrderingMode.desc)])
-     //   ..get();
-     // List<PlayersSubscription> listData = await date.get();
-     // List<NeedToReSubscribeModel> players = [];
-     // for (var data in listData) {
-     //   var x = playersDatabase.select(Players(playersDatabase))
-     //     ..where((tbl) => tbl.playerIndexId.equals(data.playerSubscriptionId))
-     //     ..get();
-     //   List<Player> playersList = await x.get();
-     //
-     //   for (var data3 in playersList) {
-     //     NeedToReSubscribeModel needToReSubscribeModel =   NeedToReSubscribeModel(
-     //
-     //         playerId: data3.playerId,
-     //         playerName: data3.playerName,
-     //         playerGender: data3.playerGender,
-     //         playerPhoneNumber: data3.playerPhoneNumber,
-     //         imagePath: data3.imagePath,
-     //         playerAge: data3.playerAge,
-     //         playerFirstJoinDate: data3.playerFirstJoinDate,
-     //         subscriptionId: data3.subscriptionId,
-     //         endedSub: data.endDate, playerIndexId: data3.playerIndexId);
-     //     players.add(needToReSubscribeModel);
-     //   }
-     // }
-     // return players;
-
+     List<GetEndedSubscriptionByTeamResult>  data = await playersDatabase.getEndedSubscriptionByTeam(teamId, DateTime.now().subtract(const Duration(days: 40)),DateTime.now()).get();
      return data;
    }
 }

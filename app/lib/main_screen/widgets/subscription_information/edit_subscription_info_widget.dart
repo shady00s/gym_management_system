@@ -1,5 +1,6 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart' as m;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/main_screen/widgets/subscription_information/add_new_subscription_value_widget.dart';
 
@@ -7,6 +8,7 @@ import '../../../database_management/tables/generate_table.dart';
 import '../../../database_management/tables/subscriptions/subscriptions_information_manager.dart';
 
 class SubscriptionCard extends StatefulWidget {
+
   final SubscriptionsInfoTableData data;
   const SubscriptionCard({super.key, required this.data});
 
@@ -19,7 +21,7 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
 
   final TextEditingController _subName = TextEditingController();
 
-  SubscriptionsInfoTableData? editSubData;
+  SubscriptionsInfoTableData? editSubData ;
   @override
   void initState() {
 
@@ -35,12 +37,13 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
 
   @override
   Widget build(BuildContext context) {
+
     return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Consumer(
 
           builder: (BuildContext context, WidgetRef ref, Widget? child) {
-            var getListOfSubscriptions  = ref.read(listOfSubscriptionsProvider.notifier);
+
             return Button(
                 onPressed: () async {
 
@@ -69,6 +72,7 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                           return null;
                                         },
                                         onChanged: (val) {
+
                                           setState(() {
                                             editSubData = SubscriptionsInfoTableData(
                                                 id: widget.data.id,
@@ -303,17 +307,13 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                                   widget.data.id!,
                                                   editSubData!)
                                                   .then((val) async {
-                                                await Future.delayed(const Duration(seconds: 0),() async {
-                                                  getListOfSubscriptions.state = await SubscriptionInformationManager().getAllSubscriptions();
-                                                });
-
-
-
-                                                showSnackbar(
+                                                await Future.delayed(const Duration(seconds: 0),()  {
+                                                  ref.invalidate(allSubscriptionsProvider);
+                                                }).then((value) => showSnackbar(
                                                     context,
-                                                    InfoBar(
+                                                   const InfoBar(
                                                       content: Text(
-                                                          "subscription is saved to database."), title: Text("Succssess"),));
+                                                          "subscription is saved to database."), title: Text("Succssess"),)));
                                               }).then((value){
 
                                                 Navigator.pop(context);
@@ -346,14 +346,21 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                     children: [
                       Text(widget.data.subscriptionName),
                       IconButton(icon: Icon(FluentIcons.delete), onPressed: () async{
-                        showDialog(context: context, builder: (context)=>ContentDialog(title: Text("Delete subscription information"),content: Text("Are you sure you want to delete this subscripton information?"),
+                       await showDialog(context: context, builder: (context)=>ContentDialog(title: Text("Delete subscription information"),content: Text("Are you sure you want to delete this subscripton information?"),
 
                           actions: [
                             Button(child:  Text("Delete"), onPressed: ()async{
-                              await SubscriptionInformationManager().deleteSubscriptionData(widget.data.id!).then((value) async => getListOfSubscriptions.state = await SubscriptionInformationManager().getAllSubscriptions());
+                              await SubscriptionInformationManager().deleteSubscriptionData(widget.data.id!).then((value) async =>Future.delayed(Duration(seconds: 0,),(){
+                                ref.invalidate(allSubscriptionsProvider);
+                                Navigator.pushReplacement(context, m.MaterialPageRoute (
+                                  builder: (BuildContext context) => const AddNewSubscriptionValueWidget(),
+                                ),);
+                              }) ).then((value){
+                                showSnackbar(context, InfoBar(title: Text("Succssess"),content: Text("Subscription is successfully deleted"),));
+                                Navigator.pop(context);
+                              });
 
-                              showSnackbar(context, InfoBar(title: Text("Succssess"),content: Text("Subscription is successfully deleted"),));
-                              Navigator.pop(context);
+
 
                             }),
                             FilledButton(child: Text("Cancel"), onPressed: (){

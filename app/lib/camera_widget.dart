@@ -246,7 +246,8 @@ class _TakeNewPhotoState extends State<TakeNewPhoto> {
 
   @override
   Widget build(BuildContext context) {
-    return  ListView(
+    return  Column(
+      mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(
