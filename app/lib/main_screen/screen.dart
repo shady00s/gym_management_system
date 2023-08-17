@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/main_screen/widgets/subscription_information/add_new_subscription_value_widget.dart';
 import 'package:gym_management/main_screen/home_widget.dart';
-import 'package:gym_management/main_screen/widgets/player_widgets/player_status_widget.dart';
+import 'package:gym_management/main_screen/widgets/player_widgets/player_status/player_status_widget.dart';
 
 import '../manage_excel/ui_widget.dart';
 

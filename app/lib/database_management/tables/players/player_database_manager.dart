@@ -111,8 +111,6 @@ class PlayersDatabaseManager {
         playerGender:"",
         subscriptionId:0);
     for (var element in result) {
-      print(element.playerName);
-      print(element.beginningDate);
      playerProfileData = Player(id: element.id,
          playerIndexId:element.playerIndexId,
          playerId:element.playerId,
@@ -138,39 +136,21 @@ class PlayersDatabaseManager {
   }
 
 
-  Future<List<Player>> getEndedSubscriptionsPlayers(DateTime dateTime,DateTime endDate) async {
-    var date = playersDatabase.select(PlayersSubscriptions(playersDatabase))
-      ..where((tbl) =>
-          tbl.endDate.isBetweenValues(
-              dateTime, endDate))
-      ..get();
-    List<PlayersSubscription> listData = await date.get();
-    List<Player> date2 = [];
-    for (var data in listData) {
-      var x = playersDatabase.select(Players(playersDatabase))
-        ..where((tbl) => tbl.playerIndexId.equals(data.playerSubscriptionId))
-        ..get();
-      List<Player> p = await x.get();
+  Future<List<Player>> getEndedSubscriptionsPlayers(var data) async {
 
-      for (var data3 in p) {
-        date2.add(data3);
-      }
-    }
-    return date2;
+    List<Player> players =   await playersDatabase.filterEndedSubPlayers(data['duration']['id'].begDate, data['duration']['id'].endDate,data['subscription']['id'], data['coach']['id']).get();
+  return players;
   }
 
-  Future <List<Player>> getNewPlayersSubscriptions(DateTime date) async {
+  Future <List<Player>> getNewPlayersSubscriptions(var data) async {
 
-    var players = playersDatabase.select(Players(playersDatabase))
-      ..where((tbl) =>
-          tbl.playerFirstJoinDate.isBetweenValues(
-              date, DateTime.now()));
-
-    return await players.get();
+ var x = await playersDatabase.filterNewPlayers(data['duration']['id'].begDate, data['duration']['id'].endDate,data['subscription']['id'], data['coach']['id']).get();
+    return x;
   }
 
 
   Future <List<Player>> getActivePlayersSubscriptions() async {
+
     var date = playersDatabase.select(PlayersSubscriptions(playersDatabase))
       ..where((tbl) =>
           tbl.endDate.isBiggerOrEqualValue(DateTime.now()))

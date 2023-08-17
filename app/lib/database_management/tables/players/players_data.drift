@@ -43,3 +43,20 @@ getEndedSubscriptionByTeam: SELECT DISTINCT Players.*, PlayersSubscriptions.*
                             AND PlayersSubscriptions.end_date
                             BETWEEN :beginDateTime AND :secondDateTime
                             ORDER BY PlayersSubscriptions.end_date DESC;
+
+filterNewPlayers(REQUIRED :beginDate AS DATETIME OR NUll,REQUIRED :endDate AS DATETIME OR NUll,REQUIRED :teamId AS INT OR NULL,REQUIRED :billVal AS INT OR NULL): SELECT  DISTINCT Players.* FROM PLAYERS
+                  INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id
+                  INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id
+                  WHERE Players.player_first_join_date BETWEEN :beginDate  AND :endDate
+                  AND (PlayersSubscriptions.billValue = COALESCE(:billVal, PlayersSubscriptions.billValue) OR :billVal IS NULL)
+                  AND (PlayersAndTeamsTable.team_id = COALESCE(:teamId, PlayersAndTeamsTable.team_id) OR :teamId IS NULL )
+                  ORDER BY PLAYERS.player_first_join_date DESC;
+
+
+filterEndedSubPlayers(REQUIRED :beginDate AS DATETIME OR NUll,REQUIRED :endDate AS DATETIME OR NUll,REQUIRED :teamId AS INT OR NULL,REQUIRED :billVal AS INT OR NULL): SELECT  DISTINCT Players.* FROM PLAYERS
+                  INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id
+                  INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id
+                  WHERE PlayersSubscriptions.end_date BETWEEN :beginDate  AND :endDate
+                  AND (PlayersSubscriptions.billValue = COALESCE(:billVal, PlayersSubscriptions.billValue) OR :billVal IS NULL)
+                  AND (PlayersAndTeamsTable.team_id = COALESCE(:teamId, PlayersAndTeamsTable.team_id) OR :teamId IS NULL )
+                  ORDER BY PLAYERS.player_first_join_date DESC;
