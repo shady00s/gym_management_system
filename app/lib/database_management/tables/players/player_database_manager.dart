@@ -75,8 +75,8 @@ class PlayersDatabaseManager {
     return await playersDatabase.getAllNames().get();
   }
 
-  Future<List<Player>> getPlayersByTeam(int id) async{
-  List<Player> players =  await  playersDatabase.getPlayersByTeam(id).get();
+  Future<List<GetPlayersByTeamResult>> getPlayersByTeam(int id) async{
+  List<GetPlayersByTeamResult> players =  await  playersDatabase.getPlayersByTeam(id).get();
    return players;
 
   }
@@ -87,12 +87,16 @@ class PlayersDatabaseManager {
         if (value == null) {
           return player.playerName.like('%$searchInput%');
         } else if (searchInput.length < 11) {
-          return player.playerId.equals(value);
+          return player.playerIndexId.equals(value);
         } else {
           return player.playerPhoneNumber.equals(value);
         }
       })
       ..get();
+
+    var x = await res.get();
+
+
     return await res.get();
   }
 
@@ -175,5 +179,18 @@ class PlayersDatabaseManager {
 
      List<GetEndedSubscriptionByTeamResult>  data = await playersDatabase.getEndedSubscriptionByTeam(teamId, DateTime.now().subtract(const Duration(days: 40)),DateTime.now()).get();
      return data;
+   }
+
+
+   Future<EnterPlayerToGymResult> enterPlayerToGym(int teamId) async{
+    var playerData = await playersDatabase.enterPlayerToGym(1303, 0).getSingle();
+      DateTime today = DateTime.now();
+      if(playerData.endDate!.difference(today).isNegative ){
+        print(playerData.endDate);
+
+      }else{
+        print("valid");
+      }
+      return playerData;
    }
 }

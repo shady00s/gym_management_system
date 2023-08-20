@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 import 'package:gym_management/database_management/tables/teams/teams_database_manager.dart';
 import 'package:gym_management/main_screen/widgets/cards_with_icons.dart';
+import 'package:gym_management/main_screen/widgets/enter_players_manually.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/add_new_player.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/onboard_players.dart';
 import 'package:gym_management/main_screen/widgets/search_widgets/search_widget.dart';
@@ -20,7 +21,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      backgroundColor: Color.fromRGBO(12, 12, 12, 0.85),
+      backgroundColor:const Color.fromRGBO(12, 12, 12, 0.85),
       child: FutureBuilder<List<TeamsDataTableData>>(
         future: TeamsDatabaseManager().getAllTeams(),
         builder: (context, snapshot) {
@@ -65,9 +66,14 @@ class HomeTabWidget extends StatelessWidget {
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
+             Expanded(
                 flex: 2,
-                child:Center(child: Text("No Players added")) ),//OnBoardPlayers(title: "Active players for today:")),
+                child:Column(
+                  children: [
+                    EnterPlayersManually(teamId:teamId),
+                    const  Center(child: Text("No Players added")),
+                  ],
+                ) ),//OnBoardPlayers(title: "Active players for today:")),
             Expanded(
               flex: 4,
               child: Column(

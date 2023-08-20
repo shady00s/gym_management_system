@@ -16,8 +16,8 @@ class AddNewSubscriptionValueWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding:  EdgeInsets.symmetric(vertical: 8.0),
+    return  Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Card(
         backgroundColor: Colors.black,
         child: Center(
@@ -25,13 +25,13 @@ class AddNewSubscriptionValueWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
                Padding(
-                padding:  EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(12.0),
                 child: Text(
                   "Subscription Information Manager",
-                  style: TextStyle(fontSize: 41, fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: Colors.yellow),
                 ),
               ),
-              Row(
+              const  Row(
                 children: [
                    CreateNewSubscriptionWidget(),
                   //  current subscriptions
@@ -53,7 +53,7 @@ class CurrentSubscriptions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var allSubscriptions =  ref.watch(allSubscriptionsProvider);
-      print( allSubscriptions.value?.length);
+
     return Expanded(
         child: Padding(
           padding:const  EdgeInsets.all(8.0),
@@ -61,11 +61,16 @@ class CurrentSubscriptions extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+               Text(
                 "Current subscription",
-                style: TextStyle(
-                    fontSize: 31, fontWeight: FontWeight.w500),
-              ),
+                style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold,color: Colors.grey[50])),
+
+               Padding(
+                 padding: const EdgeInsets.all(8.0),
+                 child: Text(
+                  "See and edit all subscriptions",
+                  style: TextStyle(fontSize: 14, color: Colors.grey[80])),
+               ),
               const SizedBox(
                 height: 15,
               ),

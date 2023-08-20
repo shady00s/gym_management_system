@@ -32,7 +32,7 @@ allSubscriptions: SELECT * FROM PlayersSubscriptions;
 
 getPlayerSubscription: SELECT Players.*, PlayersSubscriptions.* FROM Players INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id WHERE Players.player_index_id = :player_index_id  ORDER BY end_date DESC;
 
-getPlayersByTeam: SELECT Players.* From Players INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id WHERE PlayersAndTeamsTable.team_id = :team_id;
+getPlayersByTeam: SELECT player_id, player_index_id, player_name FROM Players INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id WHERE PlayersAndTeamsTable.team_id = :team_id ORDER BY Players.player_first_join_date DESC;
 
 
 getEndedSubscriptionByTeam: SELECT DISTINCT Players.*, PlayersSubscriptions.*
@@ -60,3 +60,10 @@ filterEndedSubPlayers(REQUIRED :beginDate AS DATETIME OR NUll,REQUIRED :endDate 
                   AND (PlayersSubscriptions.billValue = COALESCE(:billVal, PlayersSubscriptions.billValue) OR :billVal IS NULL)
                   AND (PlayersAndTeamsTable.team_id = COALESCE(:teamId, PlayersAndTeamsTable.team_id) OR :teamId IS NULL )
                   ORDER BY PLAYERS.player_first_join_date DESC;
+
+enterPlayerToGym(REQUIRED :teamId AS INT,REQUIRED :playerId AS INT):  SELECT DISTINCT  Players.player_id, Players.player_index_id, Players.player_name, PlayersSubscriptions.*, MAX(PlayersSubscriptions.end_date), PlayersAndTeamsTable.*
+                                                FROM Players
+                                            LEFT JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id
+                                            LEFT JOIN PlayersAndTeamsTable ON Players.player_index_id = PlayersAndTeamsTable.team_player_id
+                                            WHERE Players.player_id = :playerId
+                                            AND PlayersAndTeamsTable.team_id = :teamId;

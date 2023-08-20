@@ -3,6 +3,7 @@ import 'package:gym_management/database_management/tables/players/player_databas
 import 'package:gym_management/main_screen/widgets/player_widgets/player_name_widget.dart';
 
 import '../../../database_management/tables/generate_table.dart';
+
 class PlayersListWidget extends StatelessWidget {
   final int teamId;
   PlayersListWidget({super.key,required this.teamId});
@@ -11,7 +12,7 @@ class PlayersListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Player>>(
+    return FutureBuilder<List<GetPlayersByTeamResult>>(
         future: PlayersDatabaseManager().getPlayersByTeam(teamId),
         builder: (context, snapshot) {
 
@@ -21,7 +22,7 @@ class PlayersListWidget extends StatelessWidget {
 
             case ConnectionState.done:
               if(snapshot.hasData){
-                List<Player> playersList = snapshot.data!;
+                List<GetPlayersByTeamResult> playersList = snapshot.data!;
                 return CustomScrollView(
                   shrinkWrap: false,
                   physics: const AlwaysScrollableScrollPhysics (),

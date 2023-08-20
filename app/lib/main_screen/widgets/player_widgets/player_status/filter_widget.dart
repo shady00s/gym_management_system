@@ -34,6 +34,9 @@ class FilterNotifier extends StateNotifier<Map<String, dynamic>> {
 final filterNewProvider = StateNotifierProvider<FilterNotifier, Map<String, dynamic>>(
       (ref) => FilterNotifier(),
 );
+final emptyProvider = StateNotifierProvider<FilterNotifier, Map<String, dynamic>>(
+      (ref) => FilterNotifier(),
+);
 
 final filterEndedProvider = StateNotifierProvider<FilterNotifier, Map<String, dynamic>>(
       (ref) => FilterNotifier(),
@@ -63,12 +66,13 @@ class FilterWidget extends StatelessWidget {
               children: [
 
 
-                FilterElement(future:SubscriptionInformationManager().getAllSubscriptions(), title: 'Subscription value', list: null, allButton: true, isSubscription: true, onChange: (val) {
+                FilterElement(future:SubscriptionInformationManager().getAllSubscriptionsOrdered(), title: 'Subscription value', list: null, allButton: true, isSubscription: true, onChange: (val) {
 
                   setFilter.setSubscription(val =="null"?CustomBoxData(title: "All", id:null ): CustomBoxData(title: val.title, id:val.id ));
-                }, provider: provider ,),
+                }, provider: provider, isSubscriptionWithName: false ,),
                 Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                  var filterValues = ref.watch(provider);
+
+                   var filterValues = ref.watch(provider) ;
                   return   Text(filterValues['subscription']['title'].toString());
                 },)
 
@@ -89,7 +93,7 @@ class FilterWidget extends StatelessWidget {
                 FilterElement(future:null, title: 'Gender', list: genders, allButton: true, isSubscription: false, onChange: (val) {
 
                   setFilter.setGender(val=="null"? CustomBoxData(title: "All", id:null) : CustomBoxData(title: val.title, id: val.id) );
-                }, provider: provider,),
+                }, provider: provider, isSubscriptionWithName: false,),
                 Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
                   var filterValues = ref.watch(provider);
                   return   Text(filterValues['gender']['title'].toString());
@@ -110,7 +114,7 @@ class FilterWidget extends StatelessWidget {
                FilterElement(future: TeamsDatabaseManager().getAllTeams(), title: 'Coach / Team', list: null, allButton: true, isSubscription: false, onChange: (val) {
 
                  setFilter.setCoachId(val!="null"?CustomBoxData(title: val.title, id:val.id ):CustomBoxData(title:"All",  id:null));
-                     }, provider: provider,),
+                     }, provider: provider, isSubscriptionWithName: false,),
                     Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
                       var filterValues = ref.watch(provider);
 
@@ -132,7 +136,7 @@ class FilterWidget extends StatelessWidget {
                FilterElement(future:null, title: 'Duration', list: durationList, allButton: false, isSubscription: false, onChange: (val) {
 
                  setFilter.setDuration(val.id!="null"? DurationModel(title:val.title,value:DurationTime(begDate: val.id.begDate, endDate: val.id.endDate)):DurationModel(title:"Today",value:DurationTime(begDate:  DateTime.now().subtract(Duration(days: 1)), endDate:  DateTime.now())));
-                     }, provider: provider,),
+                     }, provider: provider, isSubscriptionWithName: false,),
                     Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
                       var filterValues = ref.watch(provider);
                      return Text(filterValues['duration']['title'].toString());

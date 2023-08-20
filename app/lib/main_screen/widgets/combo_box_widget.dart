@@ -81,27 +81,26 @@ Future _showDateRangePicker(BuildContext context,dynamic provider) async {
 }
 
 
-
-class ComboBoxWidgetForFilter extends StatefulWidget {
+class ComboBoxWidget extends StatefulWidget {
   final List<dynamic> items;
   final String filterTitle;
   final Function onChanged;
   final bool allButton;
-  final dynamic provider;
-  const ComboBoxWidgetForFilter(
+
+  const ComboBoxWidget(
       {super.key,
         required this.items,
-        required this.provider,
+
         required this.filterTitle,
         required this.onChanged,
         required this.allButton
       });
 
   @override
-  State<ComboBoxWidgetForFilter> createState() => _ComboBoxWidgetForFilterState();
+  State<ComboBoxWidget> createState() => _ComboBoxWidgetState();
 }
 
-class _ComboBoxWidgetForFilterState extends State<ComboBoxWidgetForFilter> {
+class _ComboBoxWidgetState extends State<ComboBoxWidget> {
   dynamic selectedValue;
 
   @override
@@ -135,6 +134,86 @@ class _ComboBoxWidgetForFilterState extends State<ComboBoxWidgetForFilter> {
               },
               items: [
                 if(widget.allButton)
+                  ComboBoxItem(
+                    value: "null",
+                    child: Text("All"),
+
+                  ),
+                ...widget.items
+                    .map((e) => ComboBoxItem(
+                  value: e,
+                  child: Text(e.title),
+                ))
+                    .toList(),
+
+
+
+              ])
+        ],
+      ),
+    );
+  }
+}
+
+
+
+
+
+class ComboBoxWidgetForFilter extends StatefulWidget {
+  final List<dynamic> items;
+  final String filterTitle;
+  final Function onChanged;
+  final bool allButton;
+  final dynamic provider;
+  final bool isSubscriptionWithName;
+  const ComboBoxWidgetForFilter(
+      {super.key,
+        required this.items,
+        required this.provider,
+        required this.filterTitle,
+        required this.onChanged,
+        required this.allButton,
+        required this.isSubscriptionWithName
+      });
+
+  @override
+  State<ComboBoxWidgetForFilter> createState() => _ComboBoxWidgetForFilterState();
+}
+
+class _ComboBoxWidgetForFilterState extends State<ComboBoxWidgetForFilter> {
+  dynamic selectedValue;
+
+  @override
+  void initState() {
+    setState(() {
+      selectedValue =widget.allButton && !widget.isSubscriptionWithName? "null": widget.items.first;
+    });
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.items.isEmpty
+        ? const Center(
+      child: ProgressRing(),
+    )
+        : Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text(widget.filterTitle),
+          ComboBox(
+              value: selectedValue,
+              onChanged: (value) {
+                setState(() {
+                  selectedValue = value!;
+                });
+                widget.onChanged(value);
+              },
+              items: [
+                if(widget.allButton && !widget.isSubscriptionWithName)
                 ComboBoxItem(
                   value: "null",
                   child: Text("All"),

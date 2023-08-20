@@ -14,6 +14,10 @@ class PlayerNameWidget extends StatelessWidget {
       child: Button(
         onPressed:()async{
           await showDialog(context: context, builder: (context)=> ContentDialog(
+            style: ContentDialogThemeData(
+
+                decoration: BoxDecoration(color: Color.fromRGBO(
+                    16, 15, 15, 1.0)) ),
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -25,7 +29,7 @@ class PlayerNameWidget extends StatelessWidget {
                 )
               ],
             ),
-            content: PlayerCardInformationWidget(playerId: playerIndexId,),
+            content: Card(child: PlayerCardInformationWidget(playerId: playerIndexId,)),
             actions: [
               Button(child:Text("Re-new") ,onPressed: (){},),
               Button(child:Text("Invitation") ,onPressed: (){},),

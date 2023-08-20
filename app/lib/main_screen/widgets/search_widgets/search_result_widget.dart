@@ -22,7 +22,7 @@ class SearchResultWidget extends StatelessWidget {
             return d.when(data:(val)=>val[0]?.playerName != null? ListView.builder(
                 itemCount: val.length,
                 itemBuilder: (context,index)=>FluentTheme(data: FluentThemeData.dark(),
-                child: PlayerNameWithImage(playerName: val[index]!.playerName, playerId: val[index]!.playerId, imagePath:val[index]!.imagePath),) )  :Text("no result"), error: (err,stack)=>Text(err.toString()), loading:()=> Center(child: ProgressBar(),));
+                child: PlayerNameWithImage(playerName: val[index]!.playerName, playerId: val[index]!.playerId, imagePath:val[index]!.imagePath, playerIndexId: val[index]!.playerIndexId,),) )  :Text("no result"), error: (err,stack)=>Text(err.toString()), loading:()=> Center(child: ProgressBar(),));
           },))
 
         ],);

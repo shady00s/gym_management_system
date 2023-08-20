@@ -6,8 +6,9 @@ class PlayerNameWithImage extends StatelessWidget {
   final  String playerName;
   final String imagePath;
   final int playerId;
+  final int playerIndexId;
 
-   PlayerNameWithImage({super.key,required this.playerName,required this.playerId, required this.imagePath});
+   PlayerNameWithImage({super.key,required this.playerName,required this.playerId, required this.imagePath,required this.playerIndexId});
   final menuController = FlyoutController();
 
   @override
@@ -29,7 +30,7 @@ class PlayerNameWithImage extends StatelessWidget {
                   )
                 ],
               ),
-              content: PlayerCardInformationWidget(playerId: playerId,),
+              content: PlayerCardInformationWidget(playerId: playerIndexId,),
               actions: [
                 Button(child:Text("Re-new") ,onPressed: (){},),
                 Button(child:Text("Invitation") ,onPressed: (){},),

@@ -13,7 +13,12 @@ class SubscriptionInformationManager extends PlayersDatabaseManager{
     return subscriptions;
   }
 
-
+  Future<List<SubscriptionsInfoTableData>> getAllSubscriptionsOrdered()async{
+    var subscriptions =   db.select(SubscriptionsInfoTable(db))..orderBy([
+      (u)=>OrderingTerm(expression:  u.subscriptionValue,mode: OrderingMode.asc)
+    ])..get();
+    return await subscriptions.get();
+  }
   Future editSubscriptionData (int id ,SubscriptionsInfoTableData data)async{
 
       await db.update(SubscriptionsInfoTable(db)).replace(SubscriptionsInfoTableCompanion(

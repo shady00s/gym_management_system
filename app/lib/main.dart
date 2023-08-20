@@ -20,9 +20,9 @@ class MyApp extends StatelessWidget {
        FluentApp(
          title:"Gym management system",
           themeMode: ThemeMode.dark,
-          color: Colors.black,
+          color: Colors.blue,
           theme: FluentThemeData.dark(),
-
+          debugShowCheckedModeBanner: false,
           home: const Card( backgroundColor:Colors.black,child:  MainScreen()),
       );
   }

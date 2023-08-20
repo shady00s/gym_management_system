@@ -11,7 +11,8 @@ class FilterElement extends StatelessWidget {
   final bool isSubscription;
   final Function onChange;
   final dynamic provider;
-  const FilterElement({super.key,required this.onChange,required this.isSubscription,required this.allButton,required this.future,required this.title,required this.list,required this.provider});
+  final bool isSubscriptionWithName;
+  const FilterElement({super.key,required this.isSubscriptionWithName,required this.onChange,required this.isSubscription,required this.allButton,required this.future,required this.title,required this.list,required this.provider});
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +27,10 @@ class FilterElement extends StatelessWidget {
               return
                 snapshot.hasData?   ComboBoxWidgetForFilter(
 
-                  items:snapshot.data!.map((e)=> CustomBoxData(title:isSubscription? e.subscriptionValue.toString() : e.teamName , id:isSubscription?e.subscriptionValue:  e.teamId )).toList()
+                  items:snapshot.data!.map((e)=> CustomBoxData(title:isSubscriptionWithName?e.subscriptionName:isSubscription? e.subscriptionValue.toString() : e.teamName , id:isSubscription?e.subscriptionValue:  e.teamId )).toList()
 
                   ,filterTitle: title,
-                  onChanged:(val){onChange(val);}  , allButton: allButton, provider: provider,
+                  onChanged:(val){onChange(val);}  , allButton: allButton, provider: provider, isSubscriptionWithName: isSubscriptionWithName,
 
                 ): const Center(child: Padding(
                   padding: EdgeInsets.all(8.0),
@@ -45,7 +46,7 @@ class FilterElement extends StatelessWidget {
 
       items: list!.map((e)=> CustomBoxData(title: e.title  , id: e.value)).toList(),
       filterTitle: title,
-      onChanged: onChange, allButton: allButton, provider: provider,
+      onChanged: onChange, allButton: allButton, provider: provider, isSubscriptionWithName: isSubscriptionWithName,
 
     );
   }

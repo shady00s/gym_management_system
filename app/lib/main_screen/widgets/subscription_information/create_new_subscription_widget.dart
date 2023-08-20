@@ -43,9 +43,9 @@ class _CreateNewSubscriptionWidgetState
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
+                           Text(
                             "Add new subscription",
-                            style: TextStyle(fontSize: 31, fontWeight: FontWeight.w500),
+                            style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold,color: Colors.grey[50]),
                           ),
                           const SizedBox(
                             height: 31,

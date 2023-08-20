@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
+import 'package:intl/intl.dart';
 
 import '../../../database_management/models/backup_data_models.dart';
 
@@ -20,6 +21,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
               return Center(child: ProgressRing(),);
             case ConnectionState.done:
               if(snapshot.hasData){
+                print(snapshot.data?.subData[1]);
                 int date = DateTime.now().difference(snapshot.data!.subData[0].endDate).inDays;
 
                 return Padding(
@@ -33,7 +35,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                             176, 175, 175, 0.7019607843137254),
                         child: Icon(FluentIcons.contact ,size: 41,),
                       ),
-                      SizedBox(height: 22,),
+                      const  SizedBox(height: 22,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -41,7 +43,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                           Text(snapshot.data!.profileData.playerName),
                         ],
                       ),
-                      SizedBox(height: 14,),
+                      const  SizedBox(height: 14,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -61,70 +63,91 @@ class PlayerCardInformationWidget extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("First join date:"),
-                          Text((snapshot.data!.profileData.playerFirstJoinDate.toString()).toString()),
+                          const  Text("First join date:"),
+                          Text((DateFormat.yMMMMEEEEd().format(snapshot.data!.profileData.playerFirstJoinDate) ).toString()),
                         ],
                       ),
 
-                      SizedBox(height: 14,),
+                      const SizedBox(height: 14,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Status:"),
+                          const  Text("Status:"),
                           Text(date < 0 ?"Valid": date == 0? "Ended today" :"Ended $date day ago" ,style:
 
                           TextStyle(color:
 
-                          date < 0 ?Color.fromRGBO(
-                              2, 176, 18, 0.8) : date <= 10?Color.fromRGBO(
-                              176, 173, 2, 0.8) :date <= 30?Color.fromRGBO(
-                              176, 80, 2, 0.8):Color.fromRGBO(
+                          date < 0 ?const Color.fromRGBO(
+                              2, 176, 18, 0.8) : date <= 10?const Color.fromRGBO(
+                              176, 173, 2, 0.8) :date <= 30?const Color.fromRGBO(
+                              176, 80, 2, 0.8):const Color.fromRGBO(
                               176, 2, 2, 0.8) , fontWeight: FontWeight.bold, fontSize: 18),),
                         ],
                       ),
-                      SizedBox(height: 30,),
+                      const SizedBox(height: 30,),
 
                       Text("Subscriptions history:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 21),),
-                      SizedBox(height: 14,),
+                      const SizedBox(height: 14,),
 
                       Expanded(child: ListView.builder(
                           itemCount: snapshot.data!.subData.length,
                           itemBuilder: (context,index)=>Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
+                            child: Card(
+                              child: Column(
+                                children: [
 
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Beginning date:"),
-                                    Text(snapshot.data!.subData[index].beginningDate.toString())
-                                  ],),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const   Text("Beginning date:"),
+                                        Text((DateFormat.yMMMEd().format(snapshot.data!.subData[index].beginningDate)))
+                                      ],),
+                                  ),
 
-                                Divider(),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("end date:"),
-                                    Text(snapshot.data!.subData[index].endDate.toString())
-                                  ],),
-                                Divider(),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Duration :"),
-                                    Text(snapshot.data!.subData[index].duration == 1? "1 Month":snapshot.data!.subData[index].duration == 3?"3 Months":snapshot.data!.subData[index].duration == 6? "6 Months":snapshot.data!.subData[index].duration == 11?"1 session":snapshot.data!.subData[index].duration == 12?"1 Year":"Unknown")
-                                  ],),
-                              ],),
+                                  const Divider(),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const    Text("end date:"),
+                                        Text(DateFormat.yMMMEd().format(snapshot.data!.subData[index].endDate))
+                                      ],),
+                                  ),
+                                  const Divider(),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text("Duration :"),
+                                        Text(snapshot.data!.subData[index].duration == 1? "1 Month":snapshot.data!.subData[index].duration == 3?"3 Months":snapshot.data!.subData[index].duration == 6? "6 Months":snapshot.data!.subData[index].duration == 11?"1 session":snapshot.data!.subData[index].duration == 12?"1 Year":"Unknown")
+                                      ],),
+                                  ),
+                                  const Divider(),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text("Value :"),
+                                        Text(snapshot.data!.subData[index].billValue == -1? "Unknown" : snapshot.data!.subData[index].billValue.toString())
+                                      ],),
+                                  ),
+                                ],),
+                            ),
                           )))
 
                     ],
                   ),
                 );
               }
-             return Text("No data available");
+             return const Text("No data available");
             default:
-              return  Center(child: ProgressBar(),);
+              return  const Center(child: ProgressBar(),);
 
 
           }

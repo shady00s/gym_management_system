@@ -27,7 +27,7 @@ class NewPlayersWidget extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: SizedBox(
                 width: 230,
-                height: 140,
+                height: 135,
                 child: Card(
                   child: Column(
                     mainAxisAlignment:
