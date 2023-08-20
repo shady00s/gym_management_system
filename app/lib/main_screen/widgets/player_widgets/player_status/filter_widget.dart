@@ -10,7 +10,7 @@ class FilterNotifier extends StateNotifier<Map<String, dynamic>> {
   FilterNotifier() : super({
     'gender':{"id":null,"title":"All"},
     'coach':{"id":null,'title':"All"},
-    'duration':{'id':DurationTime(begDate: DateTime.now().subtract(Duration(days: 1)),endDate: DateTime.now()) ,'title':"Today"},
+    'duration':{'id':DurationTime(begDate: DateTime.now().subtract(const Duration(days: 1)),endDate: DateTime.now()) ,'title':"Today"},
     'subscription':{'id':null,'title':"All"},
   });
 
@@ -135,7 +135,7 @@ class FilterWidget extends StatelessWidget {
 
                FilterElement(future:null, title: 'Duration', list: durationList, allButton: false, isSubscription: false, onChange: (val) {
 
-                 setFilter.setDuration(val.id!="null"? DurationModel(title:val.title,value:DurationTime(begDate: val.id.begDate, endDate: val.id.endDate)):DurationModel(title:"Today",value:DurationTime(begDate:  DateTime.now().subtract(Duration(days: 1)), endDate:  DateTime.now())));
+                 setFilter.setDuration(val.id!="null"? DurationModel(title:val.title,value:DurationTime(begDate: val.id.begDate, endDate: val.id.endDate)):DurationModel(title:"Today",value:DurationTime(begDate:  DateTime.now().subtract(const Duration(days: 1)), endDate:  DateTime.now())));
                      }, provider: provider, isSubscriptionWithName: false,),
                     Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
                       var filterValues = ref.watch(provider);

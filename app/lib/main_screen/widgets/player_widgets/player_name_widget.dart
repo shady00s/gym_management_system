@@ -14,26 +14,25 @@ class PlayerNameWidget extends StatelessWidget {
       child: Button(
         onPressed:()async{
           await showDialog(context: context, builder: (context)=> ContentDialog(
-            style: ContentDialogThemeData(
-
+            style:const ContentDialogThemeData(
                 decoration: BoxDecoration(color: Color.fromRGBO(
                     16, 15, 15, 1.0)) ),
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Player Information"),
+               const Text("Player Information"),
                 IconButton(onPressed: (){
                   Navigator.of(context).pop();
                 },
-                  icon: Icon(FluentIcons.cancel),
+                  icon:const Icon(FluentIcons.cancel),
                 )
               ],
             ),
             content: Card(child: PlayerCardInformationWidget(playerId: playerIndexId,)),
             actions: [
-              Button(child:Text("Re-new") ,onPressed: (){},),
-              Button(child:Text("Invitation") ,onPressed: (){},),
-              Button(child:Text("Freeze") ,onPressed: (){},),
+              Button(child:const Text("Re-new") ,onPressed: (){},),
+              Button(child:const Text("Invitation") ,onPressed: (){},),
+              Button(child:const Text("Freeze") ,onPressed: (){},),
             ],
           ));
         },child:  Padding(
@@ -41,12 +40,12 @@ class PlayerNameWidget extends StatelessWidget {
 
 
           child: FlyoutTarget(controller: menuController,
-          child:  Row(
-    children: [
-      OptionsMenu( menuController),
-      const Spacer(),
-      Text(playerName??"No name"),
-      Text(" - $playerId "??"no id")
+            child:  Row(
+            children: [
+              OptionsMenu( menuController),
+              const Spacer(),
+              Text(playerName),
+              Text(" - $playerId ")
 
     ],
     )

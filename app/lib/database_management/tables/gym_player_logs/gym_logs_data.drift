@@ -1,0 +1,15 @@
+import '../players/players_data.drift';
+import '../teams/teams.drift';
+
+CREATE TABLE IF NOT EXISTS PlayersLogsTable(
+    id INT PRIMARY KEY AUTOINCREMENT,
+    player_id INT NOT NULL,
+    team_id INT NOT NULL,
+    player_entrance_date TIMESTAMP,
+    FOREIGN KEY (player_id) REFERENCES Players (player_index_id),
+    FOREIGN KEY (team_id) REFERENCES TeamsDataTable (team_id)
+);
+
+getTodayLogs(REQUIRED :dateTime AS DATETIME): SELECT Players.*, PlayersLogsTable.* FROM Players
+              INNER JOIN  PlayersLogsTable ON PlayersLogsTable.player_id = Players.player_index_id
+              WHERE PlayersLogsTable.player_entrance_date = :dateTime;
