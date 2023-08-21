@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS PlayersSubscriptions(
     billCollector TEXT NOT NULL
 );
 
+
+
 allPlayers: SELECT * FROM Players;
 getAllNames: SELECT player_id, player_index_id, player_name FROM Players ORDER BY player_id ASC;
 allSubscriptions: SELECT * FROM PlayersSubscriptions;

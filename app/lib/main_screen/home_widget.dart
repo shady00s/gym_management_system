@@ -56,8 +56,8 @@ class _HomeWidgetState extends State<HomeWidget> {
     );
   }
 }
-
-var getPlayerLogsProvider = FutureProvider((ref) => GymLogsManager().getTodayPlayers() );
+var getPlayerTeamProvider = StateProvider((ref) => 0 );
+var getPlayerLogsProvider = FutureProvider((ref) => GymLogsManager().getTodayPlayers(ref.watch(getPlayerTeamProvider)) );
 
 class HomeTabWidget extends StatelessWidget {
   final int teamId;
@@ -77,17 +77,21 @@ class HomeTabWidget extends StatelessWidget {
                     EnterPlayersManually(teamId:teamId),
 
                     Expanded(child:Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                      var teamIdProvider = ref.read(getPlayerTeamProvider.notifier);
                       var logsList = ref.watch(getPlayerLogsProvider);
+                      Future.delayed(Duration.zero,(){
+                        teamIdProvider.state = teamId;
+                      });
 
                       return logsList.when(data: (data)=>
                           data.isNotEmpty?
                           ListView.builder(
                           itemCount: data.length,
                           itemBuilder: (context, index){
-                            return  PlayerNameWithImage(playerName: data[index].playerName!, playerId: data[index].playerId, imagePath: data[index].imagePath!, playerIndexId: data[index].playerIndexId!);
+                            return  PlayerNameWithImage(playerName: data[index].playerName, playerId: data[index].playerId, imagePath: data[index].imagePath!, playerIndexId: data[index].playerIndexId!);
                           }
 
-                      ) :const Center(child: ProgressRing(),)
+                      ) :const Center(child: Text("No Data found"),)
                           , error: (error,stats)=> Text("Error occurred $error"), loading: ()=>const Center(child: ProgressRing(),));
                     },))
                   ],

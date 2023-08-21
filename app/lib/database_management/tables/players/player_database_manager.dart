@@ -184,20 +184,27 @@ class PlayersDatabaseManager {
 
    Future<EnterPlayerToGymResult?> enterPlayerToGym(dynamic playerName,int teamId) async{
      EnterPlayerToGymResult? playerData;
+     DateTime today = DateTime.now();
     if(int.tryParse(playerName) != null){
        playerData = await playersDatabase.enterPlayerToGym(int.parse(playerName),null,teamId).getSingle();
+       if(!playerData.endDate!.difference(today).isNegative ){
 
+         return playerData;
+
+       }else{
+         return null;
+       }
     }else{
       playerData = await playersDatabase.enterPlayerToGym(null,playerName,teamId).getSingle();
-
-    }
-      DateTime today = DateTime.now();
-      if(playerData.endDate!.difference(today).isNegative ){
-        print(playerData.endDate);
+      if(!playerData.endDate!.difference(today).isNegative ){
+        return playerData;
 
       }else{
         return null;
       }
-      return playerData;
+    }
+
+
+
    }
 }

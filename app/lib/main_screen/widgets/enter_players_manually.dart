@@ -47,15 +47,16 @@ class _EnterPlayersManuallyState extends State<EnterPlayersManually> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Button(child: const Text("Enter"), onPressed: ()async {
-                      await GymLogsManager().enterPlayer(1303,0);
                       if(_globalKey.currentState!.validate()){
-                        PlayersDatabaseManager().enterPlayerToGym(_nameController.text,widget.teamId).then((value){
+                        PlayersDatabaseManager().enterPlayerToGym(_nameController.text.toString(),widget.teamId).then((value) async{
                           if(value != null){
-                            GymLogsManager().enterPlayer(value.playerId, value.teamId!).then((value){
+                            GymLogsManager().enterPlayer(value.playerId.toString(), value.teamId!).then((value){
                               Future.delayed(Duration.zero,(){
                                 ref.invalidate(getPlayerLogsProvider);
                               });
                             });
+                          }else{
+                            await showDialog(context: context, builder: (BuildContext context)=>ContentDialog(content: Text("This player has ended subscription"),));
                           }
                         });
 
