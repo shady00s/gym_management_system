@@ -18,10 +18,9 @@ class PlayerCardInformationWidget extends StatelessWidget {
         builder: (context, snapshot){
           switch(snapshot.connectionState){
             case ConnectionState.waiting:
-              return Center(child: ProgressRing(),);
+              return const Center(child: ProgressRing(),);
             case ConnectionState.done:
               if(snapshot.hasData){
-                print(snapshot.data?.subData[1]);
                 int date = DateTime.now().difference(snapshot.data!.subData[0].endDate).inDays;
 
                 return Padding(

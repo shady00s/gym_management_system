@@ -54,8 +54,6 @@ class EndedPlayersSubscriptionWidget extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Consumer(builder: (key, ref, child) {
               var  filter = ref.watch(filterEndedProvider);
-              print(filter['duration']['id'].begDate);
-              print(filter['duration']['id'].endDate);
               var playersListLength = ref.read(endedPlayersDurationProviderListLength.notifier);
               return FutureBuilder<List<Player>>(
                   future:PlayersDatabaseManager()
