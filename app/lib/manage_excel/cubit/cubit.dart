@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gym_management/database_management/models/backup_data_models.dart';
 import 'package:gym_management/manage_excel/cubit/state.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 
@@ -19,6 +20,7 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
   int currentIndex = 0;
   List<SheetsModel> listOfSheets = [];
   List<SheetsModel> selectedList = [];
+  List<ExcelPlayers> excelPlayersList = [];
   PlatformFile? excelFile;
   incrementNumber(int index){
     currentIndex = index;
@@ -56,14 +58,13 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
           }),
         ).then((processedResponse) {
 
-          print( processedResponse.headers['cookie']);
+
           if (processedResponse.statusCode == 200) {
             dynamic processedData = processedResponse.data;
-            print("Processed data: $processedData");
-            emit(SuccessfulUploading());
+
               listOfSheets =parseSheetList(processedData);
               responseStatus = processedResponse.statusCode!;
-
+            emit(SuccessfulUploading());
           } else {
             print("Error getting processed data");
 
@@ -93,7 +94,7 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
               data: formData).then((response) async{
             if (response.statusCode == 302) {
               String redirectedLocation = response.headers['location']![0];
-              print(redirectedLocation);
+
               String url =  "http://127.0.0.1:3000$redirectedLocation";
               // Make a new request to get the processed data
               await _dio.get(
@@ -105,8 +106,8 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
                 if (processedResponse.statusCode == 200) {
                   dynamic processedData = processedResponse.data;
                   responseCode = processedResponse.statusCode!;
-                  print("Processed data: $processedData");
-
+                  excelPlayersList =  parseExcelPlayersList(processedData['resultData']);
+                  emit(SuccessfulUploadingList());
                 } else {
                   print("Error getting processed data");
                   responseCode = processedResponse.statusCode!;
@@ -119,6 +120,13 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
   }
 
 }
+
+List<ExcelPlayers> parseExcelPlayersList(List<dynamic> list){
+
+
+  return list.map((e) => ExcelPlayers.fromJson(e)).toList();
+}
 List<SheetsModel> parseSheetList(List<dynamic> list) {
-  return list.map((item) => SheetsModel.fromJson(item)).toList();
+
+      return list.map((item) => SheetsModel.fromJson(item)).toList();
 }

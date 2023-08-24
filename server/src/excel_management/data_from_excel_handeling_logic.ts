@@ -21,10 +21,12 @@ async function saveXlsxFileData(req:Request, res: Response) {
     const selectedSheets:IselectedTeams[] = JSON.parse(fields.selectedSheet[0]);
     req.session.selected_teams_list = selectedSheets;
     req.session.fileData = req.session.fileData || {fileName:"",filePath:""}; 
-    const fileData = xlsx.readFile(req.session.fileData.filePath)
     const playersMap: IExcelDataModel[] = []
   let currentListLength = 0
-   while (currentListLength < selectedSheets.length) {
+
+  if(req.session.fileData.filePath !== ""){
+    const fileData = xlsx.readFile(req.session.fileData.filePath)
+    while (currentListLength < selectedSheets.length) {
        
         let  fileJsonData = await xlsx.utils.sheet_to_json(fileData.Sheets[ selectedSheets[currentListLength].name])
         for (let x = 0; x < fileJsonData.length; x++) {
@@ -91,10 +93,10 @@ async function saveXlsxFileData(req:Request, res: Response) {
              const invalidNames = /^(?! *$|^ *$|^ديسمبر$|^نوفمبر$|^اكتوبر$|^سبتمبر$|^اغسطس$|^يوليو$|^يونيه$|^مايو$|^ابريل$|^مارس$|^فبراير$|^يناير$).*/;
             const invalidIds = /^(?! *$|^ *$|^-$|^الا$|^لاغى$|^ID$).*$/;
             if (
-                invalidNames.test(name) && invalidIds.test(id)
+                invalidNames.test(name) && invalidIds.test(id) && typeof name !== "number" && typeof subscriptionValue !== "string"  && typeof billId !== "string"
             ) {
                
-                playersMap.push({playerIndexId, playerId, id: id, team: team, name, subscriptions: [{ subscriptionValue: subscriptionValue, beginDate: beginDate, finishDate: finishDate, billId: billId, subscriptionDuration: subscriptionDuration }] })
+                playersMap.push({playerIndexId, playerId, id: id, team: team, name, subscriptions: [{playerSubscriptionId:playerIndexId,  team:team, subscriptionValue: subscriptionValue, beginDate: beginDate, finishDate: finishDate, billId: billId, subscriptionDuration: subscriptionDuration }] })
 
             } 
            
@@ -106,7 +108,6 @@ async function saveXlsxFileData(req:Request, res: Response) {
 
     let processedPlayer = new Set();
     const result = []
-    const result2 = []
     let playerData = {};
     let playerId;
     for (const player of playersMap) {
@@ -118,7 +119,8 @@ async function saveXlsxFileData(req:Request, res: Response) {
             if (playerData[playerId]) {
                 if (player.name!== undefined &&  playerData[playerId].name === player.name) {
 
-
+                    playerData[playerId].playerIndexId = player.playerIndexId  
+                    playerId = player.playerId  
                     if (!player.subscriptions?.every(e => playerData[playerId].subscriptions.every(
                         f => e.beginDate === f.beginDate && e.billId === f.billId && e.subscriptionDuration === f.subscriptionDuration && e.subscriptionValue === f.subscriptionValue))) {
                         playerData[playerId].subscriptions.push(...player.subscriptions);
@@ -144,7 +146,8 @@ async function saveXlsxFileData(req:Request, res: Response) {
             } else {
                 playerData[playerId] = player;
                 if (player.name !== undefined && playerData[playerId].name == player.name ) {
-
+                    playerData[playerId].playerIndexId = player.playerIndexId  
+                    playerId = player.playerId  
                     if (playerData[playerId].subscriptions.length !== 0 && playerData[playerId].subscriptions !== undefined) {
 
                         if (!player.subscriptions?.every(e => playerData[playerId].subscriptions.every(
@@ -192,23 +195,23 @@ async function saveXlsxFileData(req:Request, res: Response) {
     req.session.playerList = result;
     req.session.selected_teams_list =  selectedSheets;   
 
-    res.redirect('/send_json_to_db')
-    //res.json({result,result2})
+  res.redirect('/get_excel_data_offline')
+    //res.json({result})
   }else{
        res.json("no sheets added") 
   }
        
 
 
-    })
+    
+  }
+  else{
+    res.status(400).json("There is no file")
+  }
     
 
+});
 }
-
-
-
-//}
-
 
 
 export {

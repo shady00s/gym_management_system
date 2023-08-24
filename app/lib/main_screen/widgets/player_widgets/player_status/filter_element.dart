@@ -25,14 +25,19 @@ class FilterElement extends StatelessWidget {
               return const Center(child: ProgressRing(),);
             case ConnectionState.done:
               return
-                snapshot.hasData?   ComboBoxWidgetForFilter(
+                 snapshot.data!.length == 0? const Center(child: Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text("No subscription data found"),
+                )):snapshot.hasData ?
+                 ComboBoxWidgetForFilter(
 
-                  items:snapshot.data!.map((e)=> CustomBoxData(title:isSubscriptionWithName?e.subscriptionName:isSubscription? e.subscriptionValue.toString() : e.teamName , id:isSubscription?e.subscriptionValue:  e.teamId )).toList()
+                   items:snapshot.data!.map((e)=> CustomBoxData(title:isSubscriptionWithName?e.subscriptionName:isSubscription? e.subscriptionValue.toString() : e.teamName , id:isSubscription?e.subscriptionValue:  e.teamId )).toList()
 
-                  ,filterTitle: title,
-                  onChanged:(val){onChange(val);}  , allButton: allButton, provider: provider, isSubscriptionWithName: isSubscriptionWithName,
+                   ,filterTitle: title,
+                   onChanged:(val){onChange(val);}  , allButton: allButton, provider: provider, isSubscriptionWithName: isSubscriptionWithName,
 
-                ): const Center(child: Padding(
+                 ):
+                const Center(child: Padding(
                   padding: EdgeInsets.all(8.0),
                   child: ProgressRing(),
                 ));

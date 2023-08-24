@@ -16,9 +16,12 @@ class SubscriptionsModel {
   final int billid;
   final int billValue;
   final int duration;
+  final int team;
   final String collector;
   SubscriptionsModel(
-      {required this.id,
+      {
+        required this.team,
+        required this.id,
         required this.beginning_date,
         required this.end_date,
         required this.billid,
@@ -34,6 +37,7 @@ class SubscriptionsModel {
         billid: json["billid"],
         billValue: json['billvalue'],
         duration: json["duration"],
+        team: json['team'],
         collector: json['billcollector']);
   }
 
@@ -204,5 +208,91 @@ class DataFromDB {
 }
 
 
+class ExcelPlayers{
+  final int player_id;
+  final String player_name;
+  final int? player_phone_number;
+  final String? image_path;
+  final int? player_age;
+  final dynamic team;
+  final String? player_first_join_date;
+  final String? player_gender;
+  final int? subscription_id;
+  final int playerIndexId;
+  final List<ExcelSubscriptionsModel>? subscriptions;
+
+  ExcelPlayers( 
+      {required this.player_id,
+        required this.player_name,
+        required this.player_phone_number,
+        required this.image_path,
+        required this.player_age,
+        required this.player_first_join_date,
+        required this.team,
+        required this.player_gender,
+        required this.subscription_id,
+        required this.playerIndexId,
+        required this.subscriptions});
+
+  factory ExcelPlayers.fromJson(Map<String, dynamic> json) {
+    dynamic team ;
+    if(json['team'].runtimeType == List<int>){
+      team = (json['team'] as List<int> ).map((e) => e).toList();
+    }else{
+      team = json['team'];
+    }
+
+    final subscriptions = (json['subscriptions'] as List<dynamic>).map((e){
+
+      return ExcelSubscriptionsModel.fromJson(e);
+    } ).toList() ;
+    return ExcelPlayers(
+        team: team,
+        player_id: json['playerId'],
+        player_name: json['name'],
+        player_phone_number: json['playerPhoneNumber'],
+        image_path: json['imagePath'],
+        player_age: json['playerAge'],
+        player_first_join_date: json['playerFirstJoinDate'],
+        player_gender: json['playerGender'],
+        subscription_id: json['subscriptionId'],
+        playerIndexId: json['playerIndexId'],
+        
+        subscriptions: subscriptions);
+  }
+}
+class ExcelSubscriptionsModel {
+  final int id;
+  final String beginning_date;
+  final String end_date;
+  final int billid;
+  final int billValue;
+  final int duration;
+  final dynamic team;
+
+  ExcelSubscriptionsModel({
+    required this.team,
+    required this.id,
+    required this.beginning_date,
+    required this.end_date,
+    required this.billid,
+    required this.billValue,
+    required this.duration,
+  });
+
+  factory ExcelSubscriptionsModel.fromJson(Map<String, dynamic> json) {
 
 
+    return ExcelSubscriptionsModel(
+        id: json["playerSubscriptionId"],
+        beginning_date: json["beginDate"],
+        end_date: json["finishDate"],
+        billid: json["billId"],
+        billValue: json['subscriptionValue'],
+        duration: json["subscriptionDuration"],
+        team: json['team'],
+       );
+  }
+
+
+}

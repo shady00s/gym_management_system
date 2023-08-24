@@ -6,7 +6,7 @@ import 'package:gym_management/main_screen/screen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await PlayersDatabaseManager().getDataFromBackup();
+
   runApp(const ProviderScope(child:  MyApp()));
 }
 
@@ -23,7 +23,9 @@ class MyApp extends StatelessWidget {
           color: Colors.blue,
           theme: FluentThemeData.dark(),
           debugShowCheckedModeBanner: false,
-          home: const Card( backgroundColor:Colors.black,child:  MainScreen()),
+          home:
+          const  Card( backgroundColor:Colors.black,child:  MainScreen())
+
       );
   }
 }

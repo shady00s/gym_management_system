@@ -1,19 +1,18 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 import 'package:intl/intl.dart';
-
-import '../../../database_management/models/backup_data_models.dart';
+import '../../../database_management/tables/generate_table.dart';
 
 class PlayerCardInformationWidget extends StatelessWidget {
   final int playerId;
   const PlayerCardInformationWidget({super.key,required this.playerId});
-  Future<PlayerProfileData> getPlayerInfo()async{
+  Future<List<GetPlayerSubscriptionResult>> getPlayerInfo()async{
     return  await PlayersDatabaseManager().getPlayerSubscriptionInfo(playerId);
   }
 
   @override
   Widget build(BuildContext context) {
-    return  FutureBuilder<PlayerProfileData>(
+    return  FutureBuilder<List<GetPlayerSubscriptionResult>>(
         future: getPlayerInfo(),
         builder: (context, snapshot){
           switch(snapshot.connectionState){
@@ -21,8 +20,8 @@ class PlayerCardInformationWidget extends StatelessWidget {
               return const Center(child: ProgressRing(),);
             case ConnectionState.done:
               if(snapshot.hasData){
-                int date = DateTime.now().difference(snapshot.data!.subData[0].endDate).inDays;
-
+                int date = DateTime.now().difference(snapshot.data![0].endDate).inDays;
+                print(snapshot.data![0].playerIndexId);
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
@@ -39,7 +38,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("Name:"),
-                          Text(snapshot.data!.profileData.playerName),
+                          Text(snapshot.data![0].playerName),
                         ],
                       ),
                       const  SizedBox(height: 14,),
@@ -47,7 +46,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("ID:"),
-                          Text((snapshot.data!.profileData.playerId).toString()),
+                          Text((snapshot.data![0].playerId).toString()),
                         ],
                       ),
                       SizedBox(height: 14,),
@@ -55,7 +54,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("Phone number:"),
-                          Text((snapshot.data!.profileData.playerPhoneNumber != -3?snapshot.data!.profileData.playerPhoneNumber:"unrecorded").toString()),
+                          Text((snapshot.data![0].playerPhoneNumber != -3?snapshot.data![0].playerPhoneNumber:"unrecorded").toString()),
                         ],
                       ),
                       SizedBox(height: 14,),
@@ -63,7 +62,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const  Text("First join date:"),
-                          Text((DateFormat.yMMMMEEEEd().format(snapshot.data!.profileData.playerFirstJoinDate) ).toString()),
+                          Text((DateFormat.yMMMMEEEEd().format(snapshot.data![0].playerFirstJoinDate) ).toString()),
                         ],
                       ),
 
@@ -84,12 +83,25 @@ class PlayerCardInformationWidget extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 30,),
-
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                              flex: 1,
+                              child: const  Text("Teams:")),
+                          Expanded(
+                              flex: 3,
+                              child: Wrap(children: snapshot.data!.map((e){
+                                return Card(child: Text(e.teamName!));
+                      }).toList(),))
+                        ],
+                      ),
+                      const SizedBox(height: 30,),
                       Text("Subscriptions history:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 21),),
                       const SizedBox(height: 14,),
 
                       Expanded(child: ListView.builder(
-                          itemCount: snapshot.data!.subData.length,
+                          itemCount: snapshot.data!.length,
                           itemBuilder: (context,index)=>Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Card(
@@ -102,7 +114,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         const   Text("Beginning date:"),
-                                        Text((DateFormat.yMMMEd().format(snapshot.data!.subData[index].beginningDate)))
+                                        Text((DateFormat.yMMMEd().format(snapshot.data![index].beginningDate)))
                                       ],),
                                   ),
 
@@ -113,7 +125,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         const    Text("end date:"),
-                                        Text(DateFormat.yMMMEd().format(snapshot.data!.subData[index].endDate))
+                                        Text(DateFormat.yMMMEd().format(snapshot.data![index].endDate))
                                       ],),
                                   ),
                                   const Divider(),
@@ -123,7 +135,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text("Duration :"),
-                                        Text(snapshot.data!.subData[index].duration == 1? "1 Month":snapshot.data!.subData[index].duration == 3?"3 Months":snapshot.data!.subData[index].duration == 6? "6 Months":snapshot.data!.subData[index].duration == 11?"1 session":snapshot.data!.subData[index].duration == 12?"1 Year":"Unknown")
+                                        Text(snapshot.data![index].duration == 1? "1 Month":snapshot.data![index].duration == 3?"3 Months":snapshot.data![index].duration == 6? "6 Months":snapshot.data![index].duration == 11?"1 session":snapshot.data![index].duration == 12?"1 Year":"Unknown")
                                       ],),
                                   ),
                                   const Divider(),
@@ -133,7 +145,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text("Value :"),
-                                        Text(snapshot.data!.subData[index].billValue == -1? "Unknown" : snapshot.data!.subData[index].billValue.toString())
+                                        Text(snapshot.data![index].billValue == -1? "Unknown" : snapshot.data![index].billValue.toString())
                                       ],),
                                   ),
                                 ],),

@@ -2551,13 +2551,15 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
   Selectable<GetPlayerSubscriptionResult> getPlayerSubscription(
       int playerIndexId) {
     return customSelect(
-        'SELECT Players.*, PlayersSubscriptions.* FROM Players INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id WHERE Players.player_index_id = ?1 ORDER BY end_date DESC',
+        'SELECT Players.*, PlayersSubscriptions.*, TeamsDataTable.* FROM Players INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = ?1 LEFT JOIN TeamsDataTable ON TeamsDataTable.team_id = PlayersAndTeamsTable.team_id WHERE Players.player_index_id = ?1 ORDER BY end_date DESC',
         variables: [
           Variable<int>(playerIndexId)
         ],
         readsFrom: {
           players,
           playersSubscriptions,
+          playersAndTeamsTable,
+          teamsDataTable,
         }).map((QueryRow row) => GetPlayerSubscriptionResult(
           id: row.read<int>('id'),
           playerIndexId: row.read<int>('player_index_id'),
@@ -2577,6 +2579,10 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           billValue: row.read<int>('billValue'),
           duration: row.read<int>('duration'),
           billCollector: row.read<String>('billCollector'),
+          id1: row.readNullable<int>('id'),
+          teamId: row.readNullable<int>('team_id'),
+          teamName: row.readNullable<String>('team_name'),
+          teamCaptainId: row.readNullable<int>('team_captain_id'),
         ));
   }
 
@@ -2751,6 +2757,10 @@ class GetPlayerSubscriptionResult {
   final int billValue;
   final int duration;
   final String billCollector;
+  final int? id1;
+  final int? teamId;
+  final String? teamName;
+  final int? teamCaptainId;
   GetPlayerSubscriptionResult({
     required this.id,
     required this.playerIndexId,
@@ -2770,6 +2780,10 @@ class GetPlayerSubscriptionResult {
     required this.billValue,
     required this.duration,
     required this.billCollector,
+    this.id1,
+    this.teamId,
+    this.teamName,
+    this.teamCaptainId,
   });
 }
 

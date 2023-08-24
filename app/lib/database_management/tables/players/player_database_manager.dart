@@ -70,7 +70,20 @@ class PlayersDatabaseManager {
 
     print("no backup ");
   }
+  Future getDataFromExcelOffline()async{
+    List<ExcelPlayers> playersList = [];
+    await _dio
+        .get("http://127.0.1.1:3000/get_players_data_from_db")
+        .then((playersValue) async {
+          var players = playersValue.data['resultData'];
 
+          for(var element in players){
+            playersList.add(ExcelPlayers.fromJson(element)) ;
+          }
+
+          print(playersList[0].player_name);
+    });
+  }
   Future<List<GetAllNamesResult>> getPlayersData() async {
     return await playersDatabase.getAllNames().get();
   }
@@ -100,41 +113,12 @@ class PlayersDatabaseManager {
     return await res.get();
   }
 
-  Future<PlayerProfileData> getPlayerSubscriptionInfo(int id) async {
+  Future<List<GetPlayerSubscriptionResult>> getPlayerSubscriptionInfo(int id) async {
 
     List<GetPlayerSubscriptionResult>result =  await playersDatabase.getPlayerSubscription(id).get();
-    List<PlayersSubscription> subData = [];
-    Player playerProfileData = Player(id:0,
-        playerIndexId:0,
-        playerId:0,
-        playerName:"",
-        playerPhoneNumber:0,
-        imagePath:"",
-        playerAge:0,
-        playerFirstJoinDate:DateTime(1990),
-        playerGender:"",
-        subscriptionId:0);
-    for (var element in result) {
-     playerProfileData = Player(id: element.id,
-         playerIndexId:element.playerIndexId,
-         playerId:element.playerId,
-         playerName:element.playerName,
-         playerPhoneNumber:element.playerPhoneNumber,
-         imagePath:element.imagePath,
-         playerAge:element.playerAge,
-         playerFirstJoinDate:element.playerFirstJoinDate,
-         playerGender:element.playerGender,
-         subscriptionId:element.subscriptionId);
-      subData.add(PlayersSubscription(
-          playerSubscriptionId: element.subscriptionId,
-          beginningDate: element.beginningDate,
-          endDate: element.endDate, billId: element.billId, billValue: element.billValue,
-          duration: element.duration, billCollector:element.billCollector));
 
+    return result;
 
-    }
-    //List<PlayersSubscription> subData = await sb.get();
-    return PlayerProfileData(playerProfileData, subData);
 
 
   }

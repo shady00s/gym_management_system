@@ -2,14 +2,15 @@ interface IExcelDataModel{
     playerIndexId:number,
     id:number,
     playerId:number,
-    team:number,
+    team:any,
     name:string,
     subscriptions?: ISubscriptions[]
 
 }
 
 interface ISubscriptions{
-
+    playerSubscriptionId:number,
+    team:number,
     beginDate:string,
     finishDate:string,
     subscriptionDuration:number,

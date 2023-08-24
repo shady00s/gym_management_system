@@ -8,5 +8,6 @@ class SelectNewExcelFile extends ImportExcelState{}
 
 class LoadingState extends ImportExcelState{}
 class SuccessfulUploading extends ImportExcelState{}
+class SuccessfulUploadingList extends ImportExcelState{}
 
 class SetSheetsList extends ImportExcelState{}
