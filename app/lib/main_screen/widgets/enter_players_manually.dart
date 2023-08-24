@@ -48,18 +48,18 @@ class _EnterPlayersManuallyState extends State<EnterPlayersManually> {
                     padding: const EdgeInsets.all(8.0),
                     child: Button(child: const Text("Enter"), onPressed: ()async {
                       if(_globalKey.currentState!.validate()){
-                        PlayersDatabaseManager().enterPlayerToGym(_nameController.text.toString(),widget.teamId).then((value) async{
-                          if(value != null){
-                            GymLogsManager().enterPlayer(value.playerId.toString(), value.teamId!).then((value){
-                              Future.delayed(Duration.zero,(){
-                                ref.invalidate(getPlayerLogsProvider);
-                              });
-                            });
-                          }else{
-                            await showDialog(context: context, builder: (BuildContext context)=>ContentDialog(content: Text("This player has ended subscription"),));
-                          }
-                        });
-
+                        // PlayersDatabaseManager().enterPlayerToGym(_nameController.text.toString(),widget.teamId).then((value) async{
+                        //   if(value != null){
+                        //     GymLogsManager().enterPlayer(value.playerId.toString(), value.teamId!).then((value){
+                        //       Future.delayed(Duration.zero,(){
+                        //         ref.invalidate(getPlayerLogsProvider);
+                        //       });
+                        //     });
+                        //   }else{
+                        //     await showDialog(context: context, builder: (BuildContext context)=>ContentDialog(content: Text("This player has ended subscription"),));
+                        //   }
+                        // });
+                        GymLogsManager().enterPlayer(_nameController.text.toString(), widget.teamId,context).then((value) =>  ref.invalidate(getPlayerLogsProvider));
                       }
                     }),
                   ),

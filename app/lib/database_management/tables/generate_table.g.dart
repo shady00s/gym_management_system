@@ -2491,6 +2491,8 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
   late final EmployeesTable employeesTable = EmployeesTable(this);
   late final TeamsDataTable teamsDataTable = TeamsDataTable(this);
   late final PlayersLogsTable playersLogsTable = PlayersLogsTable(this);
+  late final Index loginTimeInx = Index('login_time_inx',
+      'CREATE INDEX login_time_inx ON PlayersLogsTable (PlayersLogsTable.player_entrance_date)');
   late final SubscriptionsInfoTable subscriptionsInfoTable =
       SubscriptionsInfoTable(this);
   late final PlayersAndTeamsTable playersAndTeamsTable =
@@ -2500,7 +2502,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
   Selectable<GetTodayLogsResult> getTodayLogs(
       DateTime dateTime, DateTime endDateTime, int teamId) {
     return customSelect(
-        'SELECT Players.*, PlayersLogsTable.* FROM Players INNER JOIN PlayersLogsTable ON PlayersLogsTable.player_id = Players.player_id WHERE PlayersLogsTable.player_entrance_date BETWEEN ?1 AND ?2 AND PlayersLogsTable.team_id = ?3',
+        'SELECT DISTINCT Players.player_name, Players.player_id, Players.player_index_id, Players.image_path, PlayersLogsTable.player_entrance_date FROM Players LEFT JOIN PlayersLogsTable ON PlayersLogsTable.player_id = Players.player_id WHERE PlayersLogsTable.player_entrance_date BETWEEN ?1 AND ?2 AND PlayersLogsTable.team_id = ?3',
         variables: [
           Variable<DateTime>(dateTime),
           Variable<DateTime>(endDateTime),
@@ -2510,20 +2512,12 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           players,
           playersLogsTable,
         }).map((QueryRow row) => GetTodayLogsResult(
-          id: row.read<int>('id'),
-          playerIndexId: row.read<int>('player_index_id'),
-          playerId: row.read<int>('player_id'),
           playerName: row.read<String>('player_name'),
-          playerPhoneNumber: row.read<int>('player_phone_number'),
+          playerId: row.read<int>('player_id'),
+          playerIndexId: row.read<int>('player_index_id'),
           imagePath: row.read<String>('image_path'),
-          playerAge: row.read<int>('player_age'),
-          playerFirstJoinDate: row.read<DateTime>('player_first_join_date'),
-          playerGender: row.read<String>('player_gender'),
-          subscriptionId: row.read<int>('subscription_id'),
-          id1: row.read<int>('id'),
-          playerId1: row.read<int>('player_id'),
-          teamId: row.read<int>('team_id'),
-          playerEntranceDate: row.read<DateTime>('player_entrance_date'),
+          playerEntranceDate:
+              row.readNullable<DateTime>('player_entrance_date'),
         ));
   }
 
@@ -2674,7 +2668,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
   Selectable<EnterPlayerToGymResult> enterPlayerToGym(
       int? playerId, String? playerName, int teamId) {
     return customSelect(
-        'SELECT DISTINCT Players.player_id, Players.player_index_id, Players.player_name, PlayersSubscriptions.*, MAX(PlayersSubscriptions.end_date) AS _c0, PlayersAndTeamsTable.* FROM Players LEFT JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id LEFT JOIN PlayersAndTeamsTable ON Players.player_index_id = PlayersAndTeamsTable.team_player_id WHERE(Players.player_id = COALESCE(?1, Players.player_id) OR ?1 IS NULL)AND(Players.player_name = COALESCE(?2, Players.player_name) OR ?2 IS NULL)AND PlayersAndTeamsTable.team_id = ?3',
+        'SELECT DISTINCT Players.player_id, Players.player_index_id, Players.player_name, PlayersSubscriptions.player_subscription_id, PlayersSubscriptions.end_date, MAX(PlayersSubscriptions.end_date) AS _c0, PlayersAndTeamsTable.team_player_id, PlayersAndTeamsTable.team_id FROM Players LEFT JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id LEFT JOIN PlayersAndTeamsTable ON Players.player_index_id = PlayersAndTeamsTable.team_player_id WHERE(Players.player_id = COALESCE(?1, Players.player_id) OR ?1 IS NULL)AND(Players.player_name = COALESCE(?2, Players.player_name) OR ?2 IS NULL)AND PlayersAndTeamsTable.team_id = ?3',
         variables: [
           Variable<int>(playerId),
           Variable<String>(playerName),
@@ -2688,18 +2682,11 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           playerId: row.read<int>('player_id'),
           playerIndexId: row.read<int>('player_index_id'),
           playerName: row.read<String>('player_name'),
-          subId: row.readNullable<int>('sub_id'),
           playerSubscriptionId: row.readNullable<int>('player_subscription_id'),
-          beginningDate: row.readNullable<DateTime>('beginning_date'),
           endDate: row.readNullable<DateTime>('end_date'),
-          billId: row.readNullable<int>('billId'),
-          billValue: row.readNullable<int>('billValue'),
-          duration: row.readNullable<int>('duration'),
-          billCollector: row.readNullable<String>('billCollector'),
           mAXPlayersSubscriptionsendDate: row.readNullable<DateTime>('_c0'),
-          id: row.readNullable<int>('id'),
-          teamId: row.readNullable<int>('team_id'),
           teamPlayerId: row.readNullable<int>('team_player_id'),
+          teamId: row.readNullable<int>('team_id'),
         ));
   }
 
@@ -2712,6 +2699,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
         employeesTable,
         teamsDataTable,
         playersLogsTable,
+        loginTimeInx,
         subscriptionsInfoTable,
         playersAndTeamsTable,
         playersSubscriptions
@@ -2719,35 +2707,17 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
 }
 
 class GetTodayLogsResult {
-  final int id;
-  final int playerIndexId;
-  final int playerId;
   final String playerName;
-  final int playerPhoneNumber;
+  final int playerId;
+  final int playerIndexId;
   final String imagePath;
-  final int playerAge;
-  final DateTime playerFirstJoinDate;
-  final String playerGender;
-  final int subscriptionId;
-  final int id1;
-  final int playerId1;
-  final int teamId;
-  final DateTime playerEntranceDate;
+  final DateTime? playerEntranceDate;
   GetTodayLogsResult({
-    required this.id,
-    required this.playerIndexId,
-    required this.playerId,
     required this.playerName,
-    required this.playerPhoneNumber,
+    required this.playerId,
+    required this.playerIndexId,
     required this.imagePath,
-    required this.playerAge,
-    required this.playerFirstJoinDate,
-    required this.playerGender,
-    required this.subscriptionId,
-    required this.id1,
-    required this.playerId1,
-    required this.teamId,
-    required this.playerEntranceDate,
+    this.playerEntranceDate,
   });
 }
 
@@ -2859,33 +2829,19 @@ class EnterPlayerToGymResult {
   final int playerId;
   final int playerIndexId;
   final String playerName;
-  final int? subId;
   final int? playerSubscriptionId;
-  final DateTime? beginningDate;
   final DateTime? endDate;
-  final int? billId;
-  final int? billValue;
-  final int? duration;
-  final String? billCollector;
   final DateTime? mAXPlayersSubscriptionsendDate;
-  final int? id;
-  final int? teamId;
   final int? teamPlayerId;
+  final int? teamId;
   EnterPlayerToGymResult({
     required this.playerId,
     required this.playerIndexId,
     required this.playerName,
-    this.subId,
     this.playerSubscriptionId,
-    this.beginningDate,
     this.endDate,
-    this.billId,
-    this.billValue,
-    this.duration,
-    this.billCollector,
     this.mAXPlayersSubscriptionsendDate,
-    this.id,
-    this.teamId,
     this.teamPlayerId,
+    this.teamId,
   });
 }

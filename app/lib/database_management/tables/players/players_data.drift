@@ -63,10 +63,11 @@ filterEndedSubPlayers(REQUIRED :beginDate AS DATETIME OR NUll,REQUIRED :endDate 
                   AND (PlayersAndTeamsTable.team_id = COALESCE(:teamId, PlayersAndTeamsTable.team_id) OR :teamId IS NULL )
                   ORDER BY PLAYERS.player_first_join_date DESC;
 
-enterPlayerToGym(REQUIRED :teamId AS INT,REQUIRED :playerId AS INT, :playerName AS TEXT):  SELECT DISTINCT  Players.player_id, Players.player_index_id, Players.player_name, PlayersSubscriptions.*, MAX(PlayersSubscriptions.end_date), PlayersAndTeamsTable.*
+enterPlayerToGym(REQUIRED :teamId AS INT,REQUIRED :playerId AS INT, :playerName AS TEXT):  SELECT DISTINCT  Players.player_id, Players.player_index_id, Players.player_name, PlayersSubscriptions.player_subscription_id,PlayersSubscriptions.end_date, MAX(PlayersSubscriptions.end_date), PlayersAndTeamsTable.team_player_id, PlayersAndTeamsTable.team_id
                                                 FROM Players
                                             LEFT JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id
                                             LEFT JOIN PlayersAndTeamsTable ON Players.player_index_id = PlayersAndTeamsTable.team_player_id
                                             WHERE (Players.player_id = COALESCE(:playerId, Players.player_id) OR :playerId IS NULL)
                                             AND (Players.player_name = COALESCE(:playerName, Players.player_name) OR :playerName IS NULL)
                                             AND PlayersAndTeamsTable.team_id = :teamId;
+
