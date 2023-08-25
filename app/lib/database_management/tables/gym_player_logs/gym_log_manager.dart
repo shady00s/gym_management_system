@@ -44,7 +44,7 @@ class GymLogsManager{
     }
     Future<List<GetTodayLogsResult>> getTodayPlayers(teamId) async{
 
-      List<GetTodayLogsResult> logs=  await db.getTodayLogs(DateTime.now().subtract(const Duration(hours: 15)),DateTime.now(),teamId).get();
+      List<GetTodayLogsResult> logs=  await db.getTodayLogs(DateTime.now().subtract(const   Duration(hours: 15)),DateTime.now(),teamId).get();
 
       return  logs;
     }

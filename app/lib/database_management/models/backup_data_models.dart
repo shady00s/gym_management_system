@@ -217,7 +217,6 @@ class ExcelPlayers{
   final dynamic team;
   final String? player_first_join_date;
   final String? player_gender;
-  final int? subscription_id;
   final int playerIndexId;
   final List<ExcelSubscriptionsModel>? subscriptions;
 
@@ -230,7 +229,6 @@ class ExcelPlayers{
         required this.player_first_join_date,
         required this.team,
         required this.player_gender,
-        required this.subscription_id,
         required this.playerIndexId,
         required this.subscriptions});
 
@@ -255,7 +253,6 @@ class ExcelPlayers{
         player_age: json['playerAge'],
         player_first_join_date: json['playerFirstJoinDate'],
         player_gender: json['playerGender'],
-        subscription_id: json['subscriptionId'],
         playerIndexId: json['playerIndexId'],
         
         subscriptions: subscriptions);

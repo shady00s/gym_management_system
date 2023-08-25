@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS PlayersLogsTable(
     FOREIGN KEY (player_id) REFERENCES Players(player_index_id),
     FOREIGN KEY (team_id) REFERENCES TeamsDataTable(team_id)
 );
-CREATE INDEX login_time_inx on PlayersLogsTable(PlayersLogsTable.player_entrance_date);
+CREATE INDEX login_time_inx on PlayersLogsTable(player_entrance_date);
 
 getTodayLogs(REQUIRED :dateTime AS DATETIME, REQUIRED :endDateTime AS DATETIME, REQUIRED :teamId AS INT):
                 SELECT DISTINCT Players.player_name, Players.player_id, Players.player_index_id,Players.image_path, PlayersLogsTable.player_entrance_date FROM Players

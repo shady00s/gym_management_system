@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS Players (
 
 CREATE TABLE IF NOT EXISTS PlayersSubscriptions(
     sub_id INT PRIMARY KEY AUTOINCREMENT,
+    team_id INT NOT NULL,
     player_subscription_id INT NOT NULL,
     beginning_date DATETIME NOT NULL,
     end_date DATETIME NOT NULL,

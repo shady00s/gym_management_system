@@ -26,17 +26,18 @@ class ImportExcelScreen extends StatelessWidget {
   }
 }
 Future loadingDialog(context ,newNumber,function,state)async{
-  int? status;
+  int? status = -1;
   await showDialog(context:context,  builder:(context){
     Future.delayed( Duration.zero,() async{
 
       await function.then((value)async {
+        print(value);
         status = value;
         if(status == 200){
 
-          state.incrementNumber(newNumber+1);
+         newNumber!=-1 && state != null? state.incrementNumber(newNumber+1):null;
           Navigator.pop(context);
-        }else{
+        }else if(status != null){
           Navigator.pop(context);
           await showDialog(context:context,  builder:(context){
 
@@ -51,7 +52,9 @@ Future loadingDialog(context ,newNumber,function,state)async{
 
           );
         }
-
+        else{
+          Navigator.pop(context);
+        }
 
       });
     });

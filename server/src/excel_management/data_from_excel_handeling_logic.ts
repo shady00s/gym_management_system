@@ -10,6 +10,8 @@ import IselectedTeams from "./selected_team_model";
 
 
 async function saveXlsxFileData(req:Request, res: Response) {
+
+
     let form =  formidable({multiples:false});
     form.parse(req, async function(err,fields){
 
@@ -23,7 +25,7 @@ async function saveXlsxFileData(req:Request, res: Response) {
     req.session.fileData = req.session.fileData || {fileName:"",filePath:""}; 
     const playersMap: IExcelDataModel[] = []
   let currentListLength = 0
-
+ 
   if(req.session.fileData.filePath !== ""){
     const fileData = xlsx.readFile(req.session.fileData.filePath)
     while (currentListLength < selectedSheets.length) {
@@ -79,8 +81,8 @@ async function saveXlsxFileData(req:Request, res: Response) {
                     selectedSheets[selectedSheets.findIndex((e) => e.name === 'ك-اسراء')].id : -1;
 
             let subscriptionValue = fileJsonData[x]["__EMPTY_6"] == null ? -1 : fileJsonData[x]["__EMPTY_6"]
-            let beginDate = `${begday + "/" + begmonth + "/" + begyear}` == "NaN/NaN/NaN" ? "1990-01-01 00:00:00" : `${begyear + "-" + begmonth + "-" + begday + " " + begHour + ":" + begminuite + ":00"}`
-            let finishDate = `${day + "/" + month + "/" + year}` == "NaN/NaN/NaN" ? "1990-01-01 00:00:00" : `${year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":00"}`
+            let beginDate = `${begday + "/" + begmonth + "/" + begyear}` == "NaN/NaN/NaN" ? "1990-01-01 00:00:00" : `${begyear + "-" + (begmonth <10?`0${begmonth}`:begmonth) + "-" + (begday<10?`0${begday}`:begday) + " " +"0"+ begHour + ":" +"0"+ begminuite + ":00"}`
+            let finishDate = `${day + "/" + month + "/" + year}` == "NaN/NaN/NaN" ? "1990-01-01 00:00:00" : `${year + "-" + (month<10?`0${month}`:month) + "-" + (day<10?`0${day}`:day) + " " +"0"+ hours + ":" +"0"+ minutes + ":00"}`
 
             let billId = fileJsonData[x]["__EMPTY_4"] == null || typeof fileJsonData[x]["__EMPTY_4"] === "string" ? -1 : fileJsonData[x]["__EMPTY_4"]
 
@@ -217,3 +219,5 @@ async function saveXlsxFileData(req:Request, res: Response) {
 export {
     saveXlsxFileData,
 }
+
+
