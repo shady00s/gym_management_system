@@ -1,7 +1,5 @@
 import { Response,Request } from "express";
-import path from "path";
 import * as xlsx from "xlsx"
-import fs from "fs"
 import IExcelDataModel from "./excel_data_model";
 import formidable from "formidable";
 import generateUniqueId from "generate-unique-id";
@@ -10,7 +8,7 @@ import IselectedTeams from "./selected_team_model";
 
 
 async function saveXlsxFileData(req:Request, res: Response) {
-
+ 
 
     let form =  formidable({multiples:false});
     form.parse(req, async function(err,fields){
@@ -18,7 +16,6 @@ async function saveXlsxFileData(req:Request, res: Response) {
         if(err){
             res.json(err)
         }
-
   if(fields.selectedSheet !== undefined){
     const selectedSheets:IselectedTeams[] = JSON.parse(fields.selectedSheet[0]);
     req.session.selected_teams_list = selectedSheets;
@@ -30,9 +27,22 @@ async function saveXlsxFileData(req:Request, res: Response) {
     const fileData = xlsx.readFile(req.session.fileData.filePath)
     while (currentListLength < selectedSheets.length) {
        
-        let  fileJsonData = await xlsx.utils.sheet_to_json(fileData.Sheets[ selectedSheets[currentListLength].name])
+        let  fileJsonData:any[] =  xlsx.utils.sheet_to_json(fileData.Sheets[ selectedSheets[currentListLength].name])
         for (let x = 0; x < fileJsonData.length; x++) {
+            let  id = fileJsonData[x][selectedSheets[currentListLength].name]
+            let team;
+            if(id !== undefined && team === undefined){                
+              
+                let index = selectedSheets.findIndex(e=>(e.name === Object.keys(fileJsonData[x])[0])|| ((e.name === Object.keys(fileJsonData[x])[1])))
+                if(index !== -1){
+                    team = selectedSheets[index].id;
+                }
 
+             
+            }else if(id == undefined){
+                team = -1
+            }else team = team
+            let playerId = Math.floor(fileJsonData[x][selectedSheets[currentListLength].name] * (Math.random() * (20000-12000)))
             
             let playerIndexId =parseInt( generateUniqueId({useLetters:false,useNumbers:true,length:8,includeSymbols:[]}));
             // get begin date and end date
@@ -49,37 +59,8 @@ async function saveXlsxFileData(req:Request, res: Response) {
             let begHour = begdateVal.getHours();
             let begminuite = begdateVal.getMinutes();
 
-            let id =
-            fileJsonData[x]["GYM PLAYER 2023"] != undefined ?
-            fileJsonData[x]["GYM PLAYER 2023"] : 
-            fileJsonData[x]["swimmming players2023"] != undefined ?
-            fileJsonData[x]["swimmming players2023"]:
-            fileJsonData[x]["ك/بكرMMA"] != undefined ?
-            fileJsonData[x]["ك/بكرMMA"] : fileJsonData[x]["ك/مهيمن ديكان  بوكس(عمولات)"] != undefined ?
-            fileJsonData[x]["ك/مهيمن ديكان  بوكس(عمولات)"]: fileJsonData[x]["ك/اسراء -مدربه بنات بريفت-2023"] !== undefined ?
-            fileJsonData[x]["ك/اسراء -مدربه بنات بريفت-2023"]:null;
-
-            let playerId =
-            fileJsonData[x]["GYM PLAYER 2023"] != undefined ?
-            fileJsonData[x]["GYM PLAYER 2023"] +1000: fileJsonData[x]["swimmming players2023"] != undefined ?
-            fileJsonData[x]["swimmming players2023"] +3000:
-             fileJsonData[x]["ك/بكرMMA"] != undefined ?
-            fileJsonData[x]["ك/بكرMMA"] +8000: fileJsonData[x]["ك/مهيمن ديكان  بوكس(عمولات)"] != undefined ?
-            fileJsonData[x]["ك/مهيمن ديكان  بوكس(عمولات)"] +7000: fileJsonData[x]["ك/اسراء -مدربه بنات بريفت-2023"] !== undefined ?
-            fileJsonData[x]["ك/اسراء -مدربه بنات بريفت-2023"] +5000:null;
             let name = fileJsonData[x]["__EMPTY"]
-
-            let team:number = fileJsonData[x]["GYM PLAYER 2023"] != undefined ?  
-                selectedSheets[selectedSheets.findIndex((e) => e.name === 'gym')].id : 
-                fileJsonData[x]['swimmming players2023'] != undefined ?
-                    selectedSheets[selectedSheets.findIndex((e) => e.name === 'swim')].id :
-                    fileJsonData[x]["ك/بكرMMA"] != undefined ?
-                    selectedSheets[selectedSheets.findIndex((e) => e.name === "بكرMMA")].id :
-                    fileJsonData[x]["ك/مهيمن ديكان  بوكس(عمولات)"] != undefined ?
-                    selectedSheets[selectedSheets.findIndex((e) => e.name === 'مهيمنBOX')].id :
-                    fileJsonData[x]['ك/اسراء -مدربه بنات بريفت-2023'] !== undefined ?
-                    selectedSheets[selectedSheets.findIndex((e) => e.name === 'ك-اسراء')].id : -1;
-
+          
             let subscriptionValue = fileJsonData[x]["__EMPTY_6"] == null ? -1 : fileJsonData[x]["__EMPTY_6"]
             let beginDate = `${begday + "/" + begmonth + "/" + begyear}` == "NaN/NaN/NaN" ? "1990-01-01 00:00:00" : `${begyear + "-" + (begmonth <10?`0${begmonth}`:begmonth) + "-" + (begday<10?`0${begday}`:begday) + " " +"0"+ begHour + ":" +"0"+ begminuite + ":00"}`
             let finishDate = `${day + "/" + month + "/" + year}` == "NaN/NaN/NaN" ? "1990-01-01 00:00:00" : `${year + "-" + (month<10?`0${month}`:month) + "-" + (day<10?`0${day}`:day) + " " +"0"+ hours + ":" +"0"+ minutes + ":00"}`
@@ -98,7 +79,7 @@ async function saveXlsxFileData(req:Request, res: Response) {
                 invalidNames.test(name) && invalidIds.test(id) && typeof name !== "number" && typeof subscriptionValue !== "string"  && typeof billId !== "string"
             ) {
                
-                playersMap.push({playerIndexId, playerId, id: id, team: team, name, subscriptions: [{playerSubscriptionId:playerIndexId,  team:team, subscriptionValue: subscriptionValue, beginDate: beginDate, finishDate: finishDate, billId: billId, subscriptionDuration: subscriptionDuration }] })
+                playersMap.push({playerIndexId, playerId, id: id,team, name, subscriptions: [{playerSubscriptionId:playerIndexId,  team:team, subscriptionValue: subscriptionValue, beginDate: beginDate, finishDate: finishDate, billId: billId, subscriptionDuration: subscriptionDuration }] })
 
             } 
            
@@ -111,62 +92,62 @@ async function saveXlsxFileData(req:Request, res: Response) {
     let processedPlayer = new Set();
     const result = []
     let playerData = {};
-    let playerId;
+    let playerObjId;
     for (const player of playersMap) {
-         playerId = player.playerId;
+        playerObjId = player.playerId;
     
         if (player.id !== undefined && player.id !== null && player.name !==null ) {
      
 
-            if (playerData[playerId]) {
-                if (player.name!== undefined &&  playerData[playerId].name === player.name) {
+            if (playerData[playerObjId]) {
+                if (player.name!== undefined &&  playerData[playerObjId].name === player.name) {
 
-                    playerData[playerId].playerIndexId = player.playerIndexId  
-                    playerId = player.playerId  
-                    if (!player.subscriptions?.every(e => playerData[playerId].subscriptions.every(
+                    playerData[playerObjId].playerIndexId = player.playerIndexId  
+                    playerObjId = player.playerId  
+                    if (!player.subscriptions?.every(e => playerData[playerObjId].subscriptions.every(
                         f => e.beginDate === f.beginDate && e.billId === f.billId && e.subscriptionDuration === f.subscriptionDuration && e.subscriptionValue === f.subscriptionValue))) {
-                        playerData[playerId].subscriptions.push(...player.subscriptions);
+                        playerData[playerObjId].subscriptions.push(...player.subscriptions);
 
                     }
-                    if (!processedPlayer.has(playerId)) {
+                    if (!processedPlayer.has(playerObjId)) {
 
-                        result.push(playerData[playerId]);
-                        processedPlayer.add(playerId);
+                        result.push(playerData[playerObjId]);
+                        processedPlayer.add(playerObjId);
                     }
 
-                } else if(processedPlayer.has(playerId) &&  playerData[playerId].name === player.name && playerData[playerId].team !== player.team){
-                    result.push(playerData[playerId]);
+                } else if(processedPlayer.has(playerObjId) &&  playerData[playerObjId].name === player.name && playerData[playerObjId].team !== player.team){
+                    result.push(playerData[playerObjId]);
 
-                }if (!processedPlayer.has(playerId)) {
+                }if (!processedPlayer.has(playerObjId)) {
 
-                    result.push(playerData[playerId]);
-                    processedPlayer.add(playerId);
+                    result.push(playerData[playerObjId]);
+                    processedPlayer.add(playerObjId);
                 }
         
 
 
             } else {
-                playerData[playerId] = player;
-                if (player.name !== undefined && playerData[playerId].name == player.name ) {
-                    playerData[playerId].playerIndexId = player.playerIndexId  
-                    playerId = player.playerId  
-                    if (playerData[playerId].subscriptions.length !== 0 && playerData[playerId].subscriptions !== undefined) {
+                playerData[playerObjId] = player;
+                if (player.name !== undefined && playerData[playerObjId].name == player.name ) {
+                    playerData[playerObjId].playerIndexId = player.playerIndexId  
+                    playerObjId = player.playerId  
+                    if (playerData[playerObjId].subscriptions.length !== 0 && playerData[playerObjId].subscriptions !== undefined) {
 
-                        if (!player.subscriptions?.every(e => playerData[playerId].subscriptions.every(
+                        if (!player.subscriptions?.every(e => playerData[playerObjId].subscriptions.every(
                             f => e.beginDate === f.beginDate && e.billId === f.billId && e.subscriptionDuration === f.subscriptionDuration && e.subscriptionValue === f.subscriptionValue))) {
-                            playerData[playerId].subscriptions.push(...player.subscriptions);
+                            playerData[playerObjId].subscriptions.push(...player.subscriptions);
 
                         }
-                        if (!processedPlayer.has(playerId)) {
+                        if (!processedPlayer.has(playerObjId)) {
 
-                            result.push(playerData[playerId]);
-                            processedPlayer.add(playerId);
+                            result.push(playerData[playerObjId]);
+                            processedPlayer.add(playerObjId);
                         }
 
 
-                    }if (!processedPlayer.has(playerId)) {
+                    }if (!processedPlayer.has(playerObjId)) {
 
-                        result.push(playerData[playerId]);
+                        result.push(playerData[playerObjId]);
                        
                     }
 
@@ -174,13 +155,13 @@ async function saveXlsxFileData(req:Request, res: Response) {
                     
                 }
                 
-                else if(processedPlayer.has(playerId) &&  playerData[playerId].name === player.name && playerData[playerId].team !== player.team){
-                    result.push(playerData[playerId]);
+                else if(processedPlayer.has(playerObjId) &&  playerData[playerObjId].name === player.name && playerData[playerObjId].team !== player.team){
+                    result.push(playerData[playerObjId]);
 
-                }if (!processedPlayer.has(playerId)) {
+                }if (!processedPlayer.has(playerObjId)) {
 
-                    result.push(playerData[playerId]);
-                    processedPlayer.add(playerId);
+                    result.push(playerData[playerObjId]);
+                    processedPlayer.add(playerObjId);
                 }
 
                

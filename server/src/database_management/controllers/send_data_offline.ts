@@ -12,21 +12,17 @@ export default function sendDataOffline(req:Request,res:Response){
          playerId = player.id;
          
 
-        
-
             if (playerData[playerId]) {
                 if ((playerData[playerId].name === player.name && playerData[playerId].id === player.id) ) {
-                    let playerTeam = [];
-                    playerTeam.push(playerData[playerId].team,player.team)
-                    playerData[playerId].team = playerTeam;
-
+                   
                     playerData[playerId].subscriptions.push(...player.subscriptions);
+                    
                     for(var e of playerData[playerId].subscriptions){
                         e.playerSubscriptionId = playerData[playerId].playerIndexId
                     }
                 }if((playerData[playerId].name === player.name  && playerData[playerId].id === player.id && playerData[playerId].team === player.team) ){
-                    let playerTeam = [];
-                    playerTeam.push(playerData[playerId].team,player.team)
+                    
+                   
                     playerData[playerId].subscriptions.push(...player.subscriptions);
 
                     for(var e of playerData[playerId].subscriptions){
@@ -40,21 +36,17 @@ export default function sendDataOffline(req:Request,res:Response){
                 
 
 
-
             } else {
                 playerData[playerId] = player;
                 if ((playerData[playerId].name === player.name && playerData[playerId].id === player.id) ) {
-                    let playerTeam = [];
-                    playerTeam.push(playerData[playerId].team,player.team)
+                   
                     playerData[playerId].subscriptions.push(...player.subscriptions);
 
                     for(var e of playerData[playerId].subscriptions){
                         e.playerSubscriptionId = playerData[playerId].playerIndexId
                     }
                 }if((playerData[playerId].name === player.name  && playerData[playerId].id === player.id && playerData[playerId].team === player.team) ){
-                    let playerTeam = [];
-                    playerTeam.push(playerData[playerId].team,player.team)
-
+                    
                     playerData[playerId].subscriptions.push(...player.subscriptions);
 
                     for(var e of playerData[playerId].subscriptions){
