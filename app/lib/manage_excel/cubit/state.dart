@@ -12,3 +12,5 @@ class SuccessfulUploadingList extends ImportExcelState{}
 
 class SetSheetsList extends ImportExcelState{}
 class SetSelectedSheetsList extends ImportExcelState{}
+
+class SetValidation extends ImportExcelState{}

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_management/database_management/models/backup_data_models.dart';
 import 'package:gym_management/manage_excel/cubit/state.dart';
@@ -21,21 +22,30 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
   List<SheetsModel> listOfSheets = [];
   List<SheetsModel> selectedList = [];
 
+  List<GlobalKey<FormState>> keysFormList(){
+
+    return List.generate(selectedList.length, (_) => GlobalKey<FormState>());
+  }
+
+
+
+bool checkValidation(){
+ bool allValid = keysFormList().every((element)=>element.currentState!.validate());
+
+ emit(SetValidation());
+ return allValid;
+}
+
+
+
+
+
   void setSelectedListOfSheets(List<SheetsModel> newList){
     selectedList = [];
     selectedList = newList;
 
   }
-  void addToSelectedListOfSheets(SheetsModel newListItem){
 
-    if(!selectedList.contains(newListItem)) {
-      selectedList.add(newListItem);
-    }
-
-  }
-  void removeFromSelectedListOfSheets(int index){
-    selectedList.removeAt(index);
-  }
 
   List<ExcelPlayers> excelPlayersList = [];
   PlatformFile? excelFile;

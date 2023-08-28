@@ -6,7 +6,7 @@ import "package:gym_management/manage_excel/cubit/state.dart";
 import "package:gym_management/manage_excel/steps/coaches_data.dart";
 import "package:gym_management/manage_excel/steps/finish_data.dart";
 import "package:gym_management/manage_excel/steps/import_excel_step.dart";
-import "package:gym_management/manage_excel/steps/set_cols_rows.dart";
+import "package:gym_management/manage_excel/steps/set_sheets.dart";
 
 import "cubit/cubit.dart";
 
@@ -137,7 +137,23 @@ class _StepsWidgetState extends State<StepsWidget> {
                       
                       await  loadingDialog(context ,newNumber,ExcelFileCubit.get(context).sendSelectedSheets(),state);
                     }
+
+                    else if(state.currentIndex == 2)
+                       {
+                         if(!state.checkValidation()){
+                           await showDialog(context: context, builder: (BuildContext context) {
+                             return const ContentDialog(content: Text("Please fill the remaining  form"),);
+                           }, );
+                         }else{
+                           state.incrementNumber(newNumber+1);
+                         }
+
+                      }
+
+
+
                   },
+
                   onStepCancel:state.currentIndex> 0?  (){
 
                     if(newIndex > 0){
