@@ -14,7 +14,6 @@ class SetSheetColsAndRows extends StatelessWidget {
       height: 360,
       width: 600,
       child: BlocConsumer<ExcelFileCubit,ImportExcelState>(builder: (BuildContext context, state) {
-        List<SheetsModel> selectedList = ExcelFileCubit.get(context).selectedList;
         List<SheetsModel> listOfSheets = ExcelFileCubit.get(context).listOfSheets;
         if(listOfSheets.isNotEmpty) {
          return  Column(
@@ -23,29 +22,19 @@ class SetSheetColsAndRows extends StatelessWidget {
 
                 TreeView(
                     selectionMode: TreeViewSelectionMode.multiple,
-                    onItemInvoked: (val,reason)async{
-                      if(val.value.id == -1){
-                        for (var data in listOfSheets ){
-                          if( !selectedList.contains(data)){
-                            selectedList.add(data);
-                          }
-
-                        }
-
-                      }else{
-
-                        if( !selectedList.contains(val.value)){
-                          selectedList.add(val.value);
-                        }
-                        else{
-                          int index = selectedList.indexOf(val.value);
-                          selectedList.removeAt(index);
-                        }
-
+                    onSelectionChanged: (selectedItems) async
+                    {
+                      List<SheetsModel> selectedList = [];
+                      for(var d in selectedItems ){
+                        if( d.value.id != -1) {
+                          selectedList.add(d.value);
+                       }
                       }
+                      ExcelFileCubit.get(context).setSelectedListOfSheets(selectedList);
+
+                        },
 
 
-                    },
                     items:[TreeViewItem(value: SheetsModel(id: -1,name: "all"), content: Text("Select all"),children: ExcelFileCubit.get(context).listOfSheets.map((e) =>  TreeViewItem( value: e, content: Text(e.name))).toList())]
 
                 )

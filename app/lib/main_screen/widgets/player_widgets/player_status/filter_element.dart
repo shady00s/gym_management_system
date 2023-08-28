@@ -12,6 +12,7 @@ class FilterElement extends StatelessWidget {
   final Function onChange;
   final dynamic provider;
   final bool isSubscriptionWithName;
+
   const FilterElement({super.key,required this.isSubscriptionWithName,required this.onChange,required this.isSubscription,required this.allButton,required this.future,required this.title,required this.list,required this.provider});
 
   @override

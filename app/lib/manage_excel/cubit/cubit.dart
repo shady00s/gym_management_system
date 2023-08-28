@@ -20,13 +20,33 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
   int currentIndex = 0;
   List<SheetsModel> listOfSheets = [];
   List<SheetsModel> selectedList = [];
+
+  void setSelectedListOfSheets(List<SheetsModel> newList){
+    selectedList = [];
+    selectedList = newList;
+
+  }
+  void addToSelectedListOfSheets(SheetsModel newListItem){
+
+    if(!selectedList.contains(newListItem)) {
+      selectedList.add(newListItem);
+    }
+
+  }
+  void removeFromSelectedListOfSheets(int index){
+    selectedList.removeAt(index);
+  }
+
   List<ExcelPlayers> excelPlayersList = [];
   PlatformFile? excelFile;
   incrementNumber(int index){
     currentIndex = index;
     emit(ChangeIndexState());
   }
-
+  decrementNumber(int index){
+    currentIndex = index;
+    emit(ChangeIndexState());
+  }
   selectFile(file){
       excelFile = file;
     emit(SelectNewExcelFile());
@@ -38,6 +58,8 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
     FormData formData = FormData.fromMap({
       "file": await MultipartFile.fromFile(excelFile!.path!, filename: excelFile!.name),
     });
+    listOfSheets=[];
+
 
     await _dio.post(
       "http://127.0.0.1:3000/get_excel_file",

@@ -3,6 +3,7 @@ import "package:fluent_ui/fluent_ui.dart";
 import "package:flutter/material.dart" as material;
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:gym_management/manage_excel/cubit/state.dart";
+import "package:gym_management/manage_excel/steps/coaches_data.dart";
 import "package:gym_management/manage_excel/steps/finish_data.dart";
 import "package:gym_management/manage_excel/steps/import_excel_step.dart";
 import "package:gym_management/manage_excel/steps/set_cols_rows.dart";
@@ -77,7 +78,8 @@ class _StepsWidgetState extends State<StepsWidget> {
     return
         Card(
     backgroundColor: Colors.black,
-    child: material.Scaffold( body:BlocProvider<ExcelFileCubit>(
+    child: material.Scaffold(
+        body:BlocProvider<ExcelFileCubit>(
           create: (context) => ExcelFileCubit(),
           child: BlocBuilder<ExcelFileCubit, ImportExcelState>(
 
@@ -87,6 +89,11 @@ class _StepsWidgetState extends State<StepsWidget> {
               int newIndex = state.currentIndex;
               int newNumber = newIndex;
               return material.Stepper(
+                  onStepTapped: (int index) {
+                    if (state.currentIndex != index) {
+                      state.currentIndex = state.currentIndex;
+                    }
+                  },
                   controlsBuilder: (context,details){
                     if(state is LoadingState){
                       return Padding(
@@ -117,23 +124,27 @@ class _StepsWidgetState extends State<StepsWidget> {
                       );
                     }
                   },
-                  onStepTapped: (index){
 
-
-                    state.incrementNumber(index);
-                  },
                   onStepContinue:() async{
-                    if(state.excelFile !=null && state.currentIndex == 0 && state.listOfSheets.isEmpty){
+                    if(state.excelFile !=null && state.currentIndex == 0 ){
 
                       await  loadingDialog(context ,newNumber,ExcelFileCubit.get(context).sendFileToServer(),state);
                     }else if(state.excelFile ==null){
                       material.showDialog(context: context, builder:(context)=> ContentDialog(content: Text("please select one file to continue"),actions: [Button(child: Text("Okay"), onPressed: (){Navigator.pop(context);})],));
                     }
 
-                    else if(state.selectedList.isNotEmpty){
+                    else if(state.selectedList.isNotEmpty && state.currentIndex == 1){
+                      
                       await  loadingDialog(context ,newNumber,ExcelFileCubit.get(context).sendSelectedSheets(),state);
                     }
                   },
+                  onStepCancel:state.currentIndex> 0?  (){
+
+                    if(newIndex > 0){
+                      print('tt');
+                      state.decrementNumber(newIndex-1);
+                    }
+                  }:null,
                   currentStep: state.currentIndex,
                   type: material.StepperType.horizontal,
                   steps:  [
@@ -143,10 +154,14 @@ class _StepsWidgetState extends State<StepsWidget> {
                         content: ImportExcelStep()),
                     material.Step(
                         isActive: state.currentIndex == 1,
-                        title: const Text("Setting Teams and coaches"),
+                        title: const Text("Setting Teams"),
                         content:const SetSheetColsAndRows()),
                     material.Step(
                         isActive: state.currentIndex == 2,
+                        title: const Text("Setting  coaches"),
+                        content:const SetCoachesWidget()),
+                    material.Step(
+                        isActive: state.currentIndex == 3,
                         title: const Text("Finish up"),
                         content:const FinishDataWidget()),
 
