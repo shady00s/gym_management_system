@@ -159,9 +159,16 @@ Future insertPlayersFromExcelOffline(List<ExcelPlayers> playersData)async{
 
     Iterable <PlayersCompanion> playersCompanion = playersData.map((playerData) => PlayersCompanion.insert(playerIndexId: playerData.playerIndexId, playerId: playerData.player_id, playerName: playerData.player_name, playerPhoneNumber: -1, imagePath: "no image", playerAge: -1, playerFirstJoinDate: DateTime.parse(playerData.subscriptions![0].beginning_date), playerGender: "un recorded", subscriptionId: playerData.playerIndexId!));
 
+    //get teams data
+    List<PlayersAndTeamsTableCompanion> playersTeamCompanion = [];
+    for(var player in playersData){
+      for (var team in player.team){
+        playersTeamCompanion.add(PlayersAndTeamsTableCompanion.insert(teamId: team, teamPlayerId: player.playerIndexId));
+      }
+    }
 
     Iterable<PlayersSubscriptionsCompanion>  playersSubCompanion= playersData.expand((e) => e.subscriptions!.map((subData) => PlayersSubscriptionsCompanion.insert(playerSubscriptionId: subData.id, beginningDate: DateTime.parse(subData.beginning_date), endDate: DateTime.parse(subData.end_date), billId: subData.billid, billValue: subData.billValue, duration: subData.duration, billCollector: "unknown", teamId: subData.team)));
-
+    await playersDatabase.batch((batch) => batch.insertAll(PlayersAndTeamsTable(playersDatabase), playersTeamCompanion));
     await playersDatabase.batch((batch) => batch.insertAll(Players(playersDatabase), playersCompanion));
     await playersDatabase.batch((batch) => batch.insertAll(PlayersSubscriptions(playersDatabase), playersSubCompanion));
 

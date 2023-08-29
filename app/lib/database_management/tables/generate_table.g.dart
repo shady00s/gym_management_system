@@ -956,8 +956,17 @@ class TeamsDataTable extends Table
       type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
+  static const VerificationMeta _teamPrivateMeta =
+      const VerificationMeta('teamPrivate');
+  late final GeneratedColumn<int> teamPrivate = GeneratedColumn<int>(
+      'team_private', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL DEFAULT (-1)',
+      defaultValue: const CustomExpression('-1'));
   @override
-  List<GeneratedColumn> get $columns => [id, teamId, teamName, teamCaptainId];
+  List<GeneratedColumn> get $columns =>
+      [id, teamId, teamName, teamCaptainId, teamPrivate];
   @override
   String get aliasedName => _alias ?? 'TeamsDataTable';
   @override
@@ -990,6 +999,12 @@ class TeamsDataTable extends Table
     } else if (isInserting) {
       context.missing(_teamCaptainIdMeta);
     }
+    if (data.containsKey('team_private')) {
+      context.handle(
+          _teamPrivateMeta,
+          teamPrivate.isAcceptableOrUnknown(
+              data['team_private']!, _teamPrivateMeta));
+    }
     return context;
   }
 
@@ -1007,6 +1022,8 @@ class TeamsDataTable extends Table
           .read(DriftSqlType.string, data['${effectivePrefix}team_name'])!,
       teamCaptainId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}team_captain_id'])!,
+      teamPrivate: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}team_private'])!,
     );
   }
 
@@ -1029,11 +1046,13 @@ class TeamsDataTableData extends DataClass
   final int teamId;
   final String teamName;
   final int teamCaptainId;
+  final int teamPrivate;
   const TeamsDataTableData(
       {this.id,
       required this.teamId,
       required this.teamName,
-      required this.teamCaptainId});
+      required this.teamCaptainId,
+      required this.teamPrivate});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1043,6 +1062,7 @@ class TeamsDataTableData extends DataClass
     map['team_id'] = Variable<int>(teamId);
     map['team_name'] = Variable<String>(teamName);
     map['team_captain_id'] = Variable<int>(teamCaptainId);
+    map['team_private'] = Variable<int>(teamPrivate);
     return map;
   }
 
@@ -1052,6 +1072,7 @@ class TeamsDataTableData extends DataClass
       teamId: Value(teamId),
       teamName: Value(teamName),
       teamCaptainId: Value(teamCaptainId),
+      teamPrivate: Value(teamPrivate),
     );
   }
 
@@ -1063,6 +1084,7 @@ class TeamsDataTableData extends DataClass
       teamId: serializer.fromJson<int>(json['team_id']),
       teamName: serializer.fromJson<String>(json['team_name']),
       teamCaptainId: serializer.fromJson<int>(json['team_captain_id']),
+      teamPrivate: serializer.fromJson<int>(json['team_private']),
     );
   }
   @override
@@ -1073,6 +1095,7 @@ class TeamsDataTableData extends DataClass
       'team_id': serializer.toJson<int>(teamId),
       'team_name': serializer.toJson<String>(teamName),
       'team_captain_id': serializer.toJson<int>(teamCaptainId),
+      'team_private': serializer.toJson<int>(teamPrivate),
     };
   }
 
@@ -1080,12 +1103,14 @@ class TeamsDataTableData extends DataClass
           {Value<int?> id = const Value.absent(),
           int? teamId,
           String? teamName,
-          int? teamCaptainId}) =>
+          int? teamCaptainId,
+          int? teamPrivate}) =>
       TeamsDataTableData(
         id: id.present ? id.value : this.id,
         teamId: teamId ?? this.teamId,
         teamName: teamName ?? this.teamName,
         teamCaptainId: teamCaptainId ?? this.teamCaptainId,
+        teamPrivate: teamPrivate ?? this.teamPrivate,
       );
   @override
   String toString() {
@@ -1093,13 +1118,15 @@ class TeamsDataTableData extends DataClass
           ..write('id: $id, ')
           ..write('teamId: $teamId, ')
           ..write('teamName: $teamName, ')
-          ..write('teamCaptainId: $teamCaptainId')
+          ..write('teamCaptainId: $teamCaptainId, ')
+          ..write('teamPrivate: $teamPrivate')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, teamId, teamName, teamCaptainId);
+  int get hashCode =>
+      Object.hash(id, teamId, teamName, teamCaptainId, teamPrivate);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1107,7 +1134,8 @@ class TeamsDataTableData extends DataClass
           other.id == this.id &&
           other.teamId == this.teamId &&
           other.teamName == this.teamName &&
-          other.teamCaptainId == this.teamCaptainId);
+          other.teamCaptainId == this.teamCaptainId &&
+          other.teamPrivate == this.teamPrivate);
 }
 
 class TeamsDataTableCompanion extends UpdateCompanion<TeamsDataTableData> {
@@ -1115,17 +1143,20 @@ class TeamsDataTableCompanion extends UpdateCompanion<TeamsDataTableData> {
   final Value<int> teamId;
   final Value<String> teamName;
   final Value<int> teamCaptainId;
+  final Value<int> teamPrivate;
   const TeamsDataTableCompanion({
     this.id = const Value.absent(),
     this.teamId = const Value.absent(),
     this.teamName = const Value.absent(),
     this.teamCaptainId = const Value.absent(),
+    this.teamPrivate = const Value.absent(),
   });
   TeamsDataTableCompanion.insert({
     this.id = const Value.absent(),
     required int teamId,
     required String teamName,
     required int teamCaptainId,
+    this.teamPrivate = const Value.absent(),
   })  : teamId = Value(teamId),
         teamName = Value(teamName),
         teamCaptainId = Value(teamCaptainId);
@@ -1134,12 +1165,14 @@ class TeamsDataTableCompanion extends UpdateCompanion<TeamsDataTableData> {
     Expression<int>? teamId,
     Expression<String>? teamName,
     Expression<int>? teamCaptainId,
+    Expression<int>? teamPrivate,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (teamId != null) 'team_id': teamId,
       if (teamName != null) 'team_name': teamName,
       if (teamCaptainId != null) 'team_captain_id': teamCaptainId,
+      if (teamPrivate != null) 'team_private': teamPrivate,
     });
   }
 
@@ -1147,12 +1180,14 @@ class TeamsDataTableCompanion extends UpdateCompanion<TeamsDataTableData> {
       {Value<int?>? id,
       Value<int>? teamId,
       Value<String>? teamName,
-      Value<int>? teamCaptainId}) {
+      Value<int>? teamCaptainId,
+      Value<int>? teamPrivate}) {
     return TeamsDataTableCompanion(
       id: id ?? this.id,
       teamId: teamId ?? this.teamId,
       teamName: teamName ?? this.teamName,
       teamCaptainId: teamCaptainId ?? this.teamCaptainId,
+      teamPrivate: teamPrivate ?? this.teamPrivate,
     );
   }
 
@@ -1171,6 +1206,9 @@ class TeamsDataTableCompanion extends UpdateCompanion<TeamsDataTableData> {
     if (teamCaptainId.present) {
       map['team_captain_id'] = Variable<int>(teamCaptainId.value);
     }
+    if (teamPrivate.present) {
+      map['team_private'] = Variable<int>(teamPrivate.value);
+    }
     return map;
   }
 
@@ -1180,7 +1218,8 @@ class TeamsDataTableCompanion extends UpdateCompanion<TeamsDataTableData> {
           ..write('id: $id, ')
           ..write('teamId: $teamId, ')
           ..write('teamName: $teamName, ')
-          ..write('teamCaptainId: $teamCaptainId')
+          ..write('teamCaptainId: $teamCaptainId, ')
+          ..write('teamPrivate: $teamPrivate')
           ..write(')'))
         .toString();
   }
@@ -2621,6 +2660,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           teamId1: row.readNullable<int>('team_id'),
           teamName: row.readNullable<String>('team_name'),
           teamCaptainId: row.readNullable<int>('team_captain_id'),
+          teamPrivate: row.readNullable<int>('team_private'),
         ));
   }
 
@@ -2801,6 +2841,7 @@ class GetPlayerSubscriptionResult {
   final int? teamId1;
   final String? teamName;
   final int? teamCaptainId;
+  final int? teamPrivate;
   GetPlayerSubscriptionResult({
     required this.id,
     required this.playerIndexId,
@@ -2825,6 +2866,7 @@ class GetPlayerSubscriptionResult {
     this.teamId1,
     this.teamName,
     this.teamCaptainId,
+    this.teamPrivate,
   });
 }
 

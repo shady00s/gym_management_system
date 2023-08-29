@@ -1,7 +1,8 @@
-
 import "package:fluent_ui/fluent_ui.dart";
 import "package:flutter/material.dart" as material;
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:gym_management/database_management/tables/employees/employees_data_manager.dart";
+import "package:gym_management/database_management/tables/teams/teams_database_manager.dart";
 import "package:gym_management/manage_excel/cubit/state.dart";
 import "package:gym_management/manage_excel/steps/coaches_data.dart";
 import "package:gym_management/manage_excel/steps/finish_data.dart";
@@ -32,10 +33,8 @@ Future loadingDialog(context ,newNumber,function,state)async{
     Future.delayed( Duration.zero,() async{
 
       await function.then((value)async {
-        print(value);
         status = value;
         if(status == 200){
-
          newNumber!=-1 && state != null? state.incrementNumber(newNumber+1):null;
           Navigator.pop(context);
         }else if(status != null){
@@ -63,6 +62,40 @@ Future loadingDialog(context ,newNumber,function,state)async{
     return const ContentDialog(content: ProgressBar(),);
   }
   );
+}
+
+
+Future setEmployeesAndTeamsToDB(ExcelFileCubit state) async{
+  // create employees companion
+  await Future.delayed(Duration.zero,(){
+    state.generateEmployeesCompanion();
+  }).then(( value) async{
+    // insert employees data
+    await EmployeesDatabaseManager().insertEmployeesToDB(state.employeesListCompanion);
+    // add captain id to each player
+    await  EmployeesDatabaseManager().getEmployeesData().then((value){
+      for(var employeesDB in value){
+        for(var addedEmployees in state.employeesList){
+          if(employeesDB.employeeName == addedEmployees.employeeName){
+            for( var teams in state.teamsList){
+              if(teams.teamId == addedEmployees.teamId){
+                teams.teamCaptainId =employeesDB.employeeId;
+              }
+            }
+          }
+        }
+      }
+
+    });
+  });
+  // create team companion
+  await   Future.delayed(Duration.zero,(){
+    state.generateTeamsCompanion();
+  }).then((value) async{
+
+    await TeamsDatabaseManager().insertTeamsToDB(state.teamsListCompanion);
+  });
+
 }
 class StepsWidget extends StatefulWidget {
   const StepsWidget({super.key});
@@ -104,7 +137,7 @@ class _StepsWidgetState extends State<StepsWidget> {
                           const   ProgressRing() ,
                           const  SizedBox( width: 14,),
                           Button(onPressed: details.onStepCancel,
-                            child: Text("Cancel"),)
+                            child: const Text("Cancel"),)
                         ],),
                       );
                     }
@@ -116,8 +149,8 @@ class _StepsWidgetState extends State<StepsWidget> {
                         child: Row(children: [
 
                           FilledButton(onPressed:details.onStepContinue,
-                            child: Text("Continue"),),
-                          SizedBox( width: 14,),
+                            child:const Text("Continue"),),
+                          const SizedBox( width: 14,),
                           Button(onPressed: details.onStepCancel,
                             child: Text("Cancel"),)
                         ],),
@@ -130,22 +163,27 @@ class _StepsWidgetState extends State<StepsWidget> {
 
                       await  loadingDialog(context ,newNumber,ExcelFileCubit.get(context).sendFileToServer(),state);
                     }else if(state.excelFile ==null){
-                      material.showDialog(context: context, builder:(context)=> ContentDialog(content: Text("please select one file to continue"),actions: [Button(child: Text("Okay"), onPressed: (){Navigator.pop(context);})],));
+                      material.showDialog(context: context, builder:(context)=> ContentDialog(content:const Text("please select one file to continue"),actions: [Button(child: Text("Okay"), onPressed: (){Navigator.pop(context);})],));
                     }
 
                     else if(state.selectedList.isNotEmpty && state.currentIndex == 1){
-                      
+                      state.generateFormList();
+                      state.generateEmployeesList();
+                      state.generateTeamsList();
                       await  loadingDialog(context ,newNumber,ExcelFileCubit.get(context).sendSelectedSheets(),state);
                     }
 
                     else if(state.currentIndex == 2)
                        {
+                         
+                         
                          if(!state.checkValidation()){
                            await showDialog(context: context, builder: (BuildContext context) {
-                             return const ContentDialog(content: Text("Please fill the remaining  form"),);
+                             return  ContentDialog(content:const Text("Please fill the remaining  form"),actions: [Button(child: const Text("close"), onPressed: (){Navigator.pop(context);})],);
                            }, );
                          }else{
-                           state.incrementNumber(newNumber+1);
+                           await loadingDialog(context, -1, setEmployeesAndTeamsToDB(state), null).then((value){state.incrementNumber(newNumber +1);});
+
                          }
 
                       }
@@ -155,9 +193,7 @@ class _StepsWidgetState extends State<StepsWidget> {
                   },
 
                   onStepCancel:state.currentIndex> 0?  (){
-
                     if(newIndex > 0){
-                      print('tt');
                       state.decrementNumber(newIndex-1);
                     }
                   }:null,
@@ -167,7 +203,7 @@ class _StepsWidgetState extends State<StepsWidget> {
                     material.Step(
                         isActive: state.currentIndex == 0,
                         title: Text("Import Excel file"),
-                        content: ImportExcelStep()),
+                        content:const ImportExcelStep()),
                     material.Step(
                         isActive: state.currentIndex == 1,
                         title: const Text("Setting Teams"),

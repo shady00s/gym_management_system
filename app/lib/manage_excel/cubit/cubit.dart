@@ -7,9 +7,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_management/database_management/models/backup_data_models.dart';
+import 'package:gym_management/database_management/tables/generate_table.dart';
 import 'package:gym_management/manage_excel/cubit/state.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 
+import '../../database_management/models/employees_model.dart';
+import '../../database_management/models/teams_model.dart';
 import '../model/sheets_model.dart';
 
 class ExcelFileCubit extends Cubit<ImportExcelState>{
@@ -21,18 +24,46 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
   int currentIndex = 0;
   List<SheetsModel> listOfSheets = [];
   List<SheetsModel> selectedList = [];
+  List<GlobalKey<FormState>> globalKeyList= [];
+  List<EmployeesModel> employeesList = [];
+  final List<EmployeesTableCompanion> employeesListCompanion = [];
+  final List<TeamsDataTableCompanion> teamsListCompanion = [];
+  List<TeamsModel> teamsList = [];
 
-  List<GlobalKey<FormState>> keysFormList(){
+  void generateEmployeesList(){
+    for (var element in selectedList) {
+      employeesList.add(EmployeesModel(employeeName: "", employeePhoneNumber: 0, employeeSpecialization: "", employeePosition: "", employeeSalary: 0, employeeAddress: "", teamId: -1));
+    }
+}
 
-    return List.generate(selectedList.length, (_) => GlobalKey<FormState>());
+  void generateTeamsList(){
+    for (var element in selectedList) {
+      teamsList.add(TeamsModel(teamId: element.id, teamName: element.name, teamCaptainId: -1,teamPrivate: -1));
+    }
+  }
+  void generateFormList(){
+
+    for (var element in selectedList) {
+      globalKeyList.add(GlobalKey<FormState>());
+    }
+  }
+
+  void generateEmployeesCompanion (){
+    for(var element in employeesList){
+      employeesListCompanion.add(EmployeesTableCompanion.insert(employeeName: element.employeeName, employeePhoneNumber: element.employeePhoneNumber, employeeSpecialization: element.employeeSpecialization, employeePosition: element.employeePosition, employeeSalary: element.employeeSalary, employeeAddress: element.employeeAddress));
+    }
+  }
+
+  void generateTeamsCompanion (){
+    for(var element in teamsList){
+      teamsListCompanion.add(TeamsDataTableCompanion.insert(teamId: element.teamId, teamName: element.teamName, teamCaptainId: element.teamCaptainId));
+    }
   }
 
 
+  bool checkValidation(){
+ bool allValid = globalKeyList.every((element)=>element.currentState!.validate());
 
-bool checkValidation(){
- bool allValid = keysFormList().every((element)=>element.currentState!.validate());
-
- emit(SetValidation());
  return allValid;
 }
 
