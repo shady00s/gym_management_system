@@ -20,7 +20,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
               return const Center(child: ProgressRing(),);
             case ConnectionState.done:
               if(snapshot.hasData){
-                int date = DateTime.now().difference(snapshot.data![0].endDate).inDays;
+                int date = DateTime.now().difference(snapshot.data![0].endDate!).inDays;
                 print(snapshot.data![0].playerIndexId);
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -82,7 +82,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                               176, 2, 2, 0.8) , fontWeight: FontWeight.bold, fontSize: 18),),
                         ],
                       ),
-                      const SizedBox(height: 30,),
+                      const SizedBox(height: 10,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -91,9 +91,24 @@ class PlayerCardInformationWidget extends StatelessWidget {
                               child: const  Text("Teams:")),
                           Expanded(
                               flex: 3,
-                              child: Wrap(children: snapshot.data!.map((e){
-                                return Card(child: Text(e.teamName!));
-                      }).toList(),))
+                              child: FutureBuilder<List<TeamsDataTableData>>(
+                                future: PlayersDatabaseManager().getPlayerTeams(playerId),
+                                builder: (context, teamSnapshot) {
+
+                                  switch(teamSnapshot.connectionState){
+                                    case ConnectionState.waiting:
+                                      return const Center(child: ProgressRing(),);
+                                    case ConnectionState.done:
+                                      return Wrap(children: teamSnapshot.data!.map((e){
+                                        return SizedBox(height: 45, child: Card(
+                                            margin: EdgeInsets.zero, child: Text(e.teamName)));
+                                      }).toList(),);
+                                    default:
+                                      return const Center(child: ProgressRing(),);
+                                  }
+
+                                }
+                              ))
                         ],
                       ),
                       const SizedBox(height: 30,),
@@ -114,7 +129,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         const   Text("Beginning date:"),
-                                        Text((DateFormat.yMMMEd().format(snapshot.data![index].beginningDate)))
+                                        Text((DateFormat.yMMMEd().format(snapshot.data![index].beginningDate!)))
                                       ],),
                                   ),
 
@@ -125,7 +140,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         const    Text("end date:"),
-                                        Text(DateFormat.yMMMEd().format(snapshot.data![index].endDate))
+                                        Text(DateFormat.yMMMEd().format(snapshot.data![index].endDate!))
                                       ],),
                                   ),
                                   const Divider(),

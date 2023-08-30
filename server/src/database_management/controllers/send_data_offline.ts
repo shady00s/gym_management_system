@@ -4,86 +4,77 @@ import { Request, Response } from 'express';
 export default function sendDataOffline(req:Request,res:Response){
     let results: IExcelDataModel[] = req.session.playerList
 
-    let processedPlayer = new Set();
+    const prossedPlayerSet = new Set()
     const resultData = []
-    let playerData = {};
+    let playerData:IExcelDataModel = {
+        id: 0,
+        playerIndexId: 0,
+        playerId: 0,
+        team: undefined,
+        name: ""
+    };
     let playerId; 
 
+    let prossedPlayerId;
+
     for (const player of results) {
-         playerId = player.id;
-         
+         playerId = player.name;
+        
+         prossedPlayerId = player.name;
 
-            if (playerData[playerId]) {
-                if((playerData[playerId].name === player.name  && playerData[playerId].id === player.id && playerData[playerId].team === player.team) ){
-                  
-                    playerData[playerId].subscriptions.push(...player.subscriptions);
-
-                    for(var e of playerData[playerId].subscriptions){
-                        e.playerSubscriptionId = playerData[playerId].playerIndexId
-                    }
-                } 
-                if ((playerData[playerId].name === player.name && playerData[playerId].id === player.id) ) {
-                    
-                    let teamId = new Set()
-               
-                    playerData[playerId].subscriptions.push(...player.subscriptions);
-
-                    for (const iterator of playerData[playerId].subscriptions) {
+        
+               if(playerData[playerId]){
+                if((playerData[playerId].name === player.name  && playerData[playerId].id === player.id ) ){      
+    
+                    if (!(playerData[playerId].subscriptions!.every(e => player.subscriptions.every(
+                                f =>e.team === f.team && e.beginDate === f.beginDate && e.billId === f.billId && e.subscriptionDuration === f.subscriptionDuration && e.subscriptionValue === f.subscriptionValue)))) {
+                                playerData[playerId].subscriptions.push(...player.subscriptions);
+        
+                            }
+                            
+        
+                            for(var e of playerData[playerId].subscriptions){
+                                e.playerSubscriptionId = playerData[playerId].playerIndexId
+                            }
+                            
+                           
+                        }  
+                        let teamId = new Set()
+                        for (const iterator of playerData[playerId].subscriptions) {
                             if(!teamId.has(iterator.team)){
                                 teamId.add(iterator.team)
                             }
+                            playerData[playerId].team = Array.from(teamId)
                     }
-
-
-                    playerData[playerId].team = Array.from(teamId)
-                    
-                     playerData[playerId].subscriptions.push(...player.subscriptions);
-                     
-                     for(var e of playerData[playerId].subscriptions){
-                         e.playerSubscriptionId = playerData[playerId].playerIndexId
-                     }
-                 }
-                
-                if (!processedPlayer.has(playerId)) {
-
-                    resultData.push(playerData[playerId]);
-                    processedPlayer.add(playerId);
-                }
-                
-
-
-            } else {
+                        
+                        if(!prossedPlayerSet.has(playerId))
+                        {
+                            prossedPlayerSet.add(playerId)
+                            resultData.push(playerData[playerId]);
+                        }
+               }else{
                 playerData[playerId] = player;
-             if((playerData[playerId].name === player.name  && playerData[playerId].id === player.id && playerData[playerId].team === player.team) ){
-                    playerData[playerId].subscriptions.push(...player.subscriptions);
-                    for(var e of playerData[playerId].subscriptions){
-                        e.playerSubscriptionId = playerData[playerId].playerIndexId
-                    }   
+                for(var e of playerData[playerId].subscriptions){
+                    e.playerSubscriptionId = playerData[playerId].playerIndexId
                 }
-                if ((playerData[playerId].name === player.name && playerData[playerId].id === player.id) ) {
-                    let teamId = new Set()
-               
-                    playerData[playerId].subscriptions.push(...player.subscriptions);
-
-                    for (const iterator of playerData[playerId].subscriptions) {
-                            if(!teamId.has(iterator.team)){
-                                teamId.add(iterator.team)
-                            }
-                    }
-
-
-                    playerData[playerId].team = Array.from(teamId)
-                    for(var e of playerData[playerId].subscriptions){
-                        e.playerSubscriptionId = playerData[playerId].playerIndexId
-                    }
-                }
+                        if(!prossedPlayerSet.has(playerId))
+                        {
+                            prossedPlayerSet.add(playerId)
+                            resultData.push(playerData[playerId]);
+                        }
+               }
+     
                 
-                if (!processedPlayer.has(playerId)) {
+                
+                
+                
+        
 
-                    resultData.push(playerData[playerId]);
-                    processedPlayer.add(playerId);
-                }
-}
+          
+                
+           
+                
+
 }
 res.json({message:"succssess",resultData})
 }  

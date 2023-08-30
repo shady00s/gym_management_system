@@ -246,7 +246,7 @@ class ExcelPlayers{
     } ).toList() ;
     return ExcelPlayers(
         team: team,
-        player_id: json['playerId'],
+        player_id: json['id'],
         player_name: json['name'],
         player_phone_number: json['playerPhoneNumber'],
         image_path: json['imagePath'],
@@ -265,7 +265,7 @@ class ExcelSubscriptionsModel {
   final int billid;
   final int billValue;
   final int duration;
-  final dynamic team;
+  final int team;
 
   ExcelSubscriptionsModel({
     required this.team,

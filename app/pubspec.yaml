@@ -53,6 +53,7 @@ dependencies:
   camera_windows: ^0.2.1+7
   image_picker: ^1.0.2
   image_picker_windows: ^0.2.1
+  build_config: ^1.1.1
 
 
 dev_dependencies:

@@ -71,7 +71,6 @@ class PlayersDatabaseManager {
 
   Future dropPlayersAndSubscriptionsTable()async{
     await playersDatabase.delete(PlayersAndTeamsTable(playersDatabase)).go();
-    await playersDatabase.delete(TeamsDataTable(playersDatabase)).go();
     await playersDatabase.delete(Players(playersDatabase)).go();
     await playersDatabase.delete(PlayersSubscriptions(playersDatabase)).go();
   }
@@ -111,9 +110,10 @@ class PlayersDatabaseManager {
     List<GetPlayerSubscriptionResult>result =  await playersDatabase.getPlayerSubscription(id).get();
 
     return result;
+  }
 
-
-
+  Future <List<TeamsDataTableData>> getPlayerTeams(int id) async{
+    return await playersDatabase.getPlayerTeam(id).get();
   }
 
   Future<List<Player>> getEndedSubscriptionsPlayers(var data) async {
@@ -151,7 +151,7 @@ class PlayersDatabaseManager {
 
    Future<List<GetEndedSubscriptionByTeamResult>> getNeedToResubscribePlayersSubscriptions(teamId) async {
 
-     List<GetEndedSubscriptionByTeamResult>  data = await playersDatabase.getEndedSubscriptionByTeam(teamId, DateTime.now().subtract(const Duration(days: 40)),DateTime.now()).get();
+     List<GetEndedSubscriptionByTeamResult>  data = await playersDatabase.getEndedSubscriptionByTeam( DateTime.now().subtract(const Duration(days: 40)),DateTime.now(),teamId,).get();
      return data;
    }
 
@@ -162,15 +162,37 @@ Future insertPlayersFromExcelOffline(List<ExcelPlayers> playersData)async{
     //get teams data
     List<PlayersAndTeamsTableCompanion> playersTeamCompanion = [];
     for(var player in playersData){
-      for (var team in player.team){
-        playersTeamCompanion.add(PlayersAndTeamsTableCompanion.insert(teamId: team, teamPlayerId: player.playerIndexId));
+      if(player.team.runtimeType != int){
+        for (var team in player.team){
+          playersTeamCompanion.add(PlayersAndTeamsTableCompanion.insert(teamId: team, teamPlayerId: player.playerIndexId));
+        }
+      }else{
+        playersTeamCompanion.add(PlayersAndTeamsTableCompanion.insert(teamId: player.team, teamPlayerId: player.playerIndexId));
+      }
+
+    }
+
+    List<PlayersSubscriptionsCompanion>  playersSubCompanion= [];
+
+
+    for(var player in playersData){
+      for( var subData in player.subscriptions!){
+
+        playersSubCompanion.add(
+            PlayersSubscriptionsCompanion.insert(playerSubscriptionId: subData.id, beginningDate: DateTime.parse(subData.beginning_date), endDate: DateTime.parse(subData.end_date), billId: subData.billid, billValue: subData.billValue, duration: subData.duration, billCollector: "unknown", teamId: subData.team)
+        );
       }
     }
 
-    Iterable<PlayersSubscriptionsCompanion>  playersSubCompanion= playersData.expand((e) => e.subscriptions!.map((subData) => PlayersSubscriptionsCompanion.insert(playerSubscriptionId: subData.id, beginningDate: DateTime.parse(subData.beginning_date), endDate: DateTime.parse(subData.end_date), billId: subData.billid, billValue: subData.billValue, duration: subData.duration, billCollector: "unknown", teamId: subData.team)));
-    await playersDatabase.batch((batch) => batch.insertAll(PlayersAndTeamsTable(playersDatabase), playersTeamCompanion));
-    await playersDatabase.batch((batch) => batch.insertAll(Players(playersDatabase), playersCompanion));
-    await playersDatabase.batch((batch) => batch.insertAll(PlayersSubscriptions(playersDatabase), playersSubCompanion));
+
+      await playersDatabase.batch((batch) => batch.insertAll(Players(playersDatabase), playersCompanion)).then((value) async{
+          await playersDatabase.batch((batch) => batch.insertAll(PlayersSubscriptions(playersDatabase), playersSubCompanion)).then((value) async{
+          await playersDatabase.batch((batch) => batch.insertAll(PlayersAndTeamsTable(playersDatabase), playersTeamCompanion));
+
+        });
+    });
+
+
 
 }
 }

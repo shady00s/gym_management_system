@@ -53,7 +53,7 @@ class OnBoardPlayers extends StatelessWidget {
                    NeedToResubscribePlayerNameWidget(
                        playerName: snapshot.data![index].playerName,
                      playerId:snapshot.data![index].playerId,
-                     endDate:snapshot.data![index].endDate, playerIndexId: snapshot.data![index].playerIndexId ,))))
+                     endDate:snapshot.data![index].endDate!, playerIndexId: snapshot.data![index].playerIndexId ,))))
                           ]);
                         } else {
                           return Center(

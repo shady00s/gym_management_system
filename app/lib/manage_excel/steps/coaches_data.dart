@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gym_management/database_management/tables/generate_table.dart';
+import 'package:gym_management/database_management/tables/teams/teams_database_manager.dart';
 import '../../main_screen/widgets/combo_box_widget.dart';
 import '../cubit/cubit.dart';
 import '../cubit/state.dart';
@@ -22,45 +24,78 @@ class SetCoachesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      backgroundColor: Colors.black,
-      child: SizedBox(
+    return
+      FutureBuilder<List<TeamsDataTableData>>(
+        future: TeamsDatabaseManager().getAllTeams(),
+        builder: (BuildContext context, AsyncSnapshot<List<TeamsDataTableData>> snapshot) {
+          switch (snapshot.connectionState){
+            case ConnectionState.none:
+              return Center(child: Text("Error occured"),);
+            case ConnectionState.waiting:
+            case ConnectionState.active:
+              return const Center(child: ProgressRing(),);
+            case ConnectionState.done:
+              if(snapshot.data!.isEmpty ){
+                return   Card(
+                  backgroundColor: Colors.black,
+                  child: SizedBox(
+                      width: MediaQuery.sizeOf(context).width * 0.95,
+                      height: MediaQuery.sizeOf(context).height * 0.52,
+                      child: Column(
+                        children: [
+                          const Text("Setting coaches data"),
+                          Card(child: BlocBuilder<ExcelFileCubit, ImportExcelState>(
+                            builder: (BuildContext context, state) {
+                              List<SheetsModel> selectedSheets =
+                                  ExcelFileCubit.get(context).selectedList;
+                              List<GlobalKey<FormState>> keys =
+                                  ExcelFileCubit.get(context).globalKeyList;
+
+                              WidgetsFlutterBinding.ensureInitialized();
+                              return SizedBox(
+                                width: MediaQuery.sizeOf(context).width * 0.95,
+                                height: MediaQuery.sizeOf(context).height * 0.44,
+                                child: SingleChildScrollView(
+                                  child: Wrap(
+                                    crossAxisAlignment: WrapCrossAlignment.start,
+                                    alignment: WrapAlignment.center,
+                                    children: selectedSheets.map((selectedSheet) {
+                                      int idx = selectedSheets.indexOf(selectedSheet);
+                                      return CoachForm(
+                                          index: idx,
+                                          formKey: keys[idx],
+                                          coachId: selectedSheet.id,
+                                          teamName: selectedSheet.name);
+                                    }).toList(),
+                                  ),
+                                ),
+                              );
+                            },
+                          )),
+                        ],
+                      )),
+                );
+              }
+              return Card(
+              backgroundColor: Colors.black,
+              child: SizedBox(
           width: MediaQuery.sizeOf(context).width * 0.95,
           height: MediaQuery.sizeOf(context).height * 0.52,
-          child: Column(
-            children: [
-              const Text("Setting coaches data"),
-              Card(child: BlocBuilder<ExcelFileCubit, ImportExcelState>(
-                builder: (BuildContext context, state) {
-                  List<SheetsModel> selectedSheets =
-                      ExcelFileCubit.get(context).selectedList;
-                  List<GlobalKey<FormState>> keys =
-                      ExcelFileCubit.get(context).globalKeyList;
+          child: Column(children: [
+                Text("All teams already found, you can change the data in teams manager"),
+                Button(child: Text("Continue to finish data"), onPressed: (){
+                  int index = ExcelFileCubit.get(context).currentIndex;
+                  ExcelFileCubit.get(context).incrementNumber(index +1);
+                })
+              ],)));
 
-                  WidgetsFlutterBinding.ensureInitialized();
-                  return SizedBox(
-                    width: MediaQuery.sizeOf(context).width * 0.95,
-                    height: MediaQuery.sizeOf(context).height * 0.44,
-                    child: SingleChildScrollView(
-                      child: Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        alignment: WrapAlignment.center,
-                        children: selectedSheets.map((selectedSheet) {
-                          int idx = selectedSheets.indexOf(selectedSheet);
-                          return CoachForm(
-                              index: idx,
-                              formKey: keys[idx],
-                              coachId: selectedSheet.id,
-                              teamName: selectedSheet.name);
-                        }).toList(),
-                      ),
-                    ),
-                  );
-                },
-              )),
-            ],
-          )),
-    );
+          }
+
+        },);
+
+
+
+
   }
 }
 
@@ -103,10 +138,11 @@ class _CoachFormState extends State<CoachForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return
+    Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10),
       child: Card(
-        backgroundColor: const Color.fromRGBO(12, 12, 12, 0.8),
+        backgroundColor: const Color.fromRGBO(37, 34, 34, 0.4),
         child: SizedBox(
           width: 282,
           child: Form(
@@ -147,7 +183,7 @@ class _CoachFormState extends State<CoachForm> {
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                    const  Expanded(
+                      const  Expanded(
                           flex: 2,
                           child: Text(
                             "Team name:",
@@ -169,7 +205,7 @@ class _CoachFormState extends State<CoachForm> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                    const  Expanded(
+                      const  Expanded(
                           flex: 2,
                           child: Text(
                             "Team ID:",
@@ -188,7 +224,7 @@ class _CoachFormState extends State<CoachForm> {
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                   const   Expanded(
+                      const   Expanded(
                           flex: 2,
                           child: Text(
                             "Coach phone:",
@@ -197,15 +233,16 @@ class _CoachFormState extends State<CoachForm> {
                           flex: 3,
                           child: TextFormBox(
                             controller: _coachPhoneNumber,
+                            keyboardType: TextInputType.number,
                             validator: (val) {
-                              if (int.tryParse(val!) == null || val.length != 11) {
+                              if (int.tryParse(val!) == null || val.length != 11 ) {
                                 return "please add valid coach phone number";
                               }
                               return null;
                             },
                             onChanged: (val){
                               ExcelFileCubit.get(context).employeesList[widget.index].employeePhoneNumber = int.parse(val);
-
+                              print(ExcelFileCubit.get(context).employeesList[widget.index].employeePhoneNumber);
                             },
                           )),
                     ],
@@ -215,7 +252,7 @@ class _CoachFormState extends State<CoachForm> {
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                     const Expanded(
+                      const Expanded(
                           flex: 2,
                           child: Text(
                             "Coach address:",
@@ -243,8 +280,8 @@ class _CoachFormState extends State<CoachForm> {
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                    const  Expanded(flex:3, child: Text('Coach employment status')),
-                  Expanded(flex:2, child: ComboBoxWidget(
+                      const  Expanded(flex:3, child: Text('Coach employment status')),
+                      Expanded(flex:2, child: ComboBoxWidget(
                           items: _list,
                           filterTitle: "",
                           onChanged: (val) {
@@ -252,7 +289,7 @@ class _CoachFormState extends State<CoachForm> {
                               _coachEmploymentStatus = val.title;
                             });
 
-                              ExcelFileCubit.get(context).employeesList[widget.index].employeePosition = val;
+                            ExcelFileCubit.get(context).employeesList[widget.index].employeePosition = val;
 
                           },
                           allButton: false)),
@@ -260,64 +297,64 @@ class _CoachFormState extends State<CoachForm> {
                   ),
                 ),
                 if(_coachEmploymentStatus == "Employee")
-                  // salary
-                    Padding(
-                        padding:const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            const Expanded(
-                                flex: 2,
-                                child: Text(
-                                  "Coach salary:",
-                                )),
-                            Expanded(
-                                flex: 3,
-                                child: NumberFormBox(
-                                  onChanged: (val) {
-                                    setState(() {
-                                      _coachSalary = val!;
-                                    });
-                                    ExcelFileCubit.get(context).employeesList[widget.index].employeeSalary =double.parse(val.toString()) ;
+                // salary
+                  Padding(
+                    padding:const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        const Expanded(
+                            flex: 2,
+                            child: Text(
+                              "Coach salary:",
+                            )),
+                        Expanded(
+                            flex: 3,
+                            child: NumberFormBox(
+                              onChanged: (val) {
+                                setState(() {
+                                  _coachSalary = val!;
+                                });
+                                ExcelFileCubit.get(context).employeesList[widget.index].employeeSalary =double.parse(val.toString()) ;
 
-                                  },
-                                  validator: (val) {
-                                    if (val=="0" || val == null) {
-                                      return "please add coach salary";
-                                    }
-                                    return null;
-                                  },
-                                  value: _coachSalary,
-                                )),
-                          ],
-                        ),
-                      ),
-                    // salary
-                    Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            const  Expanded(
-                                flex: 2,
-                                child: Text(
-                                  "Coach private:",
-                                )),
-                            Expanded(
-                                flex: 3,
-                                child: NumberFormBox(
-                                  onChanged: (val) {
-                                    setState(() {
-                                      _coachPrivate = val!;
-                                    });
-                                    ExcelFileCubit.get(context).teamsList[widget.index].teamPrivate = val! ;
+                              },
+                              validator: (val) {
+                                if (val=="0" || val == null) {
+                                  return "please add coach salary";
+                                }
+                                return null;
+                              },
+                              value: _coachSalary,
+                            )),
+                      ],
+                    ),
+                  ),
+                // salary
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      const  Expanded(
+                          flex: 2,
+                          child: Text(
+                            "Coach private:",
+                          )),
+                      Expanded(
+                          flex: 3,
+                          child: NumberFormBox(
+                            onChanged: (val) {
+                              setState(() {
+                                _coachPrivate = val!;
+                              });
+                              ExcelFileCubit.get(context).teamsList[widget.index].teamPrivate = val! ;
 
-                                  },
+                            },
 
-                                  value: _coachPrivate,
-                                )),
-                          ],
-                        ),
-                      ),
+                            value: _coachPrivate,
+                          )),
                     ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),

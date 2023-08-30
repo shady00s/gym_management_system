@@ -45,8 +45,12 @@ async function saveXlsxFileData(req: Request, res: Response) {
                         } else if (id == undefined) {
                             team = -1
                         } else team = team
-                        let playerId = Math.floor(fileJsonData[x][selectedSheets[currentListLength].name] + fileJsonData.length + selectedSheets[currentListLength].id * Math.round(Math.random()*(4000-2000)))
-
+                        let playerId = Math.floor(fileJsonData[x][selectedSheets[currentListLength].name] + fileJsonData.length + selectedSheets[currentListLength].id)
+                        if (id === "*") {
+                            let num = fileJsonData.length + Math.round(Math.random() * (300 - 50))
+                            playerId = (fileJsonData.length + selectedSheets[currentListLength].id) + num * selectedSheets[currentListLength].id
+                            id = num
+                        }
                         let playerIndexId = parseInt(generateUniqueId({ useLetters: false, useNumbers: true, length: 8, includeSymbols: [] }));
                         // get begin date and end date
                         let finishdateVal = new Date((fileJsonData[x]["__EMPTY_3"] - 25569) * 86400 * 1000)
@@ -71,11 +75,7 @@ async function saveXlsxFileData(req: Request, res: Response) {
                         let billId = fileJsonData[x]["__EMPTY_4"] == null || typeof fileJsonData[x]["__EMPTY_4"] === "string" ? -1 : fileJsonData[x]["__EMPTY_4"]
 
                         let subscriptionDuration: number = fileJsonData[x]["__EMPTY_1"] === "شهر" ? 1 : fileJsonData[x]["__EMPTY_1"] === "شهرين" ? 2 : fileJsonData[x]["__EMPTY_1"] === "3شهور" ? 3 : fileJsonData[x]["__EMPTY_1"] === "6شهور" ? 6 : fileJsonData[x]["__EMPTY_1"] === "حصة" ? 11 : -1
-                        if (id === "*") {
-                            let num = (Math.round(Math.random() * (10200 - 8200)))
-                            playerId = num
-                            id = num
-                        }
+
                         const invalidNames = /^(?! *$|^ *$|^ديسمبر$|^نوفمبر$|^اكتوبر$|^سبتمبر$|^اغسطس$|^يوليو$|^يونيه$|^مايو$|^ابريل$|^مارس$|^فبراير$|^يناير$).*/;
                         const invalidIds = /^(?! *$|^ *$|^-$|^الا$|^لاغى$|^ID$).*$/;
                         if (
@@ -99,11 +99,11 @@ async function saveXlsxFileData(req: Request, res: Response) {
                 for (const player of playersMap) {
                     playerObjId = player.playerId;
 
-                    if (player.id !== undefined && player.id !== null && player.name !== null) {
+                    if (player.name !== undefined && player.id !== undefined && player.id !== null && player.name !== null && typeof player.name !== "number") {
 
 
                         if (playerData[playerObjId]) {
-                            if (player.name !== undefined && playerData[playerObjId].name === player.name) {
+                            if (playerData[playerObjId].name === player.name) {
 
                                 playerData[playerObjId].playerIndexId = player.playerIndexId
                                 playerObjId = player.playerId
@@ -112,14 +112,7 @@ async function saveXlsxFileData(req: Request, res: Response) {
                                     playerData[playerObjId].subscriptions.push(...player.subscriptions);
 
                                 }
-                                if (!processedPlayer.has(playerObjId)) {
 
-                                    result.push(playerData[playerObjId]);
-                                    processedPlayer.add(playerObjId);
-                                }
-
-                            } else if (processedPlayer.has(playerObjId) && playerData[playerObjId].name === player.name && playerData[playerObjId].team !== player.team) {
-                                result.push(playerData[playerObjId]);
 
                             } if (!processedPlayer.has(playerObjId)) {
 
@@ -131,7 +124,7 @@ async function saveXlsxFileData(req: Request, res: Response) {
 
                         } else {
                             playerData[playerObjId] = player;
-                            if (player.name !== undefined && playerData[playerObjId].name == player.name) {
+                            if (playerData[playerObjId].name === player.name && playerData[playerObjId].id === player.id) {
                                 playerData[playerObjId].playerIndexId = player.playerIndexId
                                 playerObjId = player.playerId
                                 if (playerData[playerObjId].subscriptions.length !== 0 && playerData[playerObjId].subscriptions !== undefined) {
@@ -141,16 +134,8 @@ async function saveXlsxFileData(req: Request, res: Response) {
                                         playerData[playerObjId].subscriptions.push(...player.subscriptions);
 
                                     }
-                                    if (!processedPlayer.has(playerObjId)) {
-
-                                        result.push(playerData[playerObjId]);
-                                        processedPlayer.add(playerObjId);
-                                    }
 
 
-                                } if (!processedPlayer.has(playerObjId)) {
-
-                                    result.push(playerData[playerObjId]);
 
                                 }
 
@@ -158,10 +143,7 @@ async function saveXlsxFileData(req: Request, res: Response) {
 
                             }
 
-                            else if (processedPlayer.has(playerObjId) && playerData[playerObjId].name === player.name && playerData[playerObjId].team !== player.team) {
-                                result.push(playerData[playerObjId]);
-
-                            } if (!processedPlayer.has(playerObjId)) {
+                            if (!processedPlayer.has(playerObjId)) {
 
                                 result.push(playerData[playerObjId]);
                                 processedPlayer.add(playerObjId);
@@ -182,7 +164,7 @@ async function saveXlsxFileData(req: Request, res: Response) {
                 req.session.selected_teams_list = selectedSheets;
 
                 res.redirect('/get_excel_data_offline')
-                // res.json({fileJsonData})
+
             } else {
                 res.json("no sheets added")
             }

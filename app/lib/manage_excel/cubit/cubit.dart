@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:drift/drift.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,7 +51,7 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
 
   void generateEmployeesCompanion (){
     for(var element in employeesList){
-      employeesListCompanion.add(EmployeesTableCompanion.insert(employeeName: element.employeeName, employeePhoneNumber: element.employeePhoneNumber, employeeSpecialization: element.employeeSpecialization, employeePosition: element.employeePosition, employeeSalary: element.employeeSalary, employeeAddress: element.employeeAddress));
+      employeesListCompanion.add(EmployeesTableCompanion.insert(employeeName: element.employeeName, employeePhoneNumber: element.employeePhoneNumber, employeeSpecialization: element.employeeSpecialization, employeePosition: element.employeePosition, employeeSalary: Value(element.employeeSalary) , employeeAddress: element.employeeAddress));
     }
   }
 
@@ -63,7 +64,7 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
 
   bool checkValidation(){
  bool allValid = globalKeyList.every((element)=>element.currentState!.validate());
-
+  emit(SetValidation());
  return allValid;
 }
 
@@ -74,6 +75,7 @@ class ExcelFileCubit extends Cubit<ImportExcelState>{
   void setSelectedListOfSheets(List<SheetsModel> newList){
     selectedList = [];
     selectedList = newList;
+
 
   }
 

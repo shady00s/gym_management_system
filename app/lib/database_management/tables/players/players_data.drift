@@ -33,23 +33,37 @@ allPlayers: SELECT * FROM Players;
 getAllNames: SELECT player_id, player_index_id, player_name FROM Players ORDER BY player_id ASC;
 allSubscriptions: SELECT * FROM PlayersSubscriptions;
 
-getPlayerSubscription: SELECT Players.*, PlayersSubscriptions.*,TeamsDataTable.*  FROM Players
-                        INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id
-                        LEFT JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = :player_index_id
-                        LEFT JOIN TeamsDataTable ON TeamsDataTable.team_id = PlayersAndTeamsTable.team_id
+getPlayerSubscription: SELECT DISTINCT Players.*, PlayersSubscriptions.*  FROM Players
+                        INNER JOIN PlayersSubscriptions ON  PlayersSubscriptions.player_subscription_id = :player_index_id
+                        INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = :player_index_id
                         WHERE Players.player_index_id = :player_index_id  ORDER BY end_date DESC;
 
-getPlayersByTeam: SELECT player_id, player_index_id, player_name FROM Players INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id WHERE PlayersAndTeamsTable.team_id = :team_id ORDER BY Players.player_first_join_date DESC;
+getPlayerTeam (REQUIRED :player_index_id): SELECT DISTINCT TeamsDataTable.* FROM Players
+               INNER JOIN PlayersSubscriptions ON  PlayersSubscriptions.player_subscription_id = :player_index_id
+               INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = :player_index_id
+               INNER JOIN TeamsDataTable ON TeamsDataTable.team_id = PlayersAndTeamsTable.team_id
+               WHERE Players.player_index_id = :player_index_id;
+
+getPlayersByTeam (REQUIRED :firstDate AS DATETIME, REQUIRED :secDate AS DATETIME): SELECT DISTINCT player_id, player_index_id, player_name FROM Players
+                    INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id
+                    INNER JOIN PlayersSubscriptions ON PlayersSubscriptions.player_subscription_id = Players.player_index_id
+                    WHERE PlayersAndTeamsTable.team_id = :team_id
+                    ORDER BY Players.player_first_join_date DESC;
 
 
-getEndedSubscriptionByTeam: SELECT DISTINCT Players.*, PlayersSubscriptions.*
-                            from Players INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id
-                            INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id
-                            WHERE PlayersAndTeamsTable.team_id = :team_id
-                            AND Players.player_index_id = PlayersSubscriptions.player_subscription_id
-                            AND PlayersSubscriptions.end_date
-                            BETWEEN :beginDateTime AND :secondDateTime
-                            ORDER BY PlayersSubscriptions.end_date DESC;
+getEndedSubscriptionByTeam (REQUIRED :beginDateTime AS DATETIME, REQUIRED :secondDateTime AS DATETIME,REQUIRED :team_id AS INT ):
+                           SELECT DISTINCT Players.*, PlayersSubscriptions.*
+                           FROM Players
+                           INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id
+                           INNER JOIN (
+                               SELECT DISTINCT player_subscription_id, MAX(end_date) AS latest_end_date
+                               FROM PlayersSubscriptions
+                               WHERE end_date BETWEEN :beginDateTime AND :secondDateTime
+                               GROUP BY player_subscription_id
+                           ) AS LatestSubscriptions ON Players.player_index_id = LatestSubscriptions.player_subscription_id
+                           INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id AND PlayersSubscriptions.end_date = LatestSubscriptions.latest_end_date
+                           WHERE PlayersAndTeamsTable.team_id = :team_id
+                           ORDER BY LatestSubscriptions.latest_end_date DESC;
 
 filterNewPlayers(REQUIRED :beginDate AS DATETIME OR NUll,REQUIRED :endDate AS DATETIME OR NUll,REQUIRED :teamId AS INT OR NULL,REQUIRED :billVal AS INT OR NULL): SELECT  DISTINCT Players.* FROM PLAYERS
                   INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id

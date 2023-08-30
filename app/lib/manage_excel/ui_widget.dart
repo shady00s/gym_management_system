@@ -71,22 +71,24 @@ Future setEmployeesAndTeamsToDB(ExcelFileCubit state) async{
     state.generateEmployeesCompanion();
   }).then(( value) async{
     // insert employees data
-    await EmployeesDatabaseManager().insertEmployeesToDB(state.employeesListCompanion);
-    // add captain id to each player
-    await  EmployeesDatabaseManager().getEmployeesData().then((value){
-      for(var employeesDB in value){
-        for(var addedEmployees in state.employeesList){
-          if(employeesDB.employeeName == addedEmployees.employeeName){
-            for( var teams in state.teamsList){
-              if(teams.teamId == addedEmployees.teamId){
-                teams.teamCaptainId =employeesDB.employeeId;
+    await EmployeesDatabaseManager().insertEmployeesToDB(state.employeesListCompanion).then((_) async {
+      // add captain id to each player
+      await  EmployeesDatabaseManager().getEmployeesData().then((value){
+        for(var employeesDB in value){
+          for(var addedEmployees in state.employeesList){
+            if(employeesDB.employeeName == addedEmployees.employeeName){
+              for( var teams in state.teamsList){
+                if(teams.teamId == addedEmployees.teamId){
+                  teams.teamCaptainId =employeesDB.employeeId;
+                }
               }
             }
           }
         }
-      }
 
+      });
     });
+
   });
   // create team companion
   await   Future.delayed(Duration.zero,(){
