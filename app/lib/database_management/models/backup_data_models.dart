@@ -266,8 +266,10 @@ class ExcelSubscriptionsModel {
   final int billValue;
   final int duration;
   final int team;
+  final String subscriptionCollectionDate;
 
-  ExcelSubscriptionsModel({
+  ExcelSubscriptionsModel( {
+    required this.subscriptionCollectionDate,
     required this.team,
     required this.id,
     required this.beginning_date,
@@ -281,6 +283,7 @@ class ExcelSubscriptionsModel {
 
 
     return ExcelSubscriptionsModel(
+      subscriptionCollectionDate:json['subscriptionCollectionDate'],
         id: json["playerSubscriptionId"],
         beginning_date: json["beginDate"],
         end_date: json["finishDate"],

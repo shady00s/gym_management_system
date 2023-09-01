@@ -1,5 +1,4 @@
 import '../teams/players_teams.drift';
-
 import 'players_data.drift';
 
 CREATE TABLE IF NOT EXISTS Players (
@@ -27,8 +26,6 @@ CREATE TABLE IF NOT EXISTS PlayersSubscriptions(
     billCollector TEXT NOT NULL
 );
 
-
-
 allPlayers: SELECT * FROM Players;
 getAllNames: SELECT player_id, player_index_id, player_name FROM Players ORDER BY player_id ASC;
 allSubscriptions: SELECT * FROM PlayersSubscriptions;
@@ -50,19 +47,19 @@ getPlayersByTeam (REQUIRED :firstDate AS DATETIME, REQUIRED :secDate AS DATETIME
                     WHERE PlayersAndTeamsTable.team_id = :team_id
                     ORDER BY Players.player_first_join_date DESC;
 
-
 getEndedSubscriptionByTeam (REQUIRED :beginDateTime AS DATETIME, REQUIRED :secondDateTime AS DATETIME,REQUIRED :team_id AS INT ):
                            SELECT DISTINCT Players.*, PlayersSubscriptions.*
                            FROM Players
                            INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id
                            INNER JOIN (
-                               SELECT DISTINCT player_subscription_id, MAX(end_date) AS latest_end_date
+                               SELECT player_subscription_id, MAX(end_date) AS latest_end_date
                                FROM PlayersSubscriptions
                                WHERE end_date BETWEEN :beginDateTime AND :secondDateTime
                                GROUP BY player_subscription_id
                            ) AS LatestSubscriptions ON Players.player_index_id = LatestSubscriptions.player_subscription_id
-                           INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id AND PlayersSubscriptions.end_date = LatestSubscriptions.latest_end_date
+                           INNER JOIN PlayersSubscriptions ON PlayersSubscriptions.player_subscription_id  = Players.player_index_id AND PlayersSubscriptions.end_date = LatestSubscriptions.latest_end_date
                            WHERE PlayersAndTeamsTable.team_id = :team_id
+                           AND PlayersSubscriptions.team_id = :team_id
                            ORDER BY LatestSubscriptions.latest_end_date DESC;
 
 filterNewPlayers(REQUIRED :beginDate AS DATETIME OR NUll,REQUIRED :endDate AS DATETIME OR NUll,REQUIRED :teamId AS INT OR NULL,REQUIRED :billVal AS INT OR NULL): SELECT  DISTINCT Players.* FROM PLAYERS
@@ -73,7 +70,6 @@ filterNewPlayers(REQUIRED :beginDate AS DATETIME OR NUll,REQUIRED :endDate AS DA
                   AND (PlayersAndTeamsTable.team_id = COALESCE(:teamId, PlayersAndTeamsTable.team_id) OR :teamId IS NULL )
                   ORDER BY PLAYERS.player_first_join_date DESC;
 
-
 filterEndedSubPlayers(REQUIRED :beginDate AS DATETIME OR NUll,REQUIRED :endDate AS DATETIME OR NUll,REQUIRED :teamId AS INT OR NULL,REQUIRED :billVal AS INT OR NULL): SELECT  DISTINCT Players.* FROM PLAYERS
                   INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id
                   INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id
@@ -82,7 +78,8 @@ filterEndedSubPlayers(REQUIRED :beginDate AS DATETIME OR NUll,REQUIRED :endDate 
                   AND (PlayersAndTeamsTable.team_id = COALESCE(:teamId, PlayersAndTeamsTable.team_id) OR :teamId IS NULL )
                   ORDER BY PLAYERS.player_first_join_date DESC;
 
-enterPlayerToGym(REQUIRED :teamId AS INT,REQUIRED :playerId AS INT, :playerName AS TEXT):  SELECT DISTINCT  Players.player_id, Players.player_index_id, Players.player_name, PlayersSubscriptions.player_subscription_id,PlayersSubscriptions.end_date, MAX(PlayersSubscriptions.end_date), PlayersAndTeamsTable.team_player_id, PlayersAndTeamsTable.team_id
+enterPlayerToGym(REQUIRED :teamId AS INT,REQUIRED :playerId AS INT, :playerName AS TEXT):
+                                            SELECT DISTINCT  Players.player_id, Players.player_index_id, Players.player_name, PlayersSubscriptions.player_subscription_id,PlayersSubscriptions.end_date, MAX(PlayersSubscriptions.end_date), PlayersAndTeamsTable.team_player_id, PlayersAndTeamsTable.team_id
                                                 FROM Players
                                             LEFT JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id
                                             LEFT JOIN PlayersAndTeamsTable ON Players.player_index_id = PlayersAndTeamsTable.team_player_id

@@ -151,7 +151,7 @@ class PlayersDatabaseManager {
 
    Future<List<GetEndedSubscriptionByTeamResult>> getNeedToResubscribePlayersSubscriptions(teamId) async {
 
-     List<GetEndedSubscriptionByTeamResult>  data = await playersDatabase.getEndedSubscriptionByTeam( DateTime.now().subtract(const Duration(days: 40)),DateTime.now(),teamId,).get();
+     List<GetEndedSubscriptionByTeamResult>  data = await playersDatabase.getEndedSubscriptionByTeam( DateTime.now().subtract(const Duration(days: 30)),DateTime.now(),teamId,).get();
      return data;
    }
 

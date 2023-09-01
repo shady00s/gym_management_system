@@ -29,10 +29,10 @@ async function saveXlsxFileData(req: Request, res: Response) {
 
                     let fileJsonData: any[] = xlsx.utils.sheet_to_json(fileData.Sheets[selectedSheets[currentListLength].name])
                     for (let x = 0; x < fileJsonData.length; x++) {
+
                         let id = fileJsonData[x][selectedSheets[currentListLength].name]
                         let team;
                         if (id !== undefined && team === undefined) {
-
                             let index = selectedSheets.findIndex(e =>
                                 (e.name === Object.keys(fileJsonData[x])[0])
                                 || ((e.name === Object.keys(fileJsonData[x])[1])) ||
@@ -65,10 +65,19 @@ async function saveXlsxFileData(req: Request, res: Response) {
                         let begday = begdateVal.getDate();
                         let begHour = begdateVal.getHours();
                         let begminuite = begdateVal.getMinutes();
-
+                        // subscription collecting date
+                        let subscriptionCollectingDate = new Date((fileJsonData[x]['__EMPTY_5'] - 25569) * 86400 * 1000)
+                        let subyear = subscriptionCollectingDate.getFullYear();
+                        let submonth = subscriptionCollectingDate.getMonth() + 1;
+                        let subday = subscriptionCollectingDate.getDate();
+                        let subhours = subscriptionCollectingDate.getHours();
+                        let subminutes = subscriptionCollectingDate.getMinutes()
                         let name = fileJsonData[x]["__EMPTY"]
 
                         let subscriptionValue = fileJsonData[x]["__EMPTY_6"] == null ? -1 : fileJsonData[x]["__EMPTY_6"]
+                        let subscriptionCollectionDate = `${subday + "/" + submonth + "/" + subyear}`== "NaN/NaN/NaN" ? "1990-01-01 00:00:00" : `${subyear + "-" + (submonth < 10 ? `0${submonth}` : submonth) + "-" + (subday < 10 ? `0${subday}` : subday) + " " + "0" + subhours + ":" + "0" + subminutes + ":00"}`
+                        
+                        
                         let beginDate = `${begday + "/" + begmonth + "/" + begyear}` == "NaN/NaN/NaN" ? "1990-01-01 00:00:00" : `${begyear + "-" + (begmonth < 10 ? `0${begmonth}` : begmonth) + "-" + (begday < 10 ? `0${begday}` : begday) + " " + "0" + begHour + ":" + "0" + begminuite + ":00"}`
                         let finishDate = `${day + "/" + month + "/" + year}` == "NaN/NaN/NaN" ? "1990-01-01 00:00:00" : `${year + "-" + (month < 10 ? `0${month}` : month) + "-" + (day < 10 ? `0${day}` : day) + " " + "0" + hours + ":" + "0" + minutes + ":00"}`
 
@@ -82,7 +91,7 @@ async function saveXlsxFileData(req: Request, res: Response) {
                             invalidNames.test(name) && invalidIds.test(id) && typeof name !== "number" && typeof subscriptionValue !== "string" && typeof billId !== "string"
                         ) {
 
-                            playersMap.push({ playerIndexId, playerId, id: id, team, name, subscriptions: [{ playerSubscriptionId: playerIndexId, team: team, subscriptionValue: subscriptionValue, beginDate: beginDate, finishDate: finishDate, billId: billId, subscriptionDuration: subscriptionDuration }] })
+                            playersMap.push({ playerIndexId, playerId, id: id, team, name, subscriptions: [{subscriptionCollectionDate:subscriptionCollectionDate, playerSubscriptionId: playerIndexId, team: team, subscriptionValue: subscriptionValue, beginDate: beginDate, finishDate: finishDate, billId: billId, subscriptionDuration: subscriptionDuration }] })
 
                         }
 

@@ -48,8 +48,8 @@ class PlayerNameWithImage extends StatelessWidget {
                   const Spacer(),
                   Text(playerName??"No name"),
                   Text(" - $playerId "??"no id"),
-                    SizedBox(width: 9,),
-                    imagePath !="no-image"?Image(image: NetworkImage(imagePath),):CircleAvatar(
+                  const  SizedBox(width: 9,),
+                    imagePath !="no image"?Image(image: NetworkImage(imagePath),):CircleAvatar(
                       radius: 17,
                       backgroundColor: Color.fromRGBO(
                           176, 175, 175, 0.7019607843137254),

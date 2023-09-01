@@ -9,6 +9,7 @@ interface IExcelDataModel{
 }
 
 interface ISubscriptions{
+    subscriptionCollectionDate:string,
     playerSubscriptionId:number,
     team:number,
     beginDate:string,
