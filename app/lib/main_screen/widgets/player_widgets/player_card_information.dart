@@ -179,4 +179,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
           }
         });
   }
+
+
+
 }

@@ -2744,7 +2744,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
   Selectable<GetEndedSubscriptionByTeamResult> getEndedSubscriptionByTeam(
       DateTime beginDateTime, DateTime secondDateTime, int teamId) {
     return customSelect(
-        'SELECT DISTINCT Players.*, PlayersSubscriptions.* FROM Players INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id INNER JOIN (SELECT player_subscription_id, MAX(end_date) AS latest_end_date FROM PlayersSubscriptions WHERE end_date BETWEEN ?1 AND ?2 GROUP BY player_subscription_id) AS LatestSubscriptions ON Players.player_index_id = LatestSubscriptions.player_subscription_id INNER JOIN PlayersSubscriptions ON PlayersSubscriptions.player_subscription_id = Players.player_index_id AND PlayersSubscriptions.end_date = LatestSubscriptions.latest_end_date WHERE PlayersAndTeamsTable.team_id = ?3 AND PlayersSubscriptions.team_id = ?3 ORDER BY LatestSubscriptions.latest_end_date DESC',
+        'SELECT Players.*, PlayersSubscriptions.* FROM Players LEFT JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id INNER JOIN (SELECT PlayersSubscriptions.player_subscription_id, MAX(PlayersSubscriptions.beginning_date) AS _c0, MAX(PlayersSubscriptions.end_date) AS latest_end_date FROM PlayersSubscriptions WHERE end_date BETWEEN ?1 AND ?2 AND PlayersSubscriptions.beginning_date < ?2 GROUP BY player_subscription_id) AS LatestSubscriptions ON Players.player_index_id = LatestSubscriptions.player_subscription_id LEFT JOIN PlayersSubscriptions ON PlayersSubscriptions.player_subscription_id = Players.player_index_id WHERE PlayersAndTeamsTable.team_id = ?3 AND PlayersSubscriptions.team_id = ?3 AND PlayersSubscriptions.end_date = LatestSubscriptions.latest_end_date AND PlayersSubscriptions.beginning_date < ?2 ORDER BY PlayersSubscriptions.end_date DESC',
         variables: [
           Variable<DateTime>(beginDateTime),
           Variable<DateTime>(secondDateTime),
@@ -2766,15 +2766,14 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           playerGender: row.read<String>('player_gender'),
           subscriptionId: row.read<int>('subscription_id'),
           subId: row.readNullable<int>('sub_id'),
-          teamId: row.read<int>('team_id'),
-          subscriptionPayDate: row.read<DateTime>('subscription_pay_date'),
-          playerSubscriptionId: row.read<int>('player_subscription_id'),
-          beginningDate: row.read<DateTime>('beginning_date'),
-          endDate: row.read<DateTime>('end_date'),
-          billId: row.read<int>('billId'),
-          billValue: row.read<int>('billValue'),
-          duration: row.read<int>('duration'),
-          billCollector: row.read<String>('billCollector'),
+          teamId: row.readNullable<int>('team_id'),
+          playerSubscriptionId: row.readNullable<int>('player_subscription_id'),
+          beginningDate: row.readNullable<DateTime>('beginning_date'),
+          endDate: row.readNullable<DateTime>('end_date'),
+          billId: row.readNullable<int>('billId'),
+          billValue: row.readNullable<int>('billValue'),
+          duration: row.readNullable<int>('duration'),
+          billCollector: row.readNullable<String>('billCollector'),
         ));
   }
 
@@ -2947,15 +2946,14 @@ class GetEndedSubscriptionByTeamResult {
   final String playerGender;
   final int subscriptionId;
   final int? subId;
-  final int teamId;
-  final DateTime subscriptionPayDate;
-  final int playerSubscriptionId;
-  final DateTime beginningDate;
-  final DateTime endDate;
-  final int billId;
-  final int billValue;
-  final int duration;
-  final String billCollector;
+  final int? teamId;
+  final int? playerSubscriptionId;
+  final DateTime? beginningDate;
+  final DateTime? endDate;
+  final int? billId;
+  final int? billValue;
+  final int? duration;
+  final String? billCollector;
   GetEndedSubscriptionByTeamResult({
     required this.id,
     required this.playerIndexId,
@@ -2968,15 +2966,14 @@ class GetEndedSubscriptionByTeamResult {
     required this.playerGender,
     required this.subscriptionId,
     this.subId,
-    required this.teamId,
-    required this.subscriptionPayDate,
-    required this.playerSubscriptionId,
-    required this.beginningDate,
-    required this.endDate,
-    required this.billId,
-    required this.billValue,
-    required this.duration,
-    required this.billCollector,
+    this.teamId,
+    this.playerSubscriptionId,
+    this.beginningDate,
+    this.endDate,
+    this.billId,
+    this.billValue,
+    this.duration,
+    this.billCollector,
   });
 }
 

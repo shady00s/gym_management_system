@@ -45,7 +45,7 @@ class NeedToResubscribePlayerNameWidget extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      OptionsMenu( menuController),
+                      OptionsMenu( menuController,playerIndexId),
                       const Spacer(),
                       Text(playerName??"No name"),
                       Text(" - $playerId "??"no id",style: TextStyle(fontSize: 12),)
