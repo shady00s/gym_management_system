@@ -179,7 +179,7 @@ Future insertPlayersFromExcelOffline(List<ExcelPlayers> playersData)async{
       for( var subData in player.subscriptions!){
 
         playersSubCompanion.add(
-            PlayersSubscriptionsCompanion.insert(playerSubscriptionId: subData.id, beginningDate: DateTime.parse(subData.beginning_date), endDate: DateTime.parse(subData.end_date), billId: subData.billid, billValue: subData.billValue, duration: subData.duration, billCollector: "unknown", teamId: subData.team)
+            PlayersSubscriptionsCompanion.insert( playerSubscriptionId: subData.id, beginningDate: DateTime.parse(subData.beginning_date), endDate: DateTime.parse(subData.end_date), billId: subData.billid, billValue: subData.billValue, duration: subData.duration, billCollector: "unknown", teamId: subData.team, subscriptionPayDate: DateTime.parse(subData.subscriptionCollectionDate) )
         );
       }
     }

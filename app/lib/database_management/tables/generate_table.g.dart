@@ -2114,6 +2114,13 @@ class PlayersSubscriptions extends Table
       type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
+  static const VerificationMeta _subscriptionPayDateMeta =
+      const VerificationMeta('subscriptionPayDate');
+  late final GeneratedColumn<DateTime> subscriptionPayDate =
+      GeneratedColumn<DateTime>('subscription_pay_date', aliasedName, false,
+          type: DriftSqlType.dateTime,
+          requiredDuringInsert: true,
+          $customConstraints: 'NOT NULL');
   static const VerificationMeta _playerSubscriptionIdMeta =
       const VerificationMeta('playerSubscriptionId');
   late final GeneratedColumn<int> playerSubscriptionId = GeneratedColumn<int>(
@@ -2166,6 +2173,7 @@ class PlayersSubscriptions extends Table
   List<GeneratedColumn> get $columns => [
         subId,
         teamId,
+        subscriptionPayDate,
         playerSubscriptionId,
         beginningDate,
         endDate,
@@ -2193,6 +2201,14 @@ class PlayersSubscriptions extends Table
           teamId.isAcceptableOrUnknown(data['team_id']!, _teamIdMeta));
     } else if (isInserting) {
       context.missing(_teamIdMeta);
+    }
+    if (data.containsKey('subscription_pay_date')) {
+      context.handle(
+          _subscriptionPayDateMeta,
+          subscriptionPayDate.isAcceptableOrUnknown(
+              data['subscription_pay_date']!, _subscriptionPayDateMeta));
+    } else if (isInserting) {
+      context.missing(_subscriptionPayDateMeta);
     }
     if (data.containsKey('player_subscription_id')) {
       context.handle(
@@ -2255,6 +2271,9 @@ class PlayersSubscriptions extends Table
           .read(DriftSqlType.int, data['${effectivePrefix}sub_id']),
       teamId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}team_id'])!,
+      subscriptionPayDate: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}subscription_pay_date'])!,
       playerSubscriptionId: attachedDatabase.typeMapping.read(
           DriftSqlType.int, data['${effectivePrefix}player_subscription_id'])!,
       beginningDate: attachedDatabase.typeMapping.read(
@@ -2285,6 +2304,7 @@ class PlayersSubscription extends DataClass
     implements Insertable<PlayersSubscription> {
   final int? subId;
   final int teamId;
+  final DateTime subscriptionPayDate;
   final int playerSubscriptionId;
   final DateTime beginningDate;
   final DateTime endDate;
@@ -2295,6 +2315,7 @@ class PlayersSubscription extends DataClass
   const PlayersSubscription(
       {this.subId,
       required this.teamId,
+      required this.subscriptionPayDate,
       required this.playerSubscriptionId,
       required this.beginningDate,
       required this.endDate,
@@ -2309,6 +2330,7 @@ class PlayersSubscription extends DataClass
       map['sub_id'] = Variable<int>(subId);
     }
     map['team_id'] = Variable<int>(teamId);
+    map['subscription_pay_date'] = Variable<DateTime>(subscriptionPayDate);
     map['player_subscription_id'] = Variable<int>(playerSubscriptionId);
     map['beginning_date'] = Variable<DateTime>(beginningDate);
     map['end_date'] = Variable<DateTime>(endDate);
@@ -2324,6 +2346,7 @@ class PlayersSubscription extends DataClass
       subId:
           subId == null && nullToAbsent ? const Value.absent() : Value(subId),
       teamId: Value(teamId),
+      subscriptionPayDate: Value(subscriptionPayDate),
       playerSubscriptionId: Value(playerSubscriptionId),
       beginningDate: Value(beginningDate),
       endDate: Value(endDate),
@@ -2340,6 +2363,8 @@ class PlayersSubscription extends DataClass
     return PlayersSubscription(
       subId: serializer.fromJson<int?>(json['sub_id']),
       teamId: serializer.fromJson<int>(json['team_id']),
+      subscriptionPayDate:
+          serializer.fromJson<DateTime>(json['subscription_pay_date']),
       playerSubscriptionId:
           serializer.fromJson<int>(json['player_subscription_id']),
       beginningDate: serializer.fromJson<DateTime>(json['beginning_date']),
@@ -2356,6 +2381,7 @@ class PlayersSubscription extends DataClass
     return <String, dynamic>{
       'sub_id': serializer.toJson<int?>(subId),
       'team_id': serializer.toJson<int>(teamId),
+      'subscription_pay_date': serializer.toJson<DateTime>(subscriptionPayDate),
       'player_subscription_id': serializer.toJson<int>(playerSubscriptionId),
       'beginning_date': serializer.toJson<DateTime>(beginningDate),
       'end_date': serializer.toJson<DateTime>(endDate),
@@ -2369,6 +2395,7 @@ class PlayersSubscription extends DataClass
   PlayersSubscription copyWith(
           {Value<int?> subId = const Value.absent(),
           int? teamId,
+          DateTime? subscriptionPayDate,
           int? playerSubscriptionId,
           DateTime? beginningDate,
           DateTime? endDate,
@@ -2379,6 +2406,7 @@ class PlayersSubscription extends DataClass
       PlayersSubscription(
         subId: subId.present ? subId.value : this.subId,
         teamId: teamId ?? this.teamId,
+        subscriptionPayDate: subscriptionPayDate ?? this.subscriptionPayDate,
         playerSubscriptionId: playerSubscriptionId ?? this.playerSubscriptionId,
         beginningDate: beginningDate ?? this.beginningDate,
         endDate: endDate ?? this.endDate,
@@ -2392,6 +2420,7 @@ class PlayersSubscription extends DataClass
     return (StringBuffer('PlayersSubscription(')
           ..write('subId: $subId, ')
           ..write('teamId: $teamId, ')
+          ..write('subscriptionPayDate: $subscriptionPayDate, ')
           ..write('playerSubscriptionId: $playerSubscriptionId, ')
           ..write('beginningDate: $beginningDate, ')
           ..write('endDate: $endDate, ')
@@ -2404,14 +2433,24 @@ class PlayersSubscription extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(subId, teamId, playerSubscriptionId,
-      beginningDate, endDate, billId, billValue, duration, billCollector);
+  int get hashCode => Object.hash(
+      subId,
+      teamId,
+      subscriptionPayDate,
+      playerSubscriptionId,
+      beginningDate,
+      endDate,
+      billId,
+      billValue,
+      duration,
+      billCollector);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is PlayersSubscription &&
           other.subId == this.subId &&
           other.teamId == this.teamId &&
+          other.subscriptionPayDate == this.subscriptionPayDate &&
           other.playerSubscriptionId == this.playerSubscriptionId &&
           other.beginningDate == this.beginningDate &&
           other.endDate == this.endDate &&
@@ -2425,6 +2464,7 @@ class PlayersSubscriptionsCompanion
     extends UpdateCompanion<PlayersSubscription> {
   final Value<int?> subId;
   final Value<int> teamId;
+  final Value<DateTime> subscriptionPayDate;
   final Value<int> playerSubscriptionId;
   final Value<DateTime> beginningDate;
   final Value<DateTime> endDate;
@@ -2435,6 +2475,7 @@ class PlayersSubscriptionsCompanion
   const PlayersSubscriptionsCompanion({
     this.subId = const Value.absent(),
     this.teamId = const Value.absent(),
+    this.subscriptionPayDate = const Value.absent(),
     this.playerSubscriptionId = const Value.absent(),
     this.beginningDate = const Value.absent(),
     this.endDate = const Value.absent(),
@@ -2446,6 +2487,7 @@ class PlayersSubscriptionsCompanion
   PlayersSubscriptionsCompanion.insert({
     this.subId = const Value.absent(),
     required int teamId,
+    required DateTime subscriptionPayDate,
     required int playerSubscriptionId,
     required DateTime beginningDate,
     required DateTime endDate,
@@ -2454,6 +2496,7 @@ class PlayersSubscriptionsCompanion
     required int duration,
     required String billCollector,
   })  : teamId = Value(teamId),
+        subscriptionPayDate = Value(subscriptionPayDate),
         playerSubscriptionId = Value(playerSubscriptionId),
         beginningDate = Value(beginningDate),
         endDate = Value(endDate),
@@ -2464,6 +2507,7 @@ class PlayersSubscriptionsCompanion
   static Insertable<PlayersSubscription> custom({
     Expression<int>? subId,
     Expression<int>? teamId,
+    Expression<DateTime>? subscriptionPayDate,
     Expression<int>? playerSubscriptionId,
     Expression<DateTime>? beginningDate,
     Expression<DateTime>? endDate,
@@ -2475,6 +2519,8 @@ class PlayersSubscriptionsCompanion
     return RawValuesInsertable({
       if (subId != null) 'sub_id': subId,
       if (teamId != null) 'team_id': teamId,
+      if (subscriptionPayDate != null)
+        'subscription_pay_date': subscriptionPayDate,
       if (playerSubscriptionId != null)
         'player_subscription_id': playerSubscriptionId,
       if (beginningDate != null) 'beginning_date': beginningDate,
@@ -2489,6 +2535,7 @@ class PlayersSubscriptionsCompanion
   PlayersSubscriptionsCompanion copyWith(
       {Value<int?>? subId,
       Value<int>? teamId,
+      Value<DateTime>? subscriptionPayDate,
       Value<int>? playerSubscriptionId,
       Value<DateTime>? beginningDate,
       Value<DateTime>? endDate,
@@ -2499,6 +2546,7 @@ class PlayersSubscriptionsCompanion
     return PlayersSubscriptionsCompanion(
       subId: subId ?? this.subId,
       teamId: teamId ?? this.teamId,
+      subscriptionPayDate: subscriptionPayDate ?? this.subscriptionPayDate,
       playerSubscriptionId: playerSubscriptionId ?? this.playerSubscriptionId,
       beginningDate: beginningDate ?? this.beginningDate,
       endDate: endDate ?? this.endDate,
@@ -2517,6 +2565,10 @@ class PlayersSubscriptionsCompanion
     }
     if (teamId.present) {
       map['team_id'] = Variable<int>(teamId.value);
+    }
+    if (subscriptionPayDate.present) {
+      map['subscription_pay_date'] =
+          Variable<DateTime>(subscriptionPayDate.value);
     }
     if (playerSubscriptionId.present) {
       map['player_subscription_id'] = Variable<int>(playerSubscriptionId.value);
@@ -2547,6 +2599,7 @@ class PlayersSubscriptionsCompanion
     return (StringBuffer('PlayersSubscriptionsCompanion(')
           ..write('subId: $subId, ')
           ..write('teamId: $teamId, ')
+          ..write('subscriptionPayDate: $subscriptionPayDate, ')
           ..write('playerSubscriptionId: $playerSubscriptionId, ')
           ..write('beginningDate: $beginningDate, ')
           ..write('endDate: $endDate, ')
@@ -2646,6 +2699,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           subscriptionId: row.read<int>('subscription_id'),
           subId: row.readNullable<int>('sub_id'),
           teamId: row.read<int>('team_id'),
+          subscriptionPayDate: row.read<DateTime>('subscription_pay_date'),
           playerSubscriptionId: row.read<int>('player_subscription_id'),
           beginningDate: row.read<DateTime>('beginning_date'),
           endDate: row.read<DateTime>('end_date'),
@@ -2713,6 +2767,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           subscriptionId: row.read<int>('subscription_id'),
           subId: row.readNullable<int>('sub_id'),
           teamId: row.read<int>('team_id'),
+          subscriptionPayDate: row.read<DateTime>('subscription_pay_date'),
           playerSubscriptionId: row.read<int>('player_subscription_id'),
           beginningDate: row.read<DateTime>('beginning_date'),
           endDate: row.read<DateTime>('end_date'),
@@ -2837,6 +2892,7 @@ class GetPlayerSubscriptionResult {
   final int subscriptionId;
   final int? subId;
   final int teamId;
+  final DateTime subscriptionPayDate;
   final int playerSubscriptionId;
   final DateTime beginningDate;
   final DateTime endDate;
@@ -2857,6 +2913,7 @@ class GetPlayerSubscriptionResult {
     required this.subscriptionId,
     this.subId,
     required this.teamId,
+    required this.subscriptionPayDate,
     required this.playerSubscriptionId,
     required this.beginningDate,
     required this.endDate,
@@ -2891,6 +2948,7 @@ class GetEndedSubscriptionByTeamResult {
   final int subscriptionId;
   final int? subId;
   final int teamId;
+  final DateTime subscriptionPayDate;
   final int playerSubscriptionId;
   final DateTime beginningDate;
   final DateTime endDate;
@@ -2911,6 +2969,7 @@ class GetEndedSubscriptionByTeamResult {
     required this.subscriptionId,
     this.subId,
     required this.teamId,
+    required this.subscriptionPayDate,
     required this.playerSubscriptionId,
     required this.beginningDate,
     required this.endDate,

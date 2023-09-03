@@ -82,7 +82,7 @@ Future _showDateRangePicker(BuildContext context,dynamic provider) async {
 
 
 class ComboBoxWidget extends StatefulWidget {
-  final List<dynamic> items;
+  final List<CustomBoxData> items;
   final String filterTitle;
   final Function onChanged;
   final bool allButton;
@@ -130,7 +130,7 @@ class _ComboBoxWidgetState extends State<ComboBoxWidget> {
                 setState(() {
                   selectedValue = value!;
                 });
-                widget.onChanged(value);
+                widget.onChanged( value);
               },
               items: [
                 if(widget.allButton)

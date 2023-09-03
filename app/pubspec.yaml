@@ -54,6 +54,7 @@ dependencies:
   image_picker: ^1.0.2
   image_picker_windows: ^0.2.1
   build_config: ^1.1.1
+  fl_chart: ^0.63.0
 
 
 dev_dependencies:

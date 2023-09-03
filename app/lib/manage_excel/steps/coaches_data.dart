@@ -14,9 +14,9 @@ class EmploymentModeModel {
   EmploymentModeModel(this.title, this.value);
 }
 
-List<EmploymentModeModel> _list = [
-  EmploymentModeModel("Freelance", "Freelance"),
-  EmploymentModeModel("Employee", "Employee"),
+List<CustomBoxData> _list = [
+  CustomBoxData( title: "Freelance", id: "Freelance"),
+  CustomBoxData(title:"Employee",id: "Employee"),
 ];
 
 class SetCoachesWidget extends StatelessWidget {
@@ -242,7 +242,7 @@ class _CoachFormState extends State<CoachForm> {
                             },
                             onChanged: (val){
                               ExcelFileCubit.get(context).employeesList[widget.index].employeePhoneNumber = int.parse(val);
-                              print(ExcelFileCubit.get(context).employeesList[widget.index].employeePhoneNumber);
+
                             },
                           )),
                     ],
@@ -289,7 +289,7 @@ class _CoachFormState extends State<CoachForm> {
                               _coachEmploymentStatus = val.title;
                             });
 
-                            ExcelFileCubit.get(context).employeesList[widget.index].employeePosition = val;
+                            ExcelFileCubit.get(context).employeesList[widget.index].employeePosition = val.id;
 
                           },
                           allButton: false)),

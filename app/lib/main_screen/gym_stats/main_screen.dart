@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:gym_management/main_screen/gym_stats/year_performance_widget.dart';
 
 class GymStatMainScreenWidget extends StatelessWidget {
   const GymStatMainScreenWidget({super.key});
@@ -14,6 +15,9 @@ class GymStatMainScreenWidget extends StatelessWidget {
             padding: const EdgeInsets.all(12.0),
             child: Text("Gym status",style: TextStyle(color: Colors.yellow,fontSize: 21, fontWeight: FontWeight.bold),),
           ),
+
+
+          YearPerformanceWidget()
 
 
         ],
