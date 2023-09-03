@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_card_information.dart';
+
+import '../re-subscription/re_subscription_widget.dart';
 class PlayerNameWidget extends StatelessWidget {
   final  String playerName;
   final int playerId;
@@ -30,7 +32,9 @@ class PlayerNameWidget extends StatelessWidget {
             ),
             content: Card(child: PlayerCardInformationWidget(playerId: playerIndexId,)),
             actions: [
-              Button(child:const Text("Re-new") ,onPressed: (){},),
+              Button(child:const Text("Re-new") ,onPressed: ()async{
+
+                await showReSubscriptionWidget(context,playerIndexId);},),
               Button(child:const Text("Invitation") ,onPressed: (){},),
               Button(child:const Text("Freeze") ,onPressed: (){},),
             ],
@@ -42,7 +46,7 @@ class PlayerNameWidget extends StatelessWidget {
           child: FlyoutTarget(controller: menuController,
             child:  Row(
             children: [
-              OptionsMenu( menuController),
+              OptionsMenu( menuController,playerIndexId),
               const Spacer(),
               Text(playerName),
               Text(" - $playerId ")
@@ -58,7 +62,8 @@ class PlayerNameWidget extends StatelessWidget {
 class OptionsMenu extends StatelessWidget {
 
   final FlyoutController menuController;
-  const OptionsMenu(this.menuController, {super.key});
+  final int playerIndexId;
+  const OptionsMenu(this.menuController,this.playerIndexId, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +81,9 @@ class OptionsMenu extends StatelessWidget {
               MenuFlyoutItem(
                 leading: const Icon(FluentIcons.refresh),
                 text: const Text('Re-subscribe'),
-                onPressed: Flyout.of(context).close,
+                onPressed: () async{
+                  Navigator.pop(context);
+                  await showReSubscriptionWidget(context,playerIndexId);},
               ),
               MenuFlyoutItem(
                 leading: const Icon(FluentIcons.stop),

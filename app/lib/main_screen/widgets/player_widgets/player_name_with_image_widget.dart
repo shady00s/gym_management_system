@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_card_information.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_name_widget.dart';
+import 'package:gym_management/main_screen/widgets/re-subscription/re_subscription_widget.dart';
 
 class PlayerNameWithImage extends StatelessWidget {
   final  String playerName;
@@ -32,7 +33,7 @@ class PlayerNameWithImage extends StatelessWidget {
               ),
               content: PlayerCardInformationWidget(playerId: playerIndexId,),
               actions: [
-                Button(child:Text("Re-new") ,onPressed: (){},),
+                Button(child:Text("Re-new") ,onPressed: ()async{await showReSubscriptionWidget(context, playerIndexId);},),
                 Button(child:Text("Invitation") ,onPressed: (){},),
                 Button(child:Text("Freeze") ,onPressed: (){},),
               ],
@@ -44,7 +45,7 @@ class PlayerNameWithImage extends StatelessWidget {
           child: FlyoutTarget(controller: menuController,
               child:  Row(
                 children: [
-                  OptionsMenu( menuController),
+                  OptionsMenu( menuController,playerIndexId),
                   const Spacer(),
                   Text(playerName??"No name"),
                   Text(" - $playerId "??"no id"),

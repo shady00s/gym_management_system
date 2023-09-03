@@ -5,6 +5,7 @@ import 'package:camera_windows/camera_windows.dart';
 import 'package:gym_management/camera_widget.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_status/filter_element.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_status/filter_widget.dart';
+import 'package:gym_management/main_screen/widgets/take_new_image_widget.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../database_management/tables/subscriptions/subscriptions_information_manager.dart';
@@ -53,40 +54,7 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                 children: [
                   // select player image
                   const Padding(padding: EdgeInsets.all(8),child: Text("Player image",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 19),)),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                         image == null?const CircleAvatar(
-                              radius: 25,
-                              backgroundColor: Color.fromRGBO(
-                                  176, 175, 175, 0.7019607843137254),
-                              child: Icon(FluentIcons.contact ,size: 31,),
-                            ) : Image(image: FileImage(image!),),
-
-
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Button(child: Text("take photo"), onPressed: () async{
-
-                            await showDialog(context: context, builder: (context)=>
-                                ContentDialog(
-                                  style: ContentDialogThemeData(
-
-                                      decoration: BoxDecoration(color: Color.fromRGBO(
-                                          16, 15, 15, 1.0)) ),
-                              title: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                Text("Camera"),
-                                  IconButton(icon: Icon(FluentIcons.cancel), onPressed: (){Navigator.pop(context);})
-                            ],), content:  const TakeNewPhoto(),));
-
-                            }),
-                          ),
-                        ],
-                      ),
-                    ),
+                    TakeNewImageWidget(image: image),
                 const  Divider(),
                   const SizedBox(height: 12,),
                   // player name
