@@ -15,30 +15,41 @@ class PlayerNameWidget extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Button(
         onPressed:()async{
-          await showDialog(context: context, builder: (context)=> ContentDialog(
-            style:const ContentDialogThemeData(
-                decoration: BoxDecoration(color: Color.fromRGBO(
-                    16, 15, 15, 1.0)) ),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-               const Text("Player Information"),
-                IconButton(onPressed: (){
-                  Navigator.of(context).pop();
-                },
-                  icon:const Icon(FluentIcons.cancel),
-                )
-              ],
-            ),
-            content: Card(child: PlayerCardInformationWidget(playerId: playerIndexId,)),
-            actions: [
-              Button(child:const Text("Re-new") ,onPressed: ()async{
+          await showGeneralDialog(context: context, pageBuilder:(context,animation,animations)=>
 
-                await showReSubscriptionWidget(context,playerIndexId);},),
-              Button(child:const Text("Invitation") ,onPressed: (){},),
-              Button(child:const Text("Freeze") ,onPressed: (){},),
+          Card(backgroundColor: const Color.fromRGBO(12, 2, 3, 0.3),child: Center(
+          child: SizedBox(
+          width: MediaQuery.sizeOf(context).width * 0.85,
+          height: MediaQuery.sizeOf(context).height * 0.8,
+          child: Card(
+          backgroundColor: Colors.black,
+          child: Column(children: [
+            Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("Player Information",style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
+              IconButton(onPressed: (){
+                Navigator.of(context).pop();
+              },
+                icon:const Icon(FluentIcons.cancel),
+              )
             ],
-          ));
+          ),
+            Expanded(child: PlayerCardInformationWidget(playerId: playerIndexId,)),
+
+
+
+
+              Row(children: [
+                 Button(child:const Text("Re-new") ,onPressed: ()async{
+                  await showReSubscriptionWidget(context,playerIndexId);},),
+                  Button(child:const Text("Invitation") ,onPressed: (){},),
+                  Button(child:const Text("Freeze") ,onPressed: (){},),
+            ],)
+
+          ],))))));
+
+
         },child:  Padding(
           padding:const EdgeInsets.all(8.0),
 

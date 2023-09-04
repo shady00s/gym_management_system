@@ -1,25 +1,26 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_card_information.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_name_widget.dart';
-import 'package:gym_management/main_screen/widgets/re-subscription/re_subscription_widget.dart';
 
-class PlayerNameWithImage extends StatelessWidget {
+import '../re-subscription/re_subscription_widget.dart';
+
+class NeedToResubscribePlayerNameWidget extends StatelessWidget {
   final  String playerName;
-  final String imagePath;
   final int playerId;
   final int playerIndexId;
-
-   PlayerNameWithImage({super.key,required this.playerName,required this.playerId, required this.imagePath,required this.playerIndexId});
+  final DateTime endDate;
+   NeedToResubscribePlayerNameWidget({super.key,required this.playerName,required this.playerId,required this.endDate, required this.playerIndexId});
   final menuController = FlyoutController();
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    int date = DateTime.now().difference(endDate).inDays;
+
+    return  Padding(
         padding: const EdgeInsets.all(8.0),
         child: Button(
           onPressed:()async{
 
-            await showGeneralDialog(context: context, pageBuilder: (context,animation,animations)=>
+            await showGeneralDialog(context: context, pageBuilder: (_,__,___)=>
 
                 Card(backgroundColor: const Color.fromRGBO(12, 2, 3, 0.3),child: Center(
                     child: SizedBox(
@@ -41,9 +42,6 @@ class PlayerNameWithImage extends StatelessWidget {
                               ),
                               Expanded(child: PlayerCardInformationWidget(playerId: playerIndexId,)),
 
-
-
-
                               Row(children: [
                                 Button(child:const Text("Re-new") ,onPressed: ()async{
                                   await showReSubscriptionWidget(context,playerIndexId);},),
@@ -57,19 +55,19 @@ class PlayerNameWithImage extends StatelessWidget {
 
 
           child: FlyoutTarget(controller: menuController,
-              child:  Row(
+              child:  Column(
                 children: [
-                  OptionsMenu( menuController,playerIndexId),
-                  const Spacer(),
-                  Text(playerName??"No name"),
-                  Text(" - $playerId "??"no id"),
-                  const  SizedBox(width: 9,),
-                    imagePath !="no image"?Image(image: NetworkImage(imagePath),):CircleAvatar(
-                      radius: 17,
-                      backgroundColor: Color.fromRGBO(
-                          176, 175, 175, 0.7019607843137254),
-                      child: Icon(FluentIcons.contact ,size: 14,),
-                    ),
+                  Row(
+                    children: [
+                      OptionsMenu( menuController,playerIndexId),
+                      const Spacer(),
+                      Text(playerName??"No name"),
+                      Text(" - $playerId "??"no id",style: TextStyle(fontSize: 12),)
+
+                    ],
+                  ),
+                Text("Subscription ended ${date ==0?  "today" : date==1?"yesterday": ' $date days ago'} ",style: TextStyle(color: Color.fromRGBO(
+                    255, 166, 0, 0.7019607843137254)),)
                 ],
               )
 

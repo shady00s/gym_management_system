@@ -4,6 +4,7 @@ import '../teams/teams.drift';
 CREATE TABLE IF NOT EXISTS PlayersLogsTable(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     player_id INT NOT NULL,
+    player_index_id INT NOT NULL,
     team_id INT NOT NULL,
     player_entrance_date DATETIME NOT NULL,
     FOREIGN KEY (player_id) REFERENCES Players(player_index_id),
@@ -13,6 +14,12 @@ CREATE INDEX login_time_inx on PlayersLogsTable(player_entrance_date);
 
 getTodayLogs(REQUIRED :dateTime AS DATETIME, REQUIRED :endDateTime AS DATETIME, REQUIRED :teamId AS INT):
                 SELECT DISTINCT Players.player_name, Players.player_id, Players.player_index_id,Players.image_path, PlayersLogsTable.player_entrance_date FROM Players
-                LEFT JOIN  PlayersLogsTable ON PlayersLogsTable.player_id = Players.player_id
+                INNER JOIN  PlayersLogsTable ON PlayersLogsTable.player_index_id = Players.player_index_id
                 WHERE PlayersLogsTable.player_entrance_date BETWEEN :dateTime  AND :endDateTime
                 AND PlayersLogsTable.team_id = :teamId;
+
+getTodayPlayerLogs(REQUIRED :playerIndexId AS INT, REQUIRED :teamId AS INT,REQUIRED :begDate AS DATETIME, REQUIRED :endDate AS DATETIME): SELECT PlayersLogsTable.player_entrance_date FROM PlayersLogsTable
+                                              WHERE PlayersLogsTable.player_index_id = :playerIndexId
+                                              AND  PlayersLogsTable.team_id = :teamId
+                                              AND PlayersLogsTable.player_entrance_date BETWEEN :begDate AND :endDate
+                                              ORDER BY PlayersLogsTable.player_entrance_date ASC;

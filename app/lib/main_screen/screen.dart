@@ -38,8 +38,8 @@ class _MainScreenState extends State<MainScreen> {
                PaneItemSeparator(),
                PaneItem(infoBadge: InfoBadge(color: Colors.yellow,),icon: const Icon(FluentIcons.align_vertical_bottom),title: Text("Gym players Status"), body:const GymStatMainScreenWidget()),
                PaneItemSeparator(),
-
                PaneItem(icon: const Icon(FluentIcons.pencil_reply),title: Text("Add new subscription"), body:const AddNewSubscriptionValueWidget()),
+               PaneItemSeparator(),
                PaneItem(icon: const Icon(FluentIcons.office_logo),title: Text("Get excel data"), body:const ImportExcelScreen()),
 
 

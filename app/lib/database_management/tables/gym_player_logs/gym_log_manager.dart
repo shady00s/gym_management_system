@@ -9,8 +9,8 @@ class GymLogsManager{
       if(int.tryParse(playerId) !=null){
         try{
           EnterPlayerToGymResult playerData = await db.enterPlayerToGym(int.parse(playerId) ,null ,teamId).getSingle();
-          if(!playerData.endDate!.difference(DateTime.now()).isNegative){
-            await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now()));
+          if(!playerData.endDate!.difference(DateTime.now()).isNegative && playerData.teamId == teamId){
+            await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerIndexId:playerData.playerIndexId,playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now()));
 
             }else{
             await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is already ended"),));
@@ -24,13 +24,15 @@ class GymLogsManager{
 
 
 
-      }else{
+      }
+
+      else{
 
         try{
           EnterPlayerToGymResult playerData = await db.enterPlayerToGym(null, playerId,teamId).getSingle();
 
-          if(!playerData.endDate!.difference(DateTime.now()).isNegative){
-            await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now()));
+          if(!playerData.endDate!.difference(DateTime.now()).isNegative && playerData.teamId == teamId){
+            await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now(), playerIndexId: playerData.playerIndexId));
 
           }else{
             await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is already ended"),));
@@ -47,5 +49,9 @@ class GymLogsManager{
       List<GetTodayLogsResult> logs=  await db.getTodayLogs(DateTime.now().subtract(const   Duration(hours: 15)),DateTime.now(),teamId).get();
 
       return  logs;
+    }
+
+    Future<List<DateTime>> getPlayerLogs(int playerIndexId, int teamId) async{
+      return await  db.getTodayPlayerLogs(playerIndexId, teamId,DateTime(DateTime.now().year,DateTime.now().month,1),DateTime.now()).get();
     }
 }

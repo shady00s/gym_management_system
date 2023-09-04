@@ -1243,6 +1243,13 @@ class PlayersLogsTable extends Table
       type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
+  static const VerificationMeta _playerIndexIdMeta =
+      const VerificationMeta('playerIndexId');
+  late final GeneratedColumn<int> playerIndexId = GeneratedColumn<int>(
+      'player_index_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
   static const VerificationMeta _teamIdMeta = const VerificationMeta('teamId');
   late final GeneratedColumn<int> teamId = GeneratedColumn<int>(
       'team_id', aliasedName, false,
@@ -1258,7 +1265,7 @@ class PlayersLogsTable extends Table
           $customConstraints: 'NOT NULL');
   @override
   List<GeneratedColumn> get $columns =>
-      [id, playerId, teamId, playerEntranceDate];
+      [id, playerId, playerIndexId, teamId, playerEntranceDate];
   @override
   String get aliasedName => _alias ?? 'PlayersLogsTable';
   @override
@@ -1277,6 +1284,14 @@ class PlayersLogsTable extends Table
           playerId.isAcceptableOrUnknown(data['player_id']!, _playerIdMeta));
     } else if (isInserting) {
       context.missing(_playerIdMeta);
+    }
+    if (data.containsKey('player_index_id')) {
+      context.handle(
+          _playerIndexIdMeta,
+          playerIndexId.isAcceptableOrUnknown(
+              data['player_index_id']!, _playerIndexIdMeta));
+    } else if (isInserting) {
+      context.missing(_playerIndexIdMeta);
     }
     if (data.containsKey('team_id')) {
       context.handle(_teamIdMeta,
@@ -1305,6 +1320,8 @@ class PlayersLogsTable extends Table
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       playerId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}player_id'])!,
+      playerIndexId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}player_index_id'])!,
       teamId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}team_id'])!,
       playerEntranceDate: attachedDatabase.typeMapping.read(
@@ -1331,11 +1348,13 @@ class PlayersLogsTableData extends DataClass
     implements Insertable<PlayersLogsTableData> {
   final int id;
   final int playerId;
+  final int playerIndexId;
   final int teamId;
   final DateTime playerEntranceDate;
   const PlayersLogsTableData(
       {required this.id,
       required this.playerId,
+      required this.playerIndexId,
       required this.teamId,
       required this.playerEntranceDate});
   @override
@@ -1343,6 +1362,7 @@ class PlayersLogsTableData extends DataClass
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['player_id'] = Variable<int>(playerId);
+    map['player_index_id'] = Variable<int>(playerIndexId);
     map['team_id'] = Variable<int>(teamId);
     map['player_entrance_date'] = Variable<DateTime>(playerEntranceDate);
     return map;
@@ -1352,6 +1372,7 @@ class PlayersLogsTableData extends DataClass
     return PlayersLogsTableCompanion(
       id: Value(id),
       playerId: Value(playerId),
+      playerIndexId: Value(playerIndexId),
       teamId: Value(teamId),
       playerEntranceDate: Value(playerEntranceDate),
     );
@@ -1363,6 +1384,7 @@ class PlayersLogsTableData extends DataClass
     return PlayersLogsTableData(
       id: serializer.fromJson<int>(json['id']),
       playerId: serializer.fromJson<int>(json['player_id']),
+      playerIndexId: serializer.fromJson<int>(json['player_index_id']),
       teamId: serializer.fromJson<int>(json['team_id']),
       playerEntranceDate:
           serializer.fromJson<DateTime>(json['player_entrance_date']),
@@ -1374,6 +1396,7 @@ class PlayersLogsTableData extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'player_id': serializer.toJson<int>(playerId),
+      'player_index_id': serializer.toJson<int>(playerIndexId),
       'team_id': serializer.toJson<int>(teamId),
       'player_entrance_date': serializer.toJson<DateTime>(playerEntranceDate),
     };
@@ -1382,11 +1405,13 @@ class PlayersLogsTableData extends DataClass
   PlayersLogsTableData copyWith(
           {int? id,
           int? playerId,
+          int? playerIndexId,
           int? teamId,
           DateTime? playerEntranceDate}) =>
       PlayersLogsTableData(
         id: id ?? this.id,
         playerId: playerId ?? this.playerId,
+        playerIndexId: playerIndexId ?? this.playerIndexId,
         teamId: teamId ?? this.teamId,
         playerEntranceDate: playerEntranceDate ?? this.playerEntranceDate,
       );
@@ -1395,6 +1420,7 @@ class PlayersLogsTableData extends DataClass
     return (StringBuffer('PlayersLogsTableData(')
           ..write('id: $id, ')
           ..write('playerId: $playerId, ')
+          ..write('playerIndexId: $playerIndexId, ')
           ..write('teamId: $teamId, ')
           ..write('playerEntranceDate: $playerEntranceDate')
           ..write(')'))
@@ -1402,13 +1428,15 @@ class PlayersLogsTableData extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(id, playerId, teamId, playerEntranceDate);
+  int get hashCode =>
+      Object.hash(id, playerId, playerIndexId, teamId, playerEntranceDate);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is PlayersLogsTableData &&
           other.id == this.id &&
           other.playerId == this.playerId &&
+          other.playerIndexId == this.playerIndexId &&
           other.teamId == this.teamId &&
           other.playerEntranceDate == this.playerEntranceDate);
 }
@@ -1416,31 +1444,37 @@ class PlayersLogsTableData extends DataClass
 class PlayersLogsTableCompanion extends UpdateCompanion<PlayersLogsTableData> {
   final Value<int> id;
   final Value<int> playerId;
+  final Value<int> playerIndexId;
   final Value<int> teamId;
   final Value<DateTime> playerEntranceDate;
   const PlayersLogsTableCompanion({
     this.id = const Value.absent(),
     this.playerId = const Value.absent(),
+    this.playerIndexId = const Value.absent(),
     this.teamId = const Value.absent(),
     this.playerEntranceDate = const Value.absent(),
   });
   PlayersLogsTableCompanion.insert({
     this.id = const Value.absent(),
     required int playerId,
+    required int playerIndexId,
     required int teamId,
     required DateTime playerEntranceDate,
   })  : playerId = Value(playerId),
+        playerIndexId = Value(playerIndexId),
         teamId = Value(teamId),
         playerEntranceDate = Value(playerEntranceDate);
   static Insertable<PlayersLogsTableData> custom({
     Expression<int>? id,
     Expression<int>? playerId,
+    Expression<int>? playerIndexId,
     Expression<int>? teamId,
     Expression<DateTime>? playerEntranceDate,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (playerId != null) 'player_id': playerId,
+      if (playerIndexId != null) 'player_index_id': playerIndexId,
       if (teamId != null) 'team_id': teamId,
       if (playerEntranceDate != null)
         'player_entrance_date': playerEntranceDate,
@@ -1450,11 +1484,13 @@ class PlayersLogsTableCompanion extends UpdateCompanion<PlayersLogsTableData> {
   PlayersLogsTableCompanion copyWith(
       {Value<int>? id,
       Value<int>? playerId,
+      Value<int>? playerIndexId,
       Value<int>? teamId,
       Value<DateTime>? playerEntranceDate}) {
     return PlayersLogsTableCompanion(
       id: id ?? this.id,
       playerId: playerId ?? this.playerId,
+      playerIndexId: playerIndexId ?? this.playerIndexId,
       teamId: teamId ?? this.teamId,
       playerEntranceDate: playerEntranceDate ?? this.playerEntranceDate,
     );
@@ -1468,6 +1504,9 @@ class PlayersLogsTableCompanion extends UpdateCompanion<PlayersLogsTableData> {
     }
     if (playerId.present) {
       map['player_id'] = Variable<int>(playerId.value);
+    }
+    if (playerIndexId.present) {
+      map['player_index_id'] = Variable<int>(playerIndexId.value);
     }
     if (teamId.present) {
       map['team_id'] = Variable<int>(teamId.value);
@@ -1484,6 +1523,7 @@ class PlayersLogsTableCompanion extends UpdateCompanion<PlayersLogsTableData> {
     return (StringBuffer('PlayersLogsTableCompanion(')
           ..write('id: $id, ')
           ..write('playerId: $playerId, ')
+          ..write('playerIndexId: $playerIndexId, ')
           ..write('teamId: $teamId, ')
           ..write('playerEntranceDate: $playerEntranceDate')
           ..write(')'))
@@ -2629,7 +2669,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
   Selectable<GetTodayLogsResult> getTodayLogs(
       DateTime dateTime, DateTime endDateTime, int teamId) {
     return customSelect(
-        'SELECT DISTINCT Players.player_name, Players.player_id, Players.player_index_id, Players.image_path, PlayersLogsTable.player_entrance_date FROM Players LEFT JOIN PlayersLogsTable ON PlayersLogsTable.player_id = Players.player_id WHERE PlayersLogsTable.player_entrance_date BETWEEN ?1 AND ?2 AND PlayersLogsTable.team_id = ?3',
+        'SELECT DISTINCT Players.player_name, Players.player_id, Players.player_index_id, Players.image_path, PlayersLogsTable.player_entrance_date FROM Players INNER JOIN PlayersLogsTable ON PlayersLogsTable.player_index_id = Players.player_index_id WHERE PlayersLogsTable.player_entrance_date BETWEEN ?1 AND ?2 AND PlayersLogsTable.team_id = ?3',
         variables: [
           Variable<DateTime>(dateTime),
           Variable<DateTime>(endDateTime),
@@ -2643,9 +2683,23 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           playerId: row.read<int>('player_id'),
           playerIndexId: row.read<int>('player_index_id'),
           imagePath: row.read<String>('image_path'),
-          playerEntranceDate:
-              row.readNullable<DateTime>('player_entrance_date'),
+          playerEntranceDate: row.read<DateTime>('player_entrance_date'),
         ));
+  }
+
+  Selectable<DateTime> getTodayPlayerLogs(
+      int playerIndexId, int teamId, DateTime begDate, DateTime endDate) {
+    return customSelect(
+        'SELECT PlayersLogsTable.player_entrance_date FROM PlayersLogsTable WHERE PlayersLogsTable.player_index_id = ?1 AND PlayersLogsTable.team_id = ?2 AND PlayersLogsTable.player_entrance_date BETWEEN ?3 AND ?4 ORDER BY PlayersLogsTable.player_entrance_date ASC',
+        variables: [
+          Variable<int>(playerIndexId),
+          Variable<int>(teamId),
+          Variable<DateTime>(begDate),
+          Variable<DateTime>(endDate)
+        ],
+        readsFrom: {
+          playersLogsTable,
+        }).map((QueryRow row) => row.read<DateTime>('player_entrance_date'));
   }
 
   Selectable<Player> allPlayers() {
@@ -2767,6 +2821,8 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           subscriptionId: row.read<int>('subscription_id'),
           subId: row.readNullable<int>('sub_id'),
           teamId: row.readNullable<int>('team_id'),
+          subscriptionPayDate:
+              row.readNullable<DateTime>('subscription_pay_date'),
           playerSubscriptionId: row.readNullable<int>('player_subscription_id'),
           beginningDate: row.readNullable<DateTime>('beginning_date'),
           endDate: row.readNullable<DateTime>('end_date'),
@@ -2857,13 +2913,13 @@ class GetTodayLogsResult {
   final int playerId;
   final int playerIndexId;
   final String imagePath;
-  final DateTime? playerEntranceDate;
+  final DateTime playerEntranceDate;
   GetTodayLogsResult({
     required this.playerName,
     required this.playerId,
     required this.playerIndexId,
     required this.imagePath,
-    this.playerEntranceDate,
+    required this.playerEntranceDate,
   });
 }
 
@@ -2947,6 +3003,7 @@ class GetEndedSubscriptionByTeamResult {
   final int subscriptionId;
   final int? subId;
   final int? teamId;
+  final DateTime? subscriptionPayDate;
   final int? playerSubscriptionId;
   final DateTime? beginningDate;
   final DateTime? endDate;
@@ -2967,6 +3024,7 @@ class GetEndedSubscriptionByTeamResult {
     required this.subscriptionId,
     this.subId,
     this.teamId,
+    this.subscriptionPayDate,
     this.playerSubscriptionId,
     this.beginningDate,
     this.endDate,

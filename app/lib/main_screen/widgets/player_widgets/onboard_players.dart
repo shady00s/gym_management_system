@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/database_management/tables/generate_table.dart';
-import 'package:gym_management/main_screen/widgets/need_resbscribe_player_name_widget.dart';
+import 'package:gym_management/main_screen/widgets/player_widgets/need_resbscribe_player_name_widget.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_name_widget.dart';
 
 import '../../../database_management/models/need_to_resubscribe_model.dart';
