@@ -71,7 +71,7 @@ class HomeTabWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
              Expanded(
-                flex: 2,
+                flex: 3,
                 child:Column(
                   children: [
                     EnterPlayersManually(teamId:teamId),
@@ -97,7 +97,7 @@ class HomeTabWidget extends StatelessWidget {
                   ],
                 ) ),//OnBoardPlayers(title: "Active players for today:")),
             Expanded(
-              flex: 4,
+              flex: 5,
               child: Column(
                 children: [
                   Expanded(flex: 4, child: SearchWidget(teamId: teamId,)),
@@ -113,10 +113,7 @@ class HomeTabWidget extends StatelessWidget {
                       child:SizedBox(width:700, child:     Wrap(
 
                         children: [
-                          CardsWithIcon(
-                            title: 'Re-new subscription',
-                            icon: FluentIcons.refresh, onTap: (){},
-                          ),
+
                           CardsWithIcon(
                               title: 'Show price list',
                               icon: FluentIcons.list, onTap: (){},),
@@ -133,7 +130,7 @@ class HomeTabWidget extends StatelessWidget {
               ),
             ),
             Expanded(
-                flex: 2,
+                flex: 3,
                 child: OnBoardPlayers(title: "Players need to subscribe:", data: PlayersDatabaseManager().getNeedToResubscribePlayersSubscriptions(teamId),)),
           ],
         ),

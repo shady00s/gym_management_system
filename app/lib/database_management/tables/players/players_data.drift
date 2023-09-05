@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS Players (
     player_gender TEXT NOT NULL,
     subscription_id  INT NOT NULL
 );
+CREATE INDEX player_index_id_idx on Players(player_index_id);
 
 CREATE TABLE IF NOT EXISTS PlayersSubscriptions(
     sub_id INT PRIMARY KEY AUTOINCREMENT,

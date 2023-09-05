@@ -45,13 +45,18 @@ class GymLogsManager{
       }
     }
     Future<List<GetTodayLogsResult>> getTodayPlayers(teamId) async{
-
-      List<GetTodayLogsResult> logs=  await db.getTodayLogs(DateTime.now().subtract(const   Duration(hours: 15)),DateTime.now(),teamId).get();
+      DateTime now = DateTime.now();
+      List<GetTodayLogsResult> logs=  await db.getTodayLogs(DateTime(now.year,now.month,now.day,0,0,0),DateTime(now.year,now.month,now.day,0,0,0).add(const Duration(days: 1)),teamId).get();
 
       return  logs;
     }
 
     Future<List<DateTime>> getPlayerLogs(int playerIndexId, int teamId) async{
       return await  db.getTodayPlayerLogs(playerIndexId, teamId,DateTime(DateTime.now().year,DateTime.now().month,1),DateTime.now()).get();
+    }
+
+    Future<DateTime?> getPlayerLastSeen(playerIndex,teamId)async{
+
+      return await db.getLastPlayerLog(playerIndex, teamId).getSingle();
     }
 }

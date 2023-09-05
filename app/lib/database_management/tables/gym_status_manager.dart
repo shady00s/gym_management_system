@@ -5,28 +5,29 @@ import 'package:gym_management/database_management/tables/players/player_databas
 class GymStatusManager{
   SystemDatabase db = PlayersDatabaseManager.playersDatabase;
   
-  Future getYearProfit(DateTime begValue)async{
-  var data = await db.customSelect('''
-      SELECT SUM(PlayersSubscriptions.billValue)  FROM PlayersSubscriptions
-      WHERE PlayersSubscriptions.subscription_pay_date BETWEEN ? AND DATE('NOW')
-  
-    ''',readsFrom: {PlayersSubscriptions(db)},variables: [Variable.withDateTime(begValue)]).get();
-
-   for(var element in data){
-     print(element.data);
-   }
-  }
-
-
-  Future getBestMonthInProfit(DateTime begValue,DateTime endVal)async{
-    var data = await db.customSelect('''
+  Future getYearProfit(DateTime begValue,DateTime endVal)async{
+    List<QueryRow> data = await db.customSelect('''
       SELECT SUM(PlayersSubscriptions.billValue)  FROM PlayersSubscriptions
       WHERE PlayersSubscriptions.subscription_pay_date BETWEEN ?1 AND ?2
   
     ''',readsFrom: {PlayersSubscriptions(db)},variables: [Variable.withDateTime(begValue),Variable.withDateTime(endVal)]).get();
 
-    for(var element in data){
-      print(element.data);
-    }
+   for(QueryRow element in data){
+     print(element.data);
+   }
+  }
+
+  Future getMonthlyProfit(DateTime year, int month)async{
+
+  }
+
+
+  Future getBestMonthInProfit(DateTime begValue,DateTime endVal)async{
+    var data = await db.customSelect('''
+       SELECT SUM(PlayersSubscriptions.billValue)  FROM PlayersSubscriptions
+    WHERE PlayersSubscriptions.subscription_pay_date BETWEEN ?1 AND ?2 
+  
+    ''',readsFrom: {PlayersSubscriptions(db)},variables: [Variable.withDateTime(begValue),Variable.withDateTime(endVal)]).getSingle();
+    return data.readNullable<int>("SUM(PlayersSubscriptions.billValue)");
   }
 }

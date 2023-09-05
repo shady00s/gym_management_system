@@ -19,10 +19,18 @@ class SearchResultWidget extends StatelessWidget {
           Expanded(child: Consumer(builder: (BuildContext context,  ref, Widget? child) {
             AsyncValue<List<Player?>> d  =  ref.watch(searchResult);
 
-            return d.when(data:(val)=>val[0]?.playerName != null? ListView.builder(
+            return d.when(data:(val)=> val.isNotEmpty? ListView.builder(
                 itemCount: val.length,
                 itemBuilder: (context,index)=>FluentTheme(data: FluentThemeData.dark(),
-                child: PlayerNameWithImage(playerName: val[index]!.playerName, playerId: val[index]!.playerId, imagePath:val[index]!.imagePath, playerIndexId: val[index]!.playerIndexId,),) )  :Text("no result"), error: (err,stack)=>Text(err.toString()), loading:()=> Center(child: ProgressBar(),));
+                child: PlayerNameWithImage(playerName: val[index]!.playerName, playerId: val[index]!.playerId, imagePath:val[index]!.imagePath, playerIndexId: val[index]!.playerIndexId,),) )
+                :Center(child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(FluentIcons.search_data,size: 55,color: Colors.grey[100],),
+                    Text("no result"),
+                  ],
+                )), error: (err,stack)=>Text(err.toString()), loading:()=> Center(child: ProgressBar(),));
           },))
 
         ],);

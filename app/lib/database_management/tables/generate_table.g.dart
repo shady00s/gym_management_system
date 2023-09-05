@@ -2664,12 +2664,14 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
       SubscriptionsInfoTable(this);
   late final PlayersAndTeamsTable playersAndTeamsTable =
       PlayersAndTeamsTable(this);
+  late final Index playerIndexIdIdx = Index('player_index_id_idx',
+      'CREATE INDEX player_index_id_idx ON Players (player_index_id)');
   late final PlayersSubscriptions playersSubscriptions =
       PlayersSubscriptions(this);
   Selectable<GetTodayLogsResult> getTodayLogs(
       DateTime dateTime, DateTime endDateTime, int teamId) {
     return customSelect(
-        'SELECT DISTINCT Players.player_name, Players.player_id, Players.player_index_id, Players.image_path, PlayersLogsTable.player_entrance_date FROM Players INNER JOIN PlayersLogsTable ON PlayersLogsTable.player_index_id = Players.player_index_id WHERE PlayersLogsTable.player_entrance_date BETWEEN ?1 AND ?2 AND PlayersLogsTable.team_id = ?3',
+        'SELECT DISTINCT Players.player_name, Players.player_id, Players.player_index_id, Players.image_path, PlayersLogsTable.player_entrance_date FROM Players INNER JOIN PlayersLogsTable ON PlayersLogsTable.player_index_id = Players.player_index_id WHERE PlayersLogsTable.player_entrance_date >= ?1 AND PlayersLogsTable.player_entrance_date < ?2 AND PlayersLogsTable.team_id = ?3',
         variables: [
           Variable<DateTime>(dateTime),
           Variable<DateTime>(endDateTime),
@@ -2685,6 +2687,18 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           imagePath: row.read<String>('image_path'),
           playerEntranceDate: row.read<DateTime>('player_entrance_date'),
         ));
+  }
+
+  Selectable<DateTime?> getLastPlayerLog(int playerIndex, int teamId) {
+    return customSelect(
+        'SELECT DISTINCT MAX(player_entrance_date) AS _c0 FROM PlayersLogsTable WHERE PlayersLogsTable.player_index_id = ?1 AND PlayersLogsTable.team_id = ?2',
+        variables: [
+          Variable<int>(playerIndex),
+          Variable<int>(teamId)
+        ],
+        readsFrom: {
+          playersLogsTable,
+        }).map((QueryRow row) => row.readNullable<DateTime>('_c0'));
   }
 
   Selectable<DateTime> getTodayPlayerLogs(
@@ -2904,6 +2918,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
         loginTimeInx,
         subscriptionsInfoTable,
         playersAndTeamsTable,
+        playerIndexIdIdx,
         playersSubscriptions
       ];
 }

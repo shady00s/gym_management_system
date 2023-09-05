@@ -15,8 +15,14 @@ CREATE INDEX login_time_inx on PlayersLogsTable(player_entrance_date);
 getTodayLogs(REQUIRED :dateTime AS DATETIME, REQUIRED :endDateTime AS DATETIME, REQUIRED :teamId AS INT):
                 SELECT DISTINCT Players.player_name, Players.player_id, Players.player_index_id,Players.image_path, PlayersLogsTable.player_entrance_date FROM Players
                 INNER JOIN  PlayersLogsTable ON PlayersLogsTable.player_index_id = Players.player_index_id
-                WHERE PlayersLogsTable.player_entrance_date BETWEEN :dateTime  AND :endDateTime
+                WHERE PlayersLogsTable.player_entrance_date >= :dateTime AND PlayersLogsTable.player_entrance_date < :endDateTime
                 AND PlayersLogsTable.team_id = :teamId;
+
+
+
+getLastPlayerLog(REQUIRED :playerIndexId, REQUIRED :teamId): SELECT DISTINCT MAX(player_entrance_date) FROM PlayersLogsTable
+                                                             WHERE PlayersLogsTable.player_index_id = :playerIndex
+                                                             AND PlayersLogsTable.team_id = :teamId;
 
 getTodayPlayerLogs(REQUIRED :playerIndexId AS INT, REQUIRED :teamId AS INT,REQUIRED :begDate AS DATETIME, REQUIRED :endDate AS DATETIME): SELECT PlayersLogsTable.player_entrance_date FROM PlayersLogsTable
                                               WHERE PlayersLogsTable.player_index_id = :playerIndexId

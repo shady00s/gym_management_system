@@ -36,7 +36,13 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
             });
 
           }, isSubscription: true, allButton: false, future: SubscriptionInformationManager().getAllSubscriptions(), title: '', list: null, provider: null)
-          ,Divider(),
+          ,Divider()
+          , Text("Subscription beginning date"),
+          SizedBox(height: 10,),
+          TextFormBox(initialValue: '',),
+          SizedBox(height: 10,),
+
+
           SizedBox(height: 10,)
 
           , Text("pay amount"),
@@ -49,6 +55,9 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
           TextFormBox(),
           SizedBox(height: 10,)
           ,Divider(),
+          SizedBox(height: 10,),
+
+
 
       SizedBox(height: 10,),
           Text("Bill image"),
