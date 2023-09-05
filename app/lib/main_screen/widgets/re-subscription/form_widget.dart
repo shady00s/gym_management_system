@@ -1,4 +1,8 @@
+import 'package:camera_platform_interface/camera_platform_interface.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gym_management/database_management/tables/generate_table.dart';
+import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 
 import '../../../database_management/tables/subscriptions/subscriptions_information_manager.dart';
 import '../player_widgets/player_status/filter_element.dart';
@@ -12,23 +16,32 @@ class ReSubscriptionFormWidget extends StatefulWidget {
 }
 
 class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
+  double billValue = 0;
   @override
   Widget build(BuildContext context) {
     return   Expanded(child: Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Form(child: Column(
+      child: Form(
+        key: _key,
+        child: Column(
         crossAxisAlignment:CrossAxisAlignment.start,
         children: [
           Text("Re-subscription form",style: TextStyle(fontSize: 21,fontWeight: FontWeight.bold),),
-          SizedBox(height: 30,),
+          SizedBox(height: 10,),
           Text("New duration"),
-          FilterElement(isSubscriptionWithName: true, onChange: (val){}, isSubscription: true, allButton: false, future: SubscriptionInformationManager().getAllSubscriptions(), title: '', list: null, provider: null)
+          FilterElement(isSubscriptionWithName: true, onChange: (val){
+            setState(() {
+              billValue = double.parse(val.id.toString());
+            });
+
+          }, isSubscription: true, allButton: false, future: SubscriptionInformationManager().getAllSubscriptions(), title: '', list: null, provider: null)
           ,Divider(),
           SizedBox(height: 10,)
 
           , Text("pay amount"),
           SizedBox(height: 10,),
-          TextFormBox(),
+          NumberFormBox(value: billValue,initialValue: billValue.toString(),),
           SizedBox(height: 10,)
 
           , Text("collector id"),
@@ -40,9 +53,23 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
       SizedBox(height: 10,),
           Text("Bill image"),
 
-          TakeNewImageWidget(image: null),
+        const  TakeNewImageWidget(path: "re-subscription_images",),
+        Consumer(
+            builder: (context, ref,child) {
+              XFile? image = ref.watch(imageProvider);
+              return FilledButton(child: Text("Re-subscribe"), onPressed:  ()async{
+                if(_key.currentState!.validate() && image != null){
 
-
+                  // PlayersSubscriptionsCompanion data = PlayersSubscriptionsCompanion.insert(
+                  //     teamId: teamId, subscriptionPayDate: subscriptionPayDate,
+                  //     playerSubscriptionId: playerSubscriptionId, beginningDate: beginningDate,
+                  //     endDate: endDate, billId: billId, billValue: billValue, duration: duration,
+                  //     billCollector: billCollector);
+                 // PlayersDatabaseManager().reSubscribePlayer(data);
+                }
+              });
+            }
+          )
         ],
       ),),
     ));

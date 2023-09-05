@@ -38,8 +38,12 @@ List<CalenderModel> calenderDays(){
   }
 
   // Adjust for the first day of the week
+
   for (int i = 0; i < weekDay - 1; i++) {
-    dayList.insert(0,CalenderModel(dayName: '', dayNumber: '', isLogged: false));
+    if(weekDay-1 == 0){
+      dayList.insert(0,CalenderModel(dayName: '', dayNumber: '', isLogged: false));
+
+    }
   }
 
   return dayList;
@@ -80,29 +84,32 @@ class _CalenderWidgetState extends State<CalenderWidget> {
             return Center(child: ProgressRing(),);
           case ConnectionState.done:
             return SizedBox(
-              width: 300,
+              width: 390,
 
               child: Column(
                 children: [
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text('fri'),
-                      Text('sat'),
-                      Text('sun'),
-                      Text('mon'),
-                      Text('tue'),
-                      Text('wed'),
-                      Text('thu'),
+                  const Padding(
+                    padding:  EdgeInsets.all(6.0),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('Fri'),
+                        Text('Sat'),
+                        Text('Sun'),
+                        Text('Mon'),
+                        Text('Tue'),
+                        Text('Wed'),
+                        Text('Thu'),
 
-                    ],
+                      ],
+                    ),
                   ),
                   Wrap(children: snapshot.data!.map((e) =>Card(
                       backgroundColor:e.isLogged ==true? const Color.fromRGBO(
                           5, 152, 25, 1.0) : e.dayName==""?
-                      const Color.fromRGBO(35, 35, 34, 0) :
+                      const Color.fromRGBO(35, 35, 34, 0.4) :
                       const Color.fromRGBO(35, 35, 34, 1.0),
-                      margin:const EdgeInsets.all(3), child: SizedBox(width: 20,height: 20,child: Center(child: Text(e.dayNumber)),)),).toList())
+                      margin:const EdgeInsets.only(top: 3,bottom: 3,left: 1,right: 8), child: SizedBox(width: 17,height: 15,child: Center(child: Text(e.dayNumber)),)),).toList())
                 ],
               ),
             );

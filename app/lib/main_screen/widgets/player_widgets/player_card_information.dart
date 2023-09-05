@@ -29,6 +29,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                     children: [
                       // player  info
                       Expanded(
+                        flex: 2,
                         child: Card(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +97,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                       flex: 1,
                                       child: const  Text("Teams:")),
                                   Expanded(
-                                      flex: 3,
+
                                       child: FutureBuilder<List<TeamsDataTableData>>(
                                         future: PlayersDatabaseManager().getPlayerTeams(playerId),
                                         builder: (context, teamSnapshot) {
@@ -125,13 +126,13 @@ class PlayerCardInformationWidget extends StatelessWidget {
                         ),
                       ),
                       // player subscription widget
-                      Expanded(child: Padding(
+                      Expanded(flex:2,child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(children: [
                           Text("Subscriptions history:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 21),),
                           const SizedBox(height: 14,),
 
-                          Expanded(child: ListView.builder(
+                          Expanded(flex:2,child: ListView.builder(
                               itemCount: snapshot.data!.length,
                               itemBuilder: (context,index)=>Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -185,7 +186,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                         ],),
                       )),
                       // player log info
-                        Expanded(child: Padding(
+                        Expanded(flex:3,child: Padding(
                         padding:const  EdgeInsets.all(8.0),
                         child: Column(children: [
                           Text("Player logs history:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 21),),

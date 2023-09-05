@@ -195,4 +195,14 @@ Future insertPlayersFromExcelOffline(List<ExcelPlayers> playersData)async{
 
 
 }
+
+
+Future reSubscribePlayer(PlayersSubscriptionsCompanion data)async{
+    try{
+      await playersDatabase.into(PlayersSubscriptions(playersDatabase)).insert(data);
+
+    }catch(e){
+      throw e.toString();
+    }
+   }
 }

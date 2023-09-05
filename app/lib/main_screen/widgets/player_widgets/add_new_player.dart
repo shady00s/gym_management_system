@@ -54,7 +54,7 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                 children: [
                   // select player image
                   const Padding(padding: EdgeInsets.all(8),child: Text("Player image",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 19),)),
-                    TakeNewImageWidget(image: image),
+                    TakeNewImageWidget(path: 'players_images'),
                 const  Divider(),
                   const SizedBox(height: 12,),
                   // player name

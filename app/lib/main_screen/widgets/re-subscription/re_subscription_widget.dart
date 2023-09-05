@@ -27,7 +27,7 @@ class ReSubscriptionWidget extends StatelessWidget {
     return  Card(backgroundColor: const Color.fromRGBO(12, 2, 3, 0.3),child: Center(
       child: SizedBox(
         width: MediaQuery.sizeOf(context).width * 0.85,
-        height: MediaQuery.sizeOf(context).height * 0.8,
+        height: MediaQuery.sizeOf(context).height * 0.85,
         child: Card(
           backgroundColor: Colors.black,
           child: Column(

@@ -23,7 +23,7 @@ class PlayerNameWithImage extends StatelessWidget {
 
                 Card(backgroundColor: const Color.fromRGBO(12, 2, 3, 0.3),child: Center(
                     child: SizedBox(
-                        width: MediaQuery.sizeOf(context).width * 0.85,
+                        width: MediaQuery.sizeOf(context).width * 0.90,
                         height: MediaQuery.sizeOf(context).height * 0.8,
                         child: Card(
                             backgroundColor: Colors.black,

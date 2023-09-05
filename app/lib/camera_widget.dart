@@ -3,17 +3,22 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:camera_platform_interface/camera_platform_interface.dart';
 import 'package:fluent_ui/fluent_ui.dart';
  import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gym_management/main_screen/widgets/take_new_image_widget.dart';
+import 'package:path/path.dart' as p;
 
 
 
 /// Example app for Camera Windows plugin.
 class TakeNewPhoto extends StatefulWidget {
+  final String path;
   /// Default Constructor
-  const TakeNewPhoto({super.key});
+  const TakeNewPhoto({super.key,required this.path});
 
   @override
   State<TakeNewPhoto> createState() => _TakeNewPhotoState();
@@ -176,9 +181,14 @@ class _TakeNewPhotoState extends State<TakeNewPhoto> {
     return CameraPlatform.instance.buildPreview(_cameraId);
   }
 
-  Future<void> _takePicture() async {
+  Future<XFile> _takePicture() async {
     final XFile file = await CameraPlatform.instance.takePicture(_cameraId);
-    _showInSnackBar('Picture captured to: ${file.path}');
+      await file.saveTo(p.join('assets/${widget.path}',file.name)).then((value) {
+        _showInSnackBar('Picture captured to: ${file.path}');
+        Navigator.pop(context);
+      });
+
+    return file;
   }
 
   Future<void> _togglePreview() async {
@@ -278,12 +288,21 @@ class _TakeNewPhotoState extends State<TakeNewPhoto> {
                     ),
                   ),
                   const SizedBox(width: 5),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: FilledButton(
-                      onPressed: _initialized ? _takePicture : null,
-                      child: const Text('Take picture'),
-                    ),
+                  Consumer(
+                    builder: (context, ref,child) {
+                      var image =ref.read(imageProvider.notifier);
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FilledButton(
+                          onPressed: _initialized ?()async{
+                           await _takePicture().then((value){
+                             image.state = value;
+                           });
+                          }  : null,
+                          child: const Text('Take picture'),
+                        ),
+                      );
+                    }
                   ),
                   const SizedBox(width: 5),
                   Padding(
