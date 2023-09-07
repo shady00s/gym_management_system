@@ -7,6 +7,7 @@ export default function sendDataOffline(req:Request,res:Response){
     const prossedPlayerSet = new Set()
     const resultData = []
     let playerData:IExcelDataModel = {
+        notOriginalId:false,
         id: 0,
         playerIndexId: 0,
         playerId: 0,
@@ -24,7 +25,7 @@ export default function sendDataOffline(req:Request,res:Response){
 
         
                if(playerData[playerId]){
-                if((playerData[playerId].name === player.name  && (playerData[playerId].team === player.team || playerData[playerId].id === player.id)) ){      
+                if((playerData[playerId].name === player.name) ){      
     
                     if (!(playerData[playerId].subscriptions!.every(e => player.subscriptions.every(
                                 f =>e.team === f.team && e.beginDate === f.beginDate && e.billId === f.billId && e.subscriptionDuration === f.subscriptionDuration && e.subscriptionValue === f.subscriptionValue)))) {

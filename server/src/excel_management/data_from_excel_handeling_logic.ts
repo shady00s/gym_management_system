@@ -46,7 +46,10 @@ async function saveXlsxFileData(req: Request, res: Response) {
                             team = -1
                         } else team = team
                         let playerId = Math.floor(fileJsonData[x][selectedSheets[currentListLength].name] + fileJsonData.length + selectedSheets[currentListLength].id)
+                        
+                        let notOriginalId = id === "*";
                         if (id === "*") {
+                            
                             let num = fileJsonData.length + Math.round(Math.random() * (300 - 50))
                             playerId = (fileJsonData.length + selectedSheets[currentListLength].id) + num * selectedSheets[currentListLength].id
                             id = num
@@ -72,7 +75,7 @@ async function saveXlsxFileData(req: Request, res: Response) {
                         let subday = subscriptionCollectingDate.getDate();
                         let subhours = subscriptionCollectingDate.getHours();
                         let subminutes = subscriptionCollectingDate.getMinutes()
-                        let name = fileJsonData[x]["__EMPTY"]
+                        let name =fileJsonData[x]["__EMPTY"] ?fileJsonData[x]["__EMPTY"] .replace(/^\s+|\s+$/g, '') :fileJsonData[x]["__EMPTY"] 
                         let subscriptionValue = fileJsonData[x]["__EMPTY_6"] == null ? -1 : fileJsonData[x]["__EMPTY_6"]
                         let subscriptionCollectionDate = `${subday + "/" + submonth + "/" + subyear}`== "NaN/NaN/NaN" ? "1990-01-01 00:00:00" : `${subyear + "-" + (submonth < 10 ? `0${submonth}` : submonth) + "-" + (subday < 10 ? `0${subday}` : subday) + " " + "0" + subhours + ":" + "0" + subminutes + ":00"}`
                         let beginDate = `${begday + "/" + begmonth + "/" + begyear}` == "NaN/NaN/NaN" ? "1990-01-01 00:00:00" : `${begyear + "-" + (begmonth < 10 ? `0${begmonth}` : begmonth) + "-" + (begday < 10 ? `0${begday}` : begday) + " " + "0" + begHour + ":" + "0" + begminuite + ":00"}`
@@ -80,47 +83,52 @@ async function saveXlsxFileData(req: Request, res: Response) {
 
                         let billId = fileJsonData[x]["__EMPTY_4"] == null || typeof fileJsonData[x]["__EMPTY_4"] === "string" ? -1 : fileJsonData[x]["__EMPTY_4"]
 
-                        let subscriptionDuration: number = fileJsonData[x]["__EMPTY_1"] === "شهر" ? 1 : fileJsonData[x]["__EMPTY_1"] === "شهرين" ? 2 : fileJsonData[x]["__EMPTY_1"] === "3شهور" ? 3 : fileJsonData[x]["__EMPTY_1"] === "6شهور" ? 6 : fileJsonData[x]["__EMPTY_1"] === "حصة" ? 11 : -1
+                        let subscriptionDuration: number = fileJsonData[x]["__EMPTY_1"] === "شهر" ? 1 : fileJsonData[x]["__EMPTY_1"] === "شهرين" ? 2 : fileJsonData[x]["__EMPTY_1"] === "3شهور" ? 3 : fileJsonData[x]["__EMPTY_1"] === "6شهور" ? 6 : fileJsonData[x]["__EMPTY_1"] === "سنة"?12 : fileJsonData[x]["__EMPTY_1"] === "حصة" ? 11 : -1
 
                         const invalidNames = /^(?! *$|^ *$|^ديسمبر$|^نوفمبر$|^اكتوبر$|^سبتمبر$|^اغسطس$|^يوليو$|^يونيه$|^مايو$|^ابريل$|^مارس$|^فبراير$|^يناير$).*/;
                         const invalidIds = /^(?! *$|^ *$|^-$|^الا$|^لاغى$|^ID$).*$/;
                         if (
                             invalidNames.test(name) && invalidIds.test(id) && typeof name !== "number" && typeof subscriptionValue !== "string" && typeof billId !== "string"
                         ) {
-                            playersMap.push({ playerIndexId, playerId, id: id, team, name, subscriptions: [{subscriptionCollectionDate:subscriptionCollectionDate, playerSubscriptionId: playerIndexId, team: team, subscriptionValue: subscriptionValue, beginDate: beginDate, finishDate: finishDate, billId: billId, subscriptionDuration: subscriptionDuration }] })
+                            playersMap.push({notOriginalId:notOriginalId, playerIndexId, playerId, id: id, team, name, subscriptions: [{subscriptionCollectionDate:subscriptionCollectionDate, playerSubscriptionId: playerIndexId, team: team, subscriptionValue: subscriptionValue, beginDate: beginDate, finishDate: finishDate, billId: billId, subscriptionDuration: subscriptionDuration }] })
                         }
                     }
                     currentListLength++;
                 }
                 let processedPlayer = new Set();
-                const result = []
                 let playerData = {};
-                let playerObjId;
-                for (const player of playersMap) {
-                    playerObjId = player.playerId;
+                const results = [];
+                for (const player of playersMap) {  
+                    let playerObjId = player.playerIndexId;
 
-                    if (player.name !== undefined && player.id !== undefined && player.id !== null && player.name !== null && typeof player.name !== "number") {
-
+                    if (player.name !== undefined && player.id !== undefined && player.id !== null && player.name !== null) {
+                       
                         if (playerData[playerObjId]) {
-                            if (playerData[playerObjId].name === player.name) {
 
+                            if (playerData[playerObjId].name === player.name) {
                                 playerData[playerObjId].playerIndexId = player.playerIndexId
-                                playerObjId = player.playerId
+                                if(playerData[playerObjId].notOriginalId){
+                                    playerData[playerObjId].id = player.id
+                                }
                                 if (!player.subscriptions?.every(e => playerData[playerObjId].subscriptions.every(
                                     f => e.beginDate === f.beginDate && e.billId === f.billId && e.subscriptionDuration === f.subscriptionDuration && e.subscriptionValue === f.subscriptionValue))) {
                                     playerData[playerObjId].subscriptions.push(...player.subscriptions);
                                 }
                             } if (!processedPlayer.has(playerObjId)) {
 
-                                result.push(playerData[playerObjId]);
+                                results.push(playerData[playerObjId]);
                                 processedPlayer.add(playerObjId);
                             }
                         } else {
                             playerData[playerObjId] = player;
+
                             if (playerData[playerObjId].name === player.name ) {
                                 playerData[playerObjId].playerIndexId = player.playerIndexId
-                                playerObjId = player.playerId
-                                if (playerData[playerObjId].subscriptions.length !== 0 && playerData[playerObjId].subscriptions !== undefined) {
+                                if(playerData[playerObjId].notOriginalId){
+                                    playerData[playerObjId].id = player.id
+                                }
+                                
+                                if (playerData[playerObjId].subscriptions.length !== 0 && playerData[playerObjId].subscriptions) {
 
                                     if (!player.subscriptions?.every(e => playerData[playerObjId].subscriptions.every(
                                         f => e.beginDate === f.beginDate && e.billId === f.billId && e.subscriptionDuration === f.subscriptionDuration && e.subscriptionValue === f.subscriptionValue))) {
@@ -132,17 +140,22 @@ async function saveXlsxFileData(req: Request, res: Response) {
 
                             if (!processedPlayer.has(playerObjId)) {
 
-                                result.push(playerData[playerObjId]);
+                                results.push(playerData[playerObjId]);
                                 processedPlayer.add(playerObjId);
                             }
                         }
                     }
                 }
 
-                req.session.playerList = result;
+                playerData = {}
+                processedPlayer.clear()
+                
+
+                req.session.playerList = results;
                 req.session.selected_teams_list = selectedSheets;
 
                 res.redirect('/get_excel_data_offline')
+                //res.json(playersMap)
 
             } else {
                 res.json("no sheets added")

@@ -78,10 +78,9 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   const  Text("Status:"),
-                                  Text(date < 0 ?"Valid": date == 0? "Ended today" :"Ended $date day ago" ,style:
+                                  Text(snapshot.data![0].duration == 11? "Needs to subscribe" : date < 0?"Valid": date == 0 ? "Ended today" :"Ended $date day ago" ,style:
 
                                   TextStyle(color:
-
                                   date < 0 ?const Color.fromRGBO(
                                       2, 176, 18, 0.8) : date <= 10?const Color.fromRGBO(
                                       176, 173, 2, 0.8) :date <= 30?const Color.fromRGBO(

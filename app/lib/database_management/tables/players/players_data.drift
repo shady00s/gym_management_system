@@ -56,6 +56,7 @@ getEndedSubscriptionByTeam (REQUIRED :beginDateTime AS DATETIME, REQUIRED :secon
                                      SELECT  PlayersSubscriptions.player_subscription_id, MAX(PlayersSubscriptions.beginning_date), MAX(PlayersSubscriptions.end_date) AS latest_end_date
                                      FROM PlayersSubscriptions
                                      WHERE end_date BETWEEN :beginDateTime AND :secondDateTime AND  PlayersSubscriptions.beginning_date < :secondDateTime
+                                     AND PlayersSubscriptions.duration != 11
                                      GROUP BY player_subscription_id
                                  ) AS LatestSubscriptions ON Players.player_index_id = LatestSubscriptions.player_subscription_id
                            LEFT JOIN PlayersSubscriptions ON PlayersSubscriptions.player_subscription_id = Players.player_index_id

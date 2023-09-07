@@ -1,6 +1,7 @@
 interface IExcelDataModel{
     playerIndexId:number,
     id:number,
+    notOriginalId:boolean,
     playerId:number,
     team:any,
     name:string,
