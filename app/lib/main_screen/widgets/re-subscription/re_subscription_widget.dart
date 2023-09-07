@@ -1,16 +1,13 @@
 import 'dart:io';
-
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/database_management/tables/gym_player_logs/gym_log_manager.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
-import 'package:gym_management/database_management/tables/subscriptions/subscriptions_information_manager.dart';
-import 'package:gym_management/main_screen/widgets/player_widgets/player_status/filter_element.dart';
 import 'package:gym_management/main_screen/widgets/re-subscription/form_widget.dart';
-import 'package:gym_management/main_screen/widgets/take_new_image_widget.dart';
 import 'package:intl/intl.dart';
-
 import '../../../database_management/tables/generate_table.dart';
 
+StateProvider<DateTime?> playerLastSeenProvider = StateProvider<DateTime?>((ref) => null);
 
 Future showReSubscriptionWidget(context,playerId) async{
   await showGeneralDialog(context: context,
@@ -60,6 +57,7 @@ class ReSubscriptionWidget extends StatelessWidget {
                             return Center(child: ProgressRing(),);
                           case ConnectionState.done:
                             if(snapshot.hasData && snapshot.data!.isNotEmpty){
+
                                 int date = DateTime.now().difference(snapshot.data![0].endDate).inDays;
                                 print(snapshot.data![0].playerIndexId);
 
@@ -214,24 +212,33 @@ class ReSubscriptionWidget extends StatelessWidget {
                                           SizedBox(height: 20,),
                                           Text("Last player seen date",style: TextStyle(fontSize: 21,fontWeight: FontWeight.bold),),
                                           SizedBox(height: 10,),
-                                            FutureBuilder<DateTime?>(future:GymLogsManager().getPlayerLastSeen(snapshot.data![0].playerIndexId, snapshot.data![0].teamId) ,
-                                              builder: (BuildContext context, AsyncSnapshot<DateTime?> snapshot) {
+                                            Consumer(
+                                              builder: (context, ref,child) {
+                                                var setPlayerLastSeen = ref.read(playerLastSeenProvider.notifier);
+                                                return FutureBuilder<DateTime?>(future:GymLogsManager().getPlayerLastSeen(snapshot.data![0].playerIndexId, snapshot.data![0].teamId) ,
+                                                  builder: (BuildContext context, AsyncSnapshot<DateTime?> snapshot) {
 
-                                                  switch(snapshot.connectionState){
-                                                    case ConnectionState.none:
-                                                      return Text("Error occured");
-                                                    case ConnectionState.waiting:
-                                                    case ConnectionState.active:
-                                                      return Center(child: ProgressRing(),);
-                                                    case ConnectionState.done:
-                                                      if(snapshot.hasData && snapshot.data !=null) {
-                                                        return Card(child: Text(DateFormat.yMMMEd().format(snapshot.data!)));
-                                                      }else{
-                                                        return Text("No records found");
+                                                      switch(snapshot.connectionState){
+                                                        case ConnectionState.none:
+                                                          return Text("Error occured");
+                                                        case ConnectionState.waiting:
+                                                        case ConnectionState.active:
+                                                          return Center(child: ProgressRing(),);
+                                                        case ConnectionState.done:
+                                                          if(snapshot.hasData && snapshot.data !=null) {
+                                                            Future.delayed(Duration.zero,(){
+                                                              setPlayerLastSeen.state = snapshot.data!;
+                                                            });
+
+                                                            return Card(child: Text(DateFormat.yMMMEd().format(snapshot.data!)));
+                                                          }else{
+                                                            return Text("No records found");
+                                                          }
                                                       }
-                                                  }
 
-                                              }, )
+                                                  }, );
+                                              }
+                                            )
 
 
 

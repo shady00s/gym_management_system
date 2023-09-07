@@ -73,11 +73,8 @@ async function saveXlsxFileData(req: Request, res: Response) {
                         let subhours = subscriptionCollectingDate.getHours();
                         let subminutes = subscriptionCollectingDate.getMinutes()
                         let name = fileJsonData[x]["__EMPTY"]
-
                         let subscriptionValue = fileJsonData[x]["__EMPTY_6"] == null ? -1 : fileJsonData[x]["__EMPTY_6"]
                         let subscriptionCollectionDate = `${subday + "/" + submonth + "/" + subyear}`== "NaN/NaN/NaN" ? "1990-01-01 00:00:00" : `${subyear + "-" + (submonth < 10 ? `0${submonth}` : submonth) + "-" + (subday < 10 ? `0${subday}` : subday) + " " + "0" + subhours + ":" + "0" + subminutes + ":00"}`
-                        
-                        
                         let beginDate = `${begday + "/" + begmonth + "/" + begyear}` == "NaN/NaN/NaN" ? "1990-01-01 00:00:00" : `${begyear + "-" + (begmonth < 10 ? `0${begmonth}` : begmonth) + "-" + (begday < 10 ? `0${begday}` : begday) + " " + "0" + begHour + ":" + "0" + begminuite + ":00"}`
                         let finishDate = `${day + "/" + month + "/" + year}` == "NaN/NaN/NaN" ? "1990-01-01 00:00:00" : `${year + "-" + (month < 10 ? `0${month}` : month) + "-" + (day < 10 ? `0${day}` : day) + " " + "0" + hours + ":" + "0" + minutes + ":00"}`
 
@@ -90,17 +87,11 @@ async function saveXlsxFileData(req: Request, res: Response) {
                         if (
                             invalidNames.test(name) && invalidIds.test(id) && typeof name !== "number" && typeof subscriptionValue !== "string" && typeof billId !== "string"
                         ) {
-
                             playersMap.push({ playerIndexId, playerId, id: id, team, name, subscriptions: [{subscriptionCollectionDate:subscriptionCollectionDate, playerSubscriptionId: playerIndexId, team: team, subscriptionValue: subscriptionValue, beginDate: beginDate, finishDate: finishDate, billId: billId, subscriptionDuration: subscriptionDuration }] })
-
                         }
-
                     }
                     currentListLength++;
-
                 }
-
-
                 let processedPlayer = new Set();
                 const result = []
                 let playerData = {};
@@ -110,7 +101,6 @@ async function saveXlsxFileData(req: Request, res: Response) {
 
                     if (player.name !== undefined && player.id !== undefined && player.id !== null && player.name !== null && typeof player.name !== "number") {
 
-
                         if (playerData[playerObjId]) {
                             if (playerData[playerObjId].name === player.name) {
 
@@ -119,21 +109,15 @@ async function saveXlsxFileData(req: Request, res: Response) {
                                 if (!player.subscriptions?.every(e => playerData[playerObjId].subscriptions.every(
                                     f => e.beginDate === f.beginDate && e.billId === f.billId && e.subscriptionDuration === f.subscriptionDuration && e.subscriptionValue === f.subscriptionValue))) {
                                     playerData[playerObjId].subscriptions.push(...player.subscriptions);
-
                                 }
-
-
                             } if (!processedPlayer.has(playerObjId)) {
 
                                 result.push(playerData[playerObjId]);
                                 processedPlayer.add(playerObjId);
                             }
-
-
-
                         } else {
                             playerData[playerObjId] = player;
-                            if (playerData[playerObjId].name === player.name && playerData[playerObjId].id === player.id) {
+                            if (playerData[playerObjId].name === player.name ) {
                                 playerData[playerObjId].playerIndexId = player.playerIndexId
                                 playerObjId = player.playerId
                                 if (playerData[playerObjId].subscriptions.length !== 0 && playerData[playerObjId].subscriptions !== undefined) {
@@ -141,15 +125,9 @@ async function saveXlsxFileData(req: Request, res: Response) {
                                     if (!player.subscriptions?.every(e => playerData[playerObjId].subscriptions.every(
                                         f => e.beginDate === f.beginDate && e.billId === f.billId && e.subscriptionDuration === f.subscriptionDuration && e.subscriptionValue === f.subscriptionValue))) {
                                         playerData[playerObjId].subscriptions.push(...player.subscriptions);
-
                                     }
 
-
-
                                 }
-
-
-
                             }
 
                             if (!processedPlayer.has(playerObjId)) {
@@ -157,16 +135,8 @@ async function saveXlsxFileData(req: Request, res: Response) {
                                 result.push(playerData[playerObjId]);
                                 processedPlayer.add(playerObjId);
                             }
-
-
-
-
-
-
                         }
                     }
-
-
                 }
 
                 req.session.playerList = result;

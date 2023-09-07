@@ -24,7 +24,7 @@ export default function sendDataOffline(req:Request,res:Response){
 
         
                if(playerData[playerId]){
-                if((playerData[playerId].name === player.name  && playerData[playerId].id === player.id ) ){      
+                if((playerData[playerId].name === player.name  && (playerData[playerId].team === player.team || playerData[playerId].id === player.id)) ){      
     
                     if (!(playerData[playerId].subscriptions!.every(e => player.subscriptions.every(
                                 f =>e.team === f.team && e.beginDate === f.beginDate && e.billId === f.billId && e.subscriptionDuration === f.subscriptionDuration && e.subscriptionValue === f.subscriptionValue)))) {
@@ -32,12 +32,10 @@ export default function sendDataOffline(req:Request,res:Response){
         
                             }
                             
-        
                             for(var e of playerData[playerId].subscriptions){
                                 e.playerSubscriptionId = playerData[playerId].playerIndexId
                             }
-                            
-                           
+
                         }  
                         let teamId = new Set()
                         for (const iterator of playerData[playerId].subscriptions) {
@@ -63,18 +61,6 @@ export default function sendDataOffline(req:Request,res:Response){
                             resultData.push(playerData[playerId]);
                         }
                }
-     
-                
-                
-                
-                
-        
-
-          
-                
-           
-                
-
 }
 res.json({message:"succssess",resultData})
 }  
