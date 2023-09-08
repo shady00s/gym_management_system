@@ -2154,6 +2154,27 @@ class PlayersSubscriptions extends Table
       type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
+  static const VerificationMeta _discountCodeMeta =
+      const VerificationMeta('discountCode');
+  late final GeneratedColumn<String> discountCode = GeneratedColumn<String>(
+      'discount_code', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _freezeAvailableMeta =
+      const VerificationMeta('freezeAvailable');
+  late final GeneratedColumn<int> freezeAvailable = GeneratedColumn<int>(
+      'freeze_available', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _invitationAvailableMeta =
+      const VerificationMeta('invitationAvailable');
+  late final GeneratedColumn<int> invitationAvailable = GeneratedColumn<int>(
+      'invitation_available', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
   static const VerificationMeta _subscriptionPayDateMeta =
       const VerificationMeta('subscriptionPayDate');
   late final GeneratedColumn<DateTime> subscriptionPayDate =
@@ -2213,6 +2234,9 @@ class PlayersSubscriptions extends Table
   List<GeneratedColumn> get $columns => [
         subId,
         teamId,
+        discountCode,
+        freezeAvailable,
+        invitationAvailable,
         subscriptionPayDate,
         playerSubscriptionId,
         beginningDate,
@@ -2241,6 +2265,28 @@ class PlayersSubscriptions extends Table
           teamId.isAcceptableOrUnknown(data['team_id']!, _teamIdMeta));
     } else if (isInserting) {
       context.missing(_teamIdMeta);
+    }
+    if (data.containsKey('discount_code')) {
+      context.handle(
+          _discountCodeMeta,
+          discountCode.isAcceptableOrUnknown(
+              data['discount_code']!, _discountCodeMeta));
+    }
+    if (data.containsKey('freeze_available')) {
+      context.handle(
+          _freezeAvailableMeta,
+          freezeAvailable.isAcceptableOrUnknown(
+              data['freeze_available']!, _freezeAvailableMeta));
+    } else if (isInserting) {
+      context.missing(_freezeAvailableMeta);
+    }
+    if (data.containsKey('invitation_available')) {
+      context.handle(
+          _invitationAvailableMeta,
+          invitationAvailable.isAcceptableOrUnknown(
+              data['invitation_available']!, _invitationAvailableMeta));
+    } else if (isInserting) {
+      context.missing(_invitationAvailableMeta);
     }
     if (data.containsKey('subscription_pay_date')) {
       context.handle(
@@ -2311,6 +2357,12 @@ class PlayersSubscriptions extends Table
           .read(DriftSqlType.int, data['${effectivePrefix}sub_id']),
       teamId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}team_id'])!,
+      discountCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}discount_code']),
+      freezeAvailable: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}freeze_available'])!,
+      invitationAvailable: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}invitation_available'])!,
       subscriptionPayDate: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime,
           data['${effectivePrefix}subscription_pay_date'])!,
@@ -2344,6 +2396,9 @@ class PlayersSubscription extends DataClass
     implements Insertable<PlayersSubscription> {
   final int? subId;
   final int teamId;
+  final String? discountCode;
+  final int freezeAvailable;
+  final int invitationAvailable;
   final DateTime subscriptionPayDate;
   final int playerSubscriptionId;
   final DateTime beginningDate;
@@ -2355,6 +2410,9 @@ class PlayersSubscription extends DataClass
   const PlayersSubscription(
       {this.subId,
       required this.teamId,
+      this.discountCode,
+      required this.freezeAvailable,
+      required this.invitationAvailable,
       required this.subscriptionPayDate,
       required this.playerSubscriptionId,
       required this.beginningDate,
@@ -2370,6 +2428,11 @@ class PlayersSubscription extends DataClass
       map['sub_id'] = Variable<int>(subId);
     }
     map['team_id'] = Variable<int>(teamId);
+    if (!nullToAbsent || discountCode != null) {
+      map['discount_code'] = Variable<String>(discountCode);
+    }
+    map['freeze_available'] = Variable<int>(freezeAvailable);
+    map['invitation_available'] = Variable<int>(invitationAvailable);
     map['subscription_pay_date'] = Variable<DateTime>(subscriptionPayDate);
     map['player_subscription_id'] = Variable<int>(playerSubscriptionId);
     map['beginning_date'] = Variable<DateTime>(beginningDate);
@@ -2386,6 +2449,11 @@ class PlayersSubscription extends DataClass
       subId:
           subId == null && nullToAbsent ? const Value.absent() : Value(subId),
       teamId: Value(teamId),
+      discountCode: discountCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(discountCode),
+      freezeAvailable: Value(freezeAvailable),
+      invitationAvailable: Value(invitationAvailable),
       subscriptionPayDate: Value(subscriptionPayDate),
       playerSubscriptionId: Value(playerSubscriptionId),
       beginningDate: Value(beginningDate),
@@ -2403,6 +2471,10 @@ class PlayersSubscription extends DataClass
     return PlayersSubscription(
       subId: serializer.fromJson<int?>(json['sub_id']),
       teamId: serializer.fromJson<int>(json['team_id']),
+      discountCode: serializer.fromJson<String?>(json['discount_code']),
+      freezeAvailable: serializer.fromJson<int>(json['freeze_available']),
+      invitationAvailable:
+          serializer.fromJson<int>(json['invitation_available']),
       subscriptionPayDate:
           serializer.fromJson<DateTime>(json['subscription_pay_date']),
       playerSubscriptionId:
@@ -2421,6 +2493,9 @@ class PlayersSubscription extends DataClass
     return <String, dynamic>{
       'sub_id': serializer.toJson<int?>(subId),
       'team_id': serializer.toJson<int>(teamId),
+      'discount_code': serializer.toJson<String?>(discountCode),
+      'freeze_available': serializer.toJson<int>(freezeAvailable),
+      'invitation_available': serializer.toJson<int>(invitationAvailable),
       'subscription_pay_date': serializer.toJson<DateTime>(subscriptionPayDate),
       'player_subscription_id': serializer.toJson<int>(playerSubscriptionId),
       'beginning_date': serializer.toJson<DateTime>(beginningDate),
@@ -2435,6 +2510,9 @@ class PlayersSubscription extends DataClass
   PlayersSubscription copyWith(
           {Value<int?> subId = const Value.absent(),
           int? teamId,
+          Value<String?> discountCode = const Value.absent(),
+          int? freezeAvailable,
+          int? invitationAvailable,
           DateTime? subscriptionPayDate,
           int? playerSubscriptionId,
           DateTime? beginningDate,
@@ -2446,6 +2524,10 @@ class PlayersSubscription extends DataClass
       PlayersSubscription(
         subId: subId.present ? subId.value : this.subId,
         teamId: teamId ?? this.teamId,
+        discountCode:
+            discountCode.present ? discountCode.value : this.discountCode,
+        freezeAvailable: freezeAvailable ?? this.freezeAvailable,
+        invitationAvailable: invitationAvailable ?? this.invitationAvailable,
         subscriptionPayDate: subscriptionPayDate ?? this.subscriptionPayDate,
         playerSubscriptionId: playerSubscriptionId ?? this.playerSubscriptionId,
         beginningDate: beginningDate ?? this.beginningDate,
@@ -2460,6 +2542,9 @@ class PlayersSubscription extends DataClass
     return (StringBuffer('PlayersSubscription(')
           ..write('subId: $subId, ')
           ..write('teamId: $teamId, ')
+          ..write('discountCode: $discountCode, ')
+          ..write('freezeAvailable: $freezeAvailable, ')
+          ..write('invitationAvailable: $invitationAvailable, ')
           ..write('subscriptionPayDate: $subscriptionPayDate, ')
           ..write('playerSubscriptionId: $playerSubscriptionId, ')
           ..write('beginningDate: $beginningDate, ')
@@ -2476,6 +2561,9 @@ class PlayersSubscription extends DataClass
   int get hashCode => Object.hash(
       subId,
       teamId,
+      discountCode,
+      freezeAvailable,
+      invitationAvailable,
       subscriptionPayDate,
       playerSubscriptionId,
       beginningDate,
@@ -2490,6 +2578,9 @@ class PlayersSubscription extends DataClass
       (other is PlayersSubscription &&
           other.subId == this.subId &&
           other.teamId == this.teamId &&
+          other.discountCode == this.discountCode &&
+          other.freezeAvailable == this.freezeAvailable &&
+          other.invitationAvailable == this.invitationAvailable &&
           other.subscriptionPayDate == this.subscriptionPayDate &&
           other.playerSubscriptionId == this.playerSubscriptionId &&
           other.beginningDate == this.beginningDate &&
@@ -2504,6 +2595,9 @@ class PlayersSubscriptionsCompanion
     extends UpdateCompanion<PlayersSubscription> {
   final Value<int?> subId;
   final Value<int> teamId;
+  final Value<String?> discountCode;
+  final Value<int> freezeAvailable;
+  final Value<int> invitationAvailable;
   final Value<DateTime> subscriptionPayDate;
   final Value<int> playerSubscriptionId;
   final Value<DateTime> beginningDate;
@@ -2515,6 +2609,9 @@ class PlayersSubscriptionsCompanion
   const PlayersSubscriptionsCompanion({
     this.subId = const Value.absent(),
     this.teamId = const Value.absent(),
+    this.discountCode = const Value.absent(),
+    this.freezeAvailable = const Value.absent(),
+    this.invitationAvailable = const Value.absent(),
     this.subscriptionPayDate = const Value.absent(),
     this.playerSubscriptionId = const Value.absent(),
     this.beginningDate = const Value.absent(),
@@ -2527,6 +2624,9 @@ class PlayersSubscriptionsCompanion
   PlayersSubscriptionsCompanion.insert({
     this.subId = const Value.absent(),
     required int teamId,
+    this.discountCode = const Value.absent(),
+    required int freezeAvailable,
+    required int invitationAvailable,
     required DateTime subscriptionPayDate,
     required int playerSubscriptionId,
     required DateTime beginningDate,
@@ -2536,6 +2636,8 @@ class PlayersSubscriptionsCompanion
     required int duration,
     required String billCollector,
   })  : teamId = Value(teamId),
+        freezeAvailable = Value(freezeAvailable),
+        invitationAvailable = Value(invitationAvailable),
         subscriptionPayDate = Value(subscriptionPayDate),
         playerSubscriptionId = Value(playerSubscriptionId),
         beginningDate = Value(beginningDate),
@@ -2547,6 +2649,9 @@ class PlayersSubscriptionsCompanion
   static Insertable<PlayersSubscription> custom({
     Expression<int>? subId,
     Expression<int>? teamId,
+    Expression<String>? discountCode,
+    Expression<int>? freezeAvailable,
+    Expression<int>? invitationAvailable,
     Expression<DateTime>? subscriptionPayDate,
     Expression<int>? playerSubscriptionId,
     Expression<DateTime>? beginningDate,
@@ -2559,6 +2664,10 @@ class PlayersSubscriptionsCompanion
     return RawValuesInsertable({
       if (subId != null) 'sub_id': subId,
       if (teamId != null) 'team_id': teamId,
+      if (discountCode != null) 'discount_code': discountCode,
+      if (freezeAvailable != null) 'freeze_available': freezeAvailable,
+      if (invitationAvailable != null)
+        'invitation_available': invitationAvailable,
       if (subscriptionPayDate != null)
         'subscription_pay_date': subscriptionPayDate,
       if (playerSubscriptionId != null)
@@ -2575,6 +2684,9 @@ class PlayersSubscriptionsCompanion
   PlayersSubscriptionsCompanion copyWith(
       {Value<int?>? subId,
       Value<int>? teamId,
+      Value<String?>? discountCode,
+      Value<int>? freezeAvailable,
+      Value<int>? invitationAvailable,
       Value<DateTime>? subscriptionPayDate,
       Value<int>? playerSubscriptionId,
       Value<DateTime>? beginningDate,
@@ -2586,6 +2698,9 @@ class PlayersSubscriptionsCompanion
     return PlayersSubscriptionsCompanion(
       subId: subId ?? this.subId,
       teamId: teamId ?? this.teamId,
+      discountCode: discountCode ?? this.discountCode,
+      freezeAvailable: freezeAvailable ?? this.freezeAvailable,
+      invitationAvailable: invitationAvailable ?? this.invitationAvailable,
       subscriptionPayDate: subscriptionPayDate ?? this.subscriptionPayDate,
       playerSubscriptionId: playerSubscriptionId ?? this.playerSubscriptionId,
       beginningDate: beginningDate ?? this.beginningDate,
@@ -2605,6 +2720,15 @@ class PlayersSubscriptionsCompanion
     }
     if (teamId.present) {
       map['team_id'] = Variable<int>(teamId.value);
+    }
+    if (discountCode.present) {
+      map['discount_code'] = Variable<String>(discountCode.value);
+    }
+    if (freezeAvailable.present) {
+      map['freeze_available'] = Variable<int>(freezeAvailable.value);
+    }
+    if (invitationAvailable.present) {
+      map['invitation_available'] = Variable<int>(invitationAvailable.value);
     }
     if (subscriptionPayDate.present) {
       map['subscription_pay_date'] =
@@ -2639,6 +2763,9 @@ class PlayersSubscriptionsCompanion
     return (StringBuffer('PlayersSubscriptionsCompanion(')
           ..write('subId: $subId, ')
           ..write('teamId: $teamId, ')
+          ..write('discountCode: $discountCode, ')
+          ..write('freezeAvailable: $freezeAvailable, ')
+          ..write('invitationAvailable: $invitationAvailable, ')
           ..write('subscriptionPayDate: $subscriptionPayDate, ')
           ..write('playerSubscriptionId: $playerSubscriptionId, ')
           ..write('beginningDate: $beginningDate, ')
@@ -2767,6 +2894,9 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           subscriptionId: row.read<int>('subscription_id'),
           subId: row.readNullable<int>('sub_id'),
           teamId: row.read<int>('team_id'),
+          discountCode: row.readNullable<String>('discount_code'),
+          freezeAvailable: row.read<int>('freeze_available'),
+          invitationAvailable: row.read<int>('invitation_available'),
           subscriptionPayDate: row.read<DateTime>('subscription_pay_date'),
           playerSubscriptionId: row.read<int>('player_subscription_id'),
           beginningDate: row.read<DateTime>('beginning_date'),
@@ -2835,6 +2965,9 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           subscriptionId: row.read<int>('subscription_id'),
           subId: row.readNullable<int>('sub_id'),
           teamId: row.readNullable<int>('team_id'),
+          discountCode: row.readNullable<String>('discount_code'),
+          freezeAvailable: row.readNullable<int>('freeze_available'),
+          invitationAvailable: row.readNullable<int>('invitation_available'),
           subscriptionPayDate:
               row.readNullable<DateTime>('subscription_pay_date'),
           playerSubscriptionId: row.readNullable<int>('player_subscription_id'),
@@ -2962,6 +3095,9 @@ class GetPlayerSubscriptionResult {
   final int subscriptionId;
   final int? subId;
   final int teamId;
+  final String? discountCode;
+  final int freezeAvailable;
+  final int invitationAvailable;
   final DateTime subscriptionPayDate;
   final int playerSubscriptionId;
   final DateTime beginningDate;
@@ -2983,6 +3119,9 @@ class GetPlayerSubscriptionResult {
     required this.subscriptionId,
     this.subId,
     required this.teamId,
+    this.discountCode,
+    required this.freezeAvailable,
+    required this.invitationAvailable,
     required this.subscriptionPayDate,
     required this.playerSubscriptionId,
     required this.beginningDate,
@@ -3018,6 +3157,9 @@ class GetEndedSubscriptionByTeamResult {
   final int subscriptionId;
   final int? subId;
   final int? teamId;
+  final String? discountCode;
+  final int? freezeAvailable;
+  final int? invitationAvailable;
   final DateTime? subscriptionPayDate;
   final int? playerSubscriptionId;
   final DateTime? beginningDate;
@@ -3039,6 +3181,9 @@ class GetEndedSubscriptionByTeamResult {
     required this.subscriptionId,
     this.subId,
     this.teamId,
+    this.discountCode,
+    this.freezeAvailable,
+    this.invitationAvailable,
     this.subscriptionPayDate,
     this.playerSubscriptionId,
     this.beginningDate,

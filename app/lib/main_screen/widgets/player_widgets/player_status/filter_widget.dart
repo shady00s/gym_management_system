@@ -34,8 +34,11 @@ class FilterNotifier extends StateNotifier<Map<String, dynamic>> {
 final filterNewProvider = StateNotifierProvider<FilterNotifier, Map<String, dynamic>>(
       (ref) => FilterNotifier(),
 );
-final emptyProvider = StateNotifierProvider<FilterNotifier, Map<String, dynamic>>(
-      (ref) => FilterNotifier(),
+final emptyProvider = StateProvider(
+      (ref) => null
+);
+final reSubscriptionProvider = StateProvider<String>(
+      (ref) => "0",
 );
 
 final filterEndedProvider = StateNotifierProvider<FilterNotifier, Map<String, dynamic>>(

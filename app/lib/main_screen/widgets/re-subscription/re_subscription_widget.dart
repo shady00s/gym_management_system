@@ -44,7 +44,7 @@ class ReSubscriptionWidget extends StatelessWidget {
                   ),
 
                   SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.7,
+                    height: MediaQuery.sizeOf(context).height * 0.85,
                     child: FutureBuilder<List<GetPlayerSubscriptionResult>>(future: PlayersDatabaseManager().getPlayerSubscriptionInfo(playerId),
                         builder: (BuildContext context, AsyncSnapshot<List<GetPlayerSubscriptionResult>> snapshot) {
 
@@ -66,7 +66,9 @@ class ReSubscriptionWidget extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       // player information
-                                      Expanded(
+                                      SizedBox(
+                                        width:MediaQuery.sizeOf(context).width * 0.25 ,
+                                        height:MediaQuery.sizeOf(context).height * 0.6,
                                         child: Card(
                                           backgroundColor:const Color.fromRGBO(
                                               3, 3, 3, 1.0),
@@ -166,50 +168,147 @@ class ReSubscriptionWidget extends StatelessWidget {
                                       Expanded(
                                         child: Card(backgroundColor:const Color.fromRGBO(
                                             4, 4, 4, 1.0),child:  Column(children: [
-                                          Text("Last subscription",style: TextStyle(fontSize: 21,fontWeight: FontWeight.bold),),
-                                          SizedBox(height: 20,),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                const   Text("Beginning date:"),
-                                                Text((DateFormat.yMMMEd().format(snapshot.data![0].beginningDate!)))
-                                              ],),
-                                          ),
+                                          const  Text("Last subscription",style: TextStyle(fontSize: 21,fontWeight: FontWeight.bold),),
+                                          const  SizedBox(height: 20,),
+                                          Card(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.all(8.0),
 
-                                          const Divider(),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                const    Text("end date:"),
-                                                Text(DateFormat.yMMMEd().format(snapshot.data![0].endDate!))
-                                              ],),
-                                          ),
-                                          const Divider(),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text("Duration :"),
-                                                Text(snapshot.data![0].duration == 1? "1 Month":snapshot.data![0].duration == 3?"3 Months":snapshot.data![0].duration == 6? "6 Months":snapshot.data![0].duration == 11?"1 session":snapshot.data![0].duration == 12?"1 Year":"Unknown")
-                                              ],),
-                                          ),
-                                          const Divider(),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text("Value :"),
-                                                Text(snapshot.data![0].billValue == -1? "Unknown" : snapshot.data![0].billValue.toString())
-                                              ],),
-                                          ),
+                                                      child: Icon(FluentIcons.bill,color: Colors.yellow,),
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
 
-                                          SizedBox(height: 20,),
+                                                      children: [
+                                                        Text(snapshot.data![0].duration == 1? "1 Month":snapshot.data![0].duration == 3?"3 Months":snapshot.data![0].duration == 6? "6 Months":snapshot.data![0].duration == 11?"1 session":snapshot.data![0].duration == 12?"1 Year":"Unknown",
+                                                          style: TextStyle(fontSize: 18),
+                                                        ),
+                                                        Padding(
+                                                          padding: const EdgeInsets.all(8.0),
+                                                          child: Text("no discount code"),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  ],),
+
+                                                  SizedBox(height: 10,),
+
+
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets.all(8.0),
+                                                              child: Icon(FluentIcons.timer,color: Colors.grey[90],),
+                                                            ),
+                                                            const   Text("Beginnig date:"),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 9,),
+                                                        Padding(
+                                                          padding: const EdgeInsets.symmetric(horizontal:12.0),
+                                                          child: Text((DateFormat.yMMMEd().format(snapshot.data![0].beginningDate))),
+                                                        )
+                                                      ],),
+                                                  ),
+
+                                                  const Divider(),
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets.all(8.0),
+                                                              child: Icon(FluentIcons.timer,color: Colors.grey[90],),
+                                                            ),
+                                                            const    Text("end date:"),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 9,),
+                                                        Padding(
+                                                          padding: const EdgeInsets.symmetric(horizontal:12.0),
+                                                          child: Text(DateFormat.yMMMEd().format(snapshot.data![0].endDate)),
+                                                        )
+                                                      ],),
+                                                  ),
+                                                  const Divider(),
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                      children: [
+                                                        Row(
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [ Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: Icon(FluentIcons.money,color: Colors.grey[90],),
+                                                          ),
+                                                            Text("Value :"),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 9,),
+                                                        Text(snapshot.data![0].billValue == -1? "Unknown" : snapshot.data![0].billValue.toString())
+                                                      ],),
+                                                  ),
+                                                  const Divider(),
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets.all(8.0),
+                                                              child: Icon(FluentIcons.snowflake,color: Colors.grey[90],),
+                                                            ),
+                                                            Text("Freeze left :"),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 9,),
+                                                        Text(snapshot.data![0].billValue == -1? "Unknown" : snapshot.data![0].billValue.toString())
+                                                      ],),
+                                                  ),
+                                                  const Divider(),
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                      children: [
+                                                        Row(children: [
+                                                          Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: Icon(FluentIcons.people,color: Colors.grey[90],),
+                                                          ),
+                                                          Text("Invitations left :"),
+                                                        ],),
+
+                                                        SizedBox(height: 9,),
+                                                        Text(snapshot.data![0].billValue == -1? "Unknown" : snapshot.data![0].billValue.toString())
+                                                      ],),
+                                                  ),
+                                                ],
+
+
+                                              )
+                                          ),
+                                          const   SizedBox(height: 20,),
                                           Text("Last player seen date",style: TextStyle(fontSize: 21,fontWeight: FontWeight.bold),),
                                           SizedBox(height: 10,),
                                             Consumer(

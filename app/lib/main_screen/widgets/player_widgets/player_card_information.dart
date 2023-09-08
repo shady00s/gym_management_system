@@ -69,7 +69,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   const  Text("First join date:"),
-                                  Text((DateFormat.yMMMMEEEEd().format(snapshot.data![0].playerFirstJoinDate) ).toString()),
+                                  Text((DateFormat.yMMMEd().format(snapshot.data![0].playerFirstJoinDate) ).toString()),
                                 ],
                               ),
 
@@ -135,28 +135,79 @@ class PlayerCardInformationWidget extends StatelessWidget {
                               itemCount: snapshot.data!.length,
                               itemBuilder: (context,index)=>Padding(
                                 padding: const EdgeInsets.all(8.0),
+
                                 child: Card(
                                   child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      Row(children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+
+                                          child: Icon(FluentIcons.bill,color: Colors.yellow,),
+                                        ),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+
+                                          children: [
+                                            Text(snapshot.data![index].duration == 1? "1 Month":snapshot.data![index].duration == 3?"3 Months":snapshot.data![index].duration == 6? "6 Months":snapshot.data![index].duration == 11?"1 session":snapshot.data![index].duration == 12?"1 Year":"Unknown",
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("no discount code"),
+                                            ),
+                                          ],
+                                        )
+                                      ],),
+
+                                        SizedBox(height: 10,),
+
 
                                       Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                        child: Row(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            const   Text("Beginning date:"),
-                                            Text((DateFormat.yMMMEd().format(snapshot.data![index].beginningDate!)))
+                                            Row(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Icon(FluentIcons.timer,color: Colors.grey[90],),
+                                                ),
+                                                const   Text("Beginnig date:"),
+                                              ],
+                                            ),
+                                            SizedBox(height: 9,),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal:12.0),
+                                              child: Text((DateFormat.yMMMEd().format(snapshot.data![index].beginningDate))),
+                                            )
                                           ],),
                                       ),
 
                                       const Divider(),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                        child: Row(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            const    Text("end date:"),
-                                            Text(DateFormat.yMMMEd().format(snapshot.data![index].endDate!))
+                                            Row(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Icon(FluentIcons.timer,color: Colors.grey[90],),
+                                                ),
+                                                const    Text("end date:"),
+                                              ],
+                                            ),
+                                            SizedBox(height: 9,),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal:12.0),
+                                              child: Text(DateFormat.yMMMEd().format(snapshot.data![index].endDate)),
+                                            )
                                           ],),
                                       ),
                                       const Divider(),
@@ -164,23 +215,68 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                         padding: const EdgeInsets.symmetric(vertical: 6.0),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
-                                            Text("Duration :"),
-                                            Text(snapshot.data![index].duration == 1? "1 Month":snapshot.data![index].duration == 3?"3 Months":snapshot.data![index].duration == 6? "6 Months":snapshot.data![index].duration == 11?"1 session":snapshot.data![index].duration == 12?"1 Year":"Unknown")
-                                          ],),
-                                      ),
-                                      const Divider(),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text("Value :"),
+                                            Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [ Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Icon(FluentIcons.money,color: Colors.grey[90],),
+                                              ),
+                                                Text("Value :"),
+                                              ],
+                                            ),
+                                            SizedBox(height: 9,),
                                             Text(snapshot.data![index].billValue == -1? "Unknown" : snapshot.data![index].billValue.toString())
                                           ],),
                                       ),
-                                    ],),
+                                      const Divider(),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Icon(FluentIcons.snowflake,color: Colors.grey[90],),
+                                                ),
+                                                Text("Freeze left :"),
+                                              ],
+                                            ),
+                                            SizedBox(height: 9,),
+                                            Text(snapshot.data![index].billValue == -1? "Unknown" : snapshot.data![index].billValue.toString())
+                                          ],),
+                                      ),
+                                      const Divider(),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Row(children: [
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Icon(FluentIcons.people,color: Colors.grey[90],),
+                                              ),
+                                              Text("Invitations left :"),
+                                            ],),
+
+                                            SizedBox(height: 9,),
+                                            Text(snapshot.data![index].billValue == -1? "Unknown" : snapshot.data![index].billValue.toString())
+                                          ],),
+                                      ),
+          ],
+
+
+                                  )
                                 ),
+                                // child: Card(
+
+                                // ),
                               )))
                         ],),
                       )),

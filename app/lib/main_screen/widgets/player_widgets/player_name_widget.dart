@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_card_information.dart';
 
+import '../invitation_widget.dart';
 import '../re-subscription/re_subscription_widget.dart';
 class PlayerNameWidget extends StatelessWidget {
   final  String playerName;
@@ -99,12 +100,18 @@ class OptionsMenu extends StatelessWidget {
               MenuFlyoutItem(
                 leading: const Icon(FluentIcons.stop),
                 text: const Text('Freeze'),
-                onPressed: Flyout.of(context).close,
+                onPressed: ()async{
+                  Navigator.pop(context);
+                  await showInvitationWidget(context,playerIndexId);
+                },
               ),
               MenuFlyoutItem(
                 leading: const Icon(FluentIcons.contact_heart),
                 text: const Text('Invitation'),
-                onPressed: Flyout.of(context).close,
+                onPressed: ()async{
+                  Navigator.pop(context);
+                  await showInvitationWidget(context,playerIndexId);
+                },
               )]);
           });
     },);

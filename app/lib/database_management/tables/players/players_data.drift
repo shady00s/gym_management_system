@@ -18,6 +18,9 @@ CREATE INDEX player_index_id_idx on Players(player_index_id);
 CREATE TABLE IF NOT EXISTS PlayersSubscriptions(
     sub_id INT PRIMARY KEY AUTOINCREMENT,
     team_id INT NOT NULL,
+    discount_code TEXT,
+    freeze_available INT NOT NULL,
+    invitation_available INT NOT NULL,
     subscription_pay_date  DATETIME NOT NULL,
     player_subscription_id INT NOT NULL,
     beginning_date DATETIME NOT NULL,
