@@ -151,7 +151,7 @@ class _ChartWidgetState extends State<ChartWidget> {
       child: MouseRegion(
         onHover: (event){
 
-          if(event.position < Offset(900,513.6)){
+          if(event.position < const Offset(900,513.6)){
             setState(() {
               topPosition = -100;
               leftProfitPosition = -100;
@@ -263,25 +263,25 @@ class _ChartWidgetState extends State<ChartWidget> {
                               left:leftProfitPosition,
                               bottom: topPosition,
                               child: Card(
-                                backgroundColor: Color.fromRGBO(28, 26, 26, 1.0),
+                                backgroundColor: const Color.fromRGBO(28, 26, 26, 1.0),
                                 child: Column(
                                   children: [
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Icon(FluentIcons.info,color: Colors.blue,),
-                                        SizedBox(width: 10,),
-                                        Text("Revenue for month ${currentMonth}"),
+                                        const SizedBox(width: 10,),
+                                        Text("Revenue for month $currentMonth"),
                                       ],
                                     ),
-                                    Text(currentRevenue.toString(),style: TextStyle(fontSize: 20),),
+                                    Text(currentRevenue.toString(),style: const TextStyle(fontSize: 20),),
                                   ],
                                 ),)),
 
                         ],
                       );
                     }
-                      return SizedBox();
+                      return const SizedBox();
 
                   }, error: (err,state) {
                    print(state);

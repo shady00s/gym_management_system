@@ -1,4 +1,3 @@
-import 'package:gym_management/database_management/tables/generate_table.dart';
 
 class NeedToReSubscribeModel{
 

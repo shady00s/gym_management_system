@@ -30,7 +30,7 @@ class SetCoachesWidget extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<List<TeamsDataTableData>> snapshot) {
           switch (snapshot.connectionState){
             case ConnectionState.none:
-              return Center(child: Text("Error occured"),);
+              return const Center(child: Text("Error occured"),);
             case ConnectionState.waiting:
             case ConnectionState.active:
               return const Center(child: ProgressRing(),);
@@ -82,8 +82,8 @@ class SetCoachesWidget extends StatelessWidget {
           width: MediaQuery.sizeOf(context).width * 0.95,
           height: MediaQuery.sizeOf(context).height * 0.52,
           child: Column(children: [
-                Text("All teams already found, you can change the data in teams manager"),
-                Button(child: Text("Continue to finish data"), onPressed: (){
+                const Text("All teams already found, you can change the data in teams manager"),
+                Button(child: const Text("Continue to finish data"), onPressed: (){
                   int index = ExcelFileCubit.get(context).currentIndex;
                   ExcelFileCubit.get(context).incrementNumber(index +1);
                 })

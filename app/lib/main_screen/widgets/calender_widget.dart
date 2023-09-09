@@ -77,11 +77,11 @@ class _CalenderWidgetState extends State<CalenderWidget> {
 
         switch (snapshot.connectionState){
           case ConnectionState.none:
-            return Center(child: Text("Error occured"),);
+            return const Center(child: Text("Error occured"),);
           case ConnectionState.waiting:
           case ConnectionState.active:
 
-            return Center(child: ProgressRing(),);
+            return const Center(child: ProgressRing(),);
           case ConnectionState.done:
             return SizedBox(
               width: 390,

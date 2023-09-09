@@ -44,7 +44,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Name:"),
+                                  const Text("Name:"),
                                   Text(snapshot.data![0].playerName),
                                 ],
                               ),
@@ -52,19 +52,19 @@ class PlayerCardInformationWidget extends StatelessWidget {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("ID:"),
+                                  const Text("ID:"),
                                   Text((snapshot.data![0].playerId).toString()),
                                 ],
                               ),
-                              SizedBox(height: 14,),
+                              const SizedBox(height: 14,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Phone number:"),
+                                  const Text("Phone number:"),
                                   Text((snapshot.data![0].playerPhoneNumber != -3?snapshot.data![0].playerPhoneNumber:"unrecorded").toString()),
                                 ],
                               ),
-                              SizedBox(height: 14,),
+                              const SizedBox(height: 14,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -92,9 +92,9 @@ class PlayerCardInformationWidget extends StatelessWidget {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Expanded(
+                                  const Expanded(
                                       flex: 1,
-                                      child: const  Text("Teams:")),
+                                      child: Text("Teams:")),
                                   Expanded(
 
                                       child: FutureBuilder<List<TeamsDataTableData>>(
@@ -128,7 +128,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                       Expanded(flex:2,child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(children: [
-                          Text("Subscriptions history:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 21),),
+                          const Text("Subscriptions history:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 21),),
                           const SizedBox(height: 14,),
 
                           Expanded(flex:2,child: ListView.builder(
@@ -151,17 +151,17 @@ class PlayerCardInformationWidget extends StatelessWidget {
 
                                           children: [
                                             Text(snapshot.data![index].duration == 1? "1 Month":snapshot.data![index].duration == 3?"3 Months":snapshot.data![index].duration == 6? "6 Months":snapshot.data![index].duration == 11?"1 session":snapshot.data![index].duration == 12?"1 Year":"Unknown",
-                                              style: TextStyle(fontSize: 18),
+                                              style: const TextStyle(fontSize: 18),
                                             ),
-                                            Padding(
-                                              padding: const EdgeInsets.all(8.0),
+                                            const Padding(
+                                              padding: EdgeInsets.all(8.0),
                                               child: Text("no discount code"),
                                             ),
                                           ],
                                         )
                                       ],),
 
-                                        SizedBox(height: 10,),
+                                        const SizedBox(height: 10,),
 
 
                                       Padding(
@@ -179,7 +179,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                                 const   Text("Beginnig date:"),
                                               ],
                                             ),
-                                            SizedBox(height: 9,),
+                                            const SizedBox(height: 9,),
                                             Padding(
                                               padding: const EdgeInsets.symmetric(horizontal:12.0),
                                               child: Text((DateFormat.yMMMEd().format(snapshot.data![index].beginningDate))),
@@ -203,7 +203,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                                 const    Text("end date:"),
                                               ],
                                             ),
-                                            SizedBox(height: 9,),
+                                            const SizedBox(height: 9,),
                                             Padding(
                                               padding: const EdgeInsets.symmetric(horizontal:12.0),
                                               child: Text(DateFormat.yMMMEd().format(snapshot.data![index].endDate)),
@@ -223,10 +223,10 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                                 padding: const EdgeInsets.all(8.0),
                                                 child: Icon(FluentIcons.money,color: Colors.grey[90],),
                                               ),
-                                                Text("Value :"),
+                                                const Text("Value :"),
                                               ],
                                             ),
-                                            SizedBox(height: 9,),
+                                            const SizedBox(height: 9,),
                                             Text(snapshot.data![index].billValue == -1? "Unknown" : snapshot.data![index].billValue.toString())
                                           ],),
                                       ),
@@ -243,10 +243,10 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                                   padding: const EdgeInsets.all(8.0),
                                                   child: Icon(FluentIcons.snowflake,color: Colors.grey[90],),
                                                 ),
-                                                Text("Freeze left :"),
+                                                const Text("Freeze left :"),
                                               ],
                                             ),
-                                            SizedBox(height: 9,),
+                                            const SizedBox(height: 9,),
                                             Text(snapshot.data![index].billValue == -1? "Unknown" : snapshot.data![index].billValue.toString())
                                           ],),
                                       ),
@@ -262,10 +262,10 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                                 padding: const EdgeInsets.all(8.0),
                                                 child: Icon(FluentIcons.people,color: Colors.grey[90],),
                                               ),
-                                              Text("Invitations left :"),
+                                              const Text("Invitations left :"),
                                             ],),
 
-                                            SizedBox(height: 9,),
+                                            const SizedBox(height: 9,),
                                             Text(snapshot.data![index].billValue == -1? "Unknown" : snapshot.data![index].billValue.toString())
                                           ],),
                                       ),
@@ -284,7 +284,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                         Expanded(flex:3,child: Padding(
                         padding:const  EdgeInsets.all(8.0),
                         child: Column(children: [
-                          Text("Player logs history:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 21),),
+                          const Text("Player logs history:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 21),),
                           const  SizedBox(height: 14,),
                           CalenderWidget(playerIndexId: snapshot.data![0].playerIndexId, teamId:snapshot.data![0].teamId ,)
                         ],),

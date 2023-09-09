@@ -61,10 +61,10 @@ class PlayerNameWithImage extends StatelessWidget {
                 children: [
                   OptionsMenu( menuController,playerIndexId),
                   const Spacer(),
-                  Text(playerName??"No name"),
-                  Text(" - $playerId "??"no id"),
+                  Text(playerName),
+                  Text(" - $playerId "),
                   const  SizedBox(width: 9,),
-                    imagePath !="no image"?Image(image: NetworkImage(imagePath),):CircleAvatar(
+                    imagePath !="no image"?Image(image: NetworkImage(imagePath),):const CircleAvatar(
                       radius: 17,
                       backgroundColor: Color.fromRGBO(
                           176, 175, 175, 0.7019607843137254),

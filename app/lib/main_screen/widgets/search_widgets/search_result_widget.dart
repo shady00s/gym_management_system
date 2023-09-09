@@ -28,9 +28,9 @@ class SearchResultWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(FluentIcons.search_data,size: 55,color: Colors.grey[100],),
-                    Text("no result"),
+                    const Text("no result"),
                   ],
-                )), error: (err,stack)=>Text(err.toString()), loading:()=> Center(child: ProgressBar(),));
+                )), error: (err,stack)=>Text(err.toString()), loading:()=> const Center(child: ProgressBar(),));
           },))
 
         ],);

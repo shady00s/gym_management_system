@@ -43,12 +43,12 @@ class _HomeWidgetState extends State<HomeWidget> {
                         Tab(text:Text(e.teamName) ,closeIcon: null, body:  HomeTabWidget(teamId: e.teamId,))).toList());
 
               }else{
-                return Center(child: Text("No Teams Found"),);
+                return const Center(child: Text("No Teams Found"),);
               }
             case ConnectionState.waiting:
-              return Center(child: ProgressBar(),);
+              return const Center(child: ProgressBar(),);
             default:
-              return Center(child: ProgressBar(),);
+              return const Center(child: ProgressBar(),);
 
           }
         }
@@ -88,7 +88,7 @@ class HomeTabWidget extends StatelessWidget {
                           ListView.builder(
                           itemCount: data.length,
                           itemBuilder: (context, index){
-                            return  PlayerNameWithImage(playerName: data[index].playerName, playerId: data[index].playerId, imagePath: data[index].imagePath!, playerIndexId: data[index].playerIndexId!);
+                            return  PlayerNameWithImage(playerName: data[index].playerName, playerId: data[index].playerId, imagePath: data[index].imagePath, playerIndexId: data[index].playerIndexId);
                           }
 
                       ) :const Center(child: Text("No Data found"),)
@@ -101,10 +101,10 @@ class HomeTabWidget extends StatelessWidget {
               child: Column(
                 children: [
                   Expanded(flex: 4, child: SearchWidget(teamId: teamId,)),
-                  Align(
+                  const Align(
                     alignment: AlignmentDirectional.topStart,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text("Quick access"),
                     ),
                   ),

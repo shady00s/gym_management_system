@@ -139,15 +139,15 @@ class EmployeesData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['employee_id'] = this.employeeId;
-    data['employee_name'] = this.employeeName;
-    data['employee_phone_number'] = this.employeePhoneNumber;
-    data['employee_specialization'] = this.employeeSpecialization;
-    data['employee_position'] = this.employeePosition;
-    data['employee_salary'] = this.employeeSalary;
-    data['employee_address'] = this.employeeAddress;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['employee_id'] = employeeId;
+    data['employee_name'] = employeeName;
+    data['employee_phone_number'] = employeePhoneNumber;
+    data['employee_specialization'] = employeeSpecialization;
+    data['employee_position'] = employeePosition;
+    data['employee_salary'] = employeeSalary;
+    data['employee_address'] = employeeAddress;
     return data;
   }
 }
@@ -166,10 +166,10 @@ class PlayerTeamFromDB {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['team_id'] = this.teamId;
-    data['team_player_id'] = this.teamPlayerId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['team_id'] = teamId;
+    data['team_player_id'] = teamPlayerId;
     return data;
   }
 }

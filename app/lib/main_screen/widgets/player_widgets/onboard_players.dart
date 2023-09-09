@@ -1,9 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/database_management/tables/generate_table.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/need_resbscribe_player_name_widget.dart';
-import 'package:gym_management/main_screen/widgets/player_widgets/player_name_widget.dart';
 
-import '../../../database_management/models/need_to_resubscribe_model.dart';
 
 class OnBoardPlayers extends StatelessWidget {
   final String title;
@@ -25,7 +23,7 @@ class OnBoardPlayers extends StatelessWidget {
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
-                        return Center(
+                        return const Center(
                           child: ProgressRing(),
                         );
                       case ConnectionState.done:
@@ -56,13 +54,13 @@ class OnBoardPlayers extends StatelessWidget {
                      endDate:snapshot.data![index].endDate!, playerIndexId: snapshot.data![index].playerIndexId ,))))
                           ]);
                         } else {
-                          return Center(
+                          return const Center(
                             child: Text("No players found"),
                           );
                         }
 
                       default:
-                        return Center(
+                        return const Center(
                           child: ProgressBar(),
                         );
                     }

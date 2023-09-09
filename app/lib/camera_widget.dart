@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:camera_platform_interface/camera_platform_interface.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -230,7 +229,7 @@ class _TakeNewPhotoState extends State<TakeNewPhoto> {
         builder:(context,exit){
           return InfoBar(
             severity: InfoBarSeverity.warning,
-            content: Text('Error: ${event.description}'), title: Text("Error"),);
+            content: Text('Error: ${event.description}'), title: const Text("Error"),);
         }
 
       );
@@ -248,7 +247,7 @@ class _TakeNewPhotoState extends State<TakeNewPhoto> {
 
   void _showInSnackBar(String message) {
     displayInfoBar( context, builder: (context, close) {
-      return InfoBar(title: Text('warning'),content: Text(message),);
+      return InfoBar(title: const Text('warning'),content: Text(message),);
     });
   }
 

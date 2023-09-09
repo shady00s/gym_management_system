@@ -1,7 +1,7 @@
 import 'dart:core';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gym_management/main_screen/widgets/player_widgets/player_status/activePlayers.dart';
+import 'package:gym_management/main_screen/widgets/player_widgets/player_status/active_players.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_status/ended_subscription_players.dart';
 import 'new_players.dart';
 
@@ -26,7 +26,7 @@ class GenderModel {
 }
 
 List<DurationModel> durationList = [
-  DurationModel(title:"Today",value: DurationTime(begDate:DateTime.now().subtract(Duration(days: 2)),endDate: DateTime.now() ) ),
+  DurationModel(title:"Today",value: DurationTime(begDate:DateTime.now().subtract(const Duration(days: 2)),endDate: DateTime.now() ) ),
   DurationModel(title:"Past 10 days",value: DurationTime(begDate:DateTime.now().subtract(const Duration(days: 10)),endDate: DateTime.now() )),
   DurationModel(title:"Past 20 days",value: DurationTime(begDate:DateTime.now().subtract(const Duration(days: 20)),endDate: DateTime.now() )),
   DurationModel(title:"Past 1 month",value: DurationTime(begDate:DateTime.now().subtract(Duration(  days: DateTime.now().difference(DateTime.now().subtract(const Duration(days: 30))).inDays )),endDate: DateTime.now() )),

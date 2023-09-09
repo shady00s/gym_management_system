@@ -37,7 +37,7 @@ class NewPlayersWidget extends StatelessWidget {
                           style: const TextStyle(
                               fontSize: 36,
                               fontWeight: FontWeight.w500)),
-                      Text("New players  ")
+                      const Text("New players  ")
                     ],
                   ),
                 ),
@@ -104,7 +104,7 @@ class NewPlayersWidget extends StatelessWidget {
           ),
         ),
 
-        SizedBox(width: 22),
+        const SizedBox(width: 22),
       ],
     );
   }

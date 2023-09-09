@@ -1,7 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/database_management/tables/gym_player_logs/gym_log_manager.dart';
-import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 
 import '../home_widget.dart';
 

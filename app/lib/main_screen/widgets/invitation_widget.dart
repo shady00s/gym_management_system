@@ -47,7 +47,7 @@ class InvitationWidget extends StatelessWidget {
 
           // guest information
 
-          Text("Guest information"),
+          const Text("Guest information"),
           StatefulBuilder(builder: (context,setState)=>Form(
             child: SingleChildScrollView(
               child: Column(
@@ -56,11 +56,11 @@ class InvitationWidget extends StatelessWidget {
                 children: [
                   // select player image
                   const Padding(padding: EdgeInsets.all(8),child: Text("Player image",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 19),)),
-                  TakeNewImageWidget(path: 'players_images'),
+                 const TakeNewImageWidget(path: 'players_images'),
                   const  Divider(),
                   const SizedBox(height: 12,),
                   // player name
-                  Padding(padding: EdgeInsets.all(8),child: Text("Player name",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 19),)),
+                  const Padding(padding: EdgeInsets.all(8),child: Text("Player name",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 19),)),
                   Row(children: [
                     Expanded(child: TextFormBox( placeholder: "first name",)),
                     const SizedBox(width: 10,),
@@ -71,7 +71,7 @@ class InvitationWidget extends StatelessWidget {
                   const   Divider(),
                   const    SizedBox(height: 12,),
                   //phone number
-                  Padding(padding: EdgeInsets.all(8),child: Text("Phone number",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 19),)),
+                  const Padding(padding: EdgeInsets.all(8),child: Text("Phone number",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 19),)),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormBox( placeholder: "first name",),
@@ -89,7 +89,7 @@ class InvitationWidget extends StatelessWidget {
                             gender = data!;
                           });
                         },
-                        items: [ComboBoxItem(value:"Male", child: Text("Male")),
+                        items: const [ComboBoxItem(value:"Male", child: Text("Male")),
                           ComboBoxItem(value:"Female",child: Text("Female"))]),
                   ),
                   const  Divider(),
@@ -99,8 +99,8 @@ class InvitationWidget extends StatelessWidget {
                   const   Divider(),
                   const  SizedBox(height: 21,),
                   Center(
-                    child: FilledButton(child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    child: FilledButton(child: const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Text("Add player"),
                     ), onPressed: (){}),
                   )

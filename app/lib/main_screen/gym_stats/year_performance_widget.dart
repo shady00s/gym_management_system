@@ -5,10 +5,10 @@ import 'package:gym_management/main_screen/widgets/combo_box_widget.dart';
 import 'chart_widget.dart';
 List<CustomBoxData> yearList = [
   CustomBoxData(title: DateTime.now().year.toString(), id: DateTime.now().year) ,
-  CustomBoxData(title:DateTime.now().subtract(Duration(days: 365)).year.toString(),id: DateTime.now().subtract(Duration(days: 365)).year),
-  CustomBoxData(title:DateTime.now().subtract(Duration(days: 730)).year.toString(),id: DateTime.now().subtract(Duration(days: 730)).year),
-  CustomBoxData(title:DateTime.now().subtract(Duration(days: 1095)).year.toString(),id: DateTime.now().subtract(Duration(days: 1095)).year),
-  CustomBoxData(title:DateTime.now().subtract(Duration(days: 1460)).year.toString(),id: DateTime.now().subtract(Duration(days: 1460)).year),
+  CustomBoxData(title:DateTime.now().subtract(const Duration(days: 365)).year.toString(),id: DateTime.now().subtract(const Duration(days: 365)).year),
+  CustomBoxData(title:DateTime.now().subtract(const Duration(days: 730)).year.toString(),id: DateTime.now().subtract(const Duration(days: 730)).year),
+  CustomBoxData(title:DateTime.now().subtract(const Duration(days: 1095)).year.toString(),id: DateTime.now().subtract(const Duration(days: 1095)).year),
+  CustomBoxData(title:DateTime.now().subtract(const Duration(days: 1460)).year.toString(),id: DateTime.now().subtract(const Duration(days: 1460)).year),
 ];
 
 
@@ -50,7 +50,7 @@ class YearPerformanceWidget extends StatelessWidget {
                 Text("Total revenue"),
               ],),),)
           ,
-          Text("Year profit summary",style: TextStyle(fontWeight: FontWeight.bold),),
+          const Text("Year profit summary",style: TextStyle(fontWeight: FontWeight.bold),),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -66,15 +66,15 @@ class YearPerformanceWidget extends StatelessWidget {
               width: 300,
                     child: Card(child: ListTile(
                         leading: Icon(FluentIcons.medal_solid,color: Colors.yellow,),
-                        title:Text("March",style: TextStyle(fontSize: 19)),subtitle:  Text("Best profit",style: TextStyle(fontSize: 14),),trailing:Column(
+                        title:const Text("March",style: TextStyle(fontSize: 19)),subtitle:  const Text("Best profit",style: TextStyle(fontSize: 14),),trailing:Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        RichText(text: TextSpan(text: "Profit: ",children: [ TextSpan(text: '23000')]),),
-                        SizedBox(height: 8,),
-                        RichText(text: TextSpan(text: "Loss: ",children: [ TextSpan(text: '13000')]),),
-                        SizedBox(height: 12,),
-                        Divider(),
-                        RichText(text: TextSpan(text: "Revenue: ",children: [ TextSpan(text: '13000')]),),
+                        RichText(text: const TextSpan(text: "Profit: ",children: [ TextSpan(text: '23000')]),),
+                        const SizedBox(height: 8,),
+                        RichText(text: const TextSpan(text: "Loss: ",children: [ TextSpan(text: '13000')]),),
+                        const SizedBox(height: 12,),
+                        const Divider(),
+                        RichText(text: const TextSpan(text: "Revenue: ",children: [ TextSpan(text: '13000')]),),
                       ],
                     ))),
                   ),
@@ -87,15 +87,15 @@ class YearPerformanceWidget extends StatelessWidget {
                     width: 300,
                     child: Card(child: ListTile(
                       leading: Icon(FluentIcons.arrow_tall_down_left,color: Colors.orange,),
-                      title:Text("May",style: TextStyle(fontSize: 19)),subtitle:  Text("least profit",style: TextStyle(fontSize: 14),),trailing:Column(
+                      title:const Text("May",style: TextStyle(fontSize: 19)),subtitle:  const Text("least profit",style: TextStyle(fontSize: 14),),trailing:Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      RichText(text: TextSpan(text: "Profit: ",children: [ TextSpan(text: '23000')]),),
-                      SizedBox(height: 8,),
-                      RichText(text: TextSpan(text: "Loss: ",children: [ TextSpan(text: '13000')]),),
-                      SizedBox(height: 12,),
-                      Divider(),
-                      RichText(text: TextSpan(text: "Revenue: ",children: [ TextSpan(text: '13000')]),),
+                      RichText(text: const TextSpan(text: "Profit: ",children: [ TextSpan(text: '23000')]),),
+                      const SizedBox(height: 8,),
+                      RichText(text: const TextSpan(text: "Loss: ",children: [ TextSpan(text: '13000')]),),
+                      const SizedBox(height: 12,),
+                      const Divider(),
+                      RichText(text: const TextSpan(text: "Revenue: ",children: [ TextSpan(text: '13000')]),),
                     ],
                   )))),
                 ),
@@ -107,15 +107,15 @@ class YearPerformanceWidget extends StatelessWidget {
                       width: 300,
                       child:  Card(child: ListTile(
                       leading: Icon(FluentIcons.warning,color: Colors.yellow,),
-                      title:Text("May"),subtitle:  Text("expensive month"),trailing:Column(
+                      title:const Text("May"),subtitle:  const Text("expensive month"),trailing:Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      RichText(text: TextSpan(text: "Profit: ",children: [ TextSpan(text: '23000')]),),
-                      SizedBox(height: 8,),
-                      RichText(text: TextSpan(text: "Loss: ",children: [ TextSpan(text: '13000')]),),
-                      SizedBox(height: 12,),
-                      Divider(),
-                      RichText(text: TextSpan(text: "Revenue: ",children: [ TextSpan(text: '13000')]),),
+                      RichText(text: const TextSpan(text: "Profit: ",children: [ TextSpan(text: '23000')]),),
+                      const SizedBox(height: 8,),
+                      RichText(text: const TextSpan(text: "Loss: ",children: [ TextSpan(text: '13000')]),),
+                      const SizedBox(height: 12,),
+                      const Divider(),
+                      RichText(text: const TextSpan(text: "Revenue: ",children: [ TextSpan(text: '13000')]),),
                     ],
                 )))),
                   ),
@@ -127,22 +127,22 @@ class YearPerformanceWidget extends StatelessWidget {
                       width: 300,
                       child:  Card(child: ListTile(
                       leading: Icon(FluentIcons.accept,color: Colors.green,),
-                      title:Text("May"),subtitle:  Text("least expensive"),trailing:Column(
+                      title:const Text("May"),subtitle:  const Text("least expensive"),trailing:Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      RichText(text: TextSpan(text: "Profit: ",children: [ TextSpan(text: '23000')]),),
-                      SizedBox(height: 8,),
-                      RichText(text: TextSpan(text: "Loss: ",children: [ TextSpan(text: '13000')]),),
-                      SizedBox(height: 12,),
-                      Divider(),
-                      RichText(text: TextSpan(text: "Revenue: ",children: [ TextSpan(text: '13000')]),),
+                      RichText(text: const TextSpan(text: "Profit: ",children: [ TextSpan(text: '23000')]),),
+                      const SizedBox(height: 8,),
+                      RichText(text: const TextSpan(text: "Loss: ",children: [ TextSpan(text: '13000')]),),
+                      const SizedBox(height: 12,),
+                      const Divider(),
+                      RichText(text: const TextSpan(text: "Revenue: ",children: [ TextSpan(text: '13000')]),),
                     ],
                 )))),
                   ),
 
               ],)),
 
-            ChartWidget()
+            const ChartWidget()
           ],)
 
 

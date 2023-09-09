@@ -1,12 +1,9 @@
 import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:camera_windows/camera_windows.dart';
-import 'package:gym_management/camera_widget.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_status/filter_element.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_status/filter_widget.dart';
 import 'package:gym_management/main_screen/widgets/take_new_image_widget.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../database_management/tables/subscriptions/subscriptions_information_manager.dart';
 
@@ -28,7 +25,7 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
   @override
   Widget build(BuildContext context) {
     return  ContentDialog(
-      style: ContentDialogThemeData(
+      style: const ContentDialogThemeData(
 
           decoration: BoxDecoration(color: Color.fromRGBO(
               16, 15, 15, 1.0)) ),
@@ -36,8 +33,8 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
         children: [
-          Text("Add new player"),
-          IconButton(icon: Icon(FluentIcons.cancel), onPressed: (){
+          const Text("Add new player"),
+          IconButton(icon: const Icon(FluentIcons.cancel), onPressed: (){
             Navigator.pop(context);
           })
         ],
@@ -54,11 +51,11 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                 children: [
                   // select player image
                   const Padding(padding: EdgeInsets.all(8),child: Text("Player image",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 19),)),
-                    TakeNewImageWidget(path: 'players_images'),
+                    const TakeNewImageWidget(path: 'players_images'),
                 const  Divider(),
                   const SizedBox(height: 12,),
                   // player name
-                  Padding(padding: EdgeInsets.all(8),child: Text("Player name",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 19),)),
+                  const Padding(padding: EdgeInsets.all(8),child: Text("Player name",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 19),)),
                   Row(children: [
                     Expanded(child: TextFormBox( placeholder: "first name",)),
                    const SizedBox(width: 10,),
@@ -69,7 +66,7 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                   const   Divider(),
                   const    SizedBox(height: 12,),
                   //phone number
-                  Padding(padding: EdgeInsets.all(8),child: Text("Phone number",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 19),)),
+                  const Padding(padding: EdgeInsets.all(8),child: Text("Phone number",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 19),)),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormBox( placeholder: "first name",),
@@ -87,14 +84,14 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                               gender = data!;
                             });
                         },
-                        items: [ComboBoxItem(value:"Male", child: Text("Male")),
+                        items: const [ComboBoxItem(value:"Male", child: Text("Male")),
                           ComboBoxItem(value:"Female",child: Text("Female"))]),
                   ),
                   const  Divider(),
                   const SizedBox(height: 12,),
 
                   // player subscription
-                  Padding(padding: EdgeInsets.all(8),child: Text("Player subscription",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 19),)),
+                  const Padding(padding: EdgeInsets.all(8),child: Text("Player subscription",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 19),)),
 
                   FilterElement(
                       future:SubscriptionInformationManager().getAllSubscriptions(),
@@ -109,8 +106,8 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                   const   Divider(),
                   const  SizedBox(height: 21,),
                   Center(
-                    child: FilledButton(child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    child: FilledButton(child: const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Text("Add player"),
                     ), onPressed: (){}),
                   )

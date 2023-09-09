@@ -154,7 +154,7 @@ class _StepsWidgetState extends State<StepsWidget> {
                             child:const Text("Continue"),),
                           const SizedBox( width: 14,),
                           Button(onPressed: details.onStepCancel,
-                            child: Text("Cancel"),)
+                            child: const Text("Cancel"),)
                         ],),
                       );
                     }
@@ -165,7 +165,7 @@ class _StepsWidgetState extends State<StepsWidget> {
 
                       await  loadingDialog(context ,newNumber,ExcelFileCubit.get(context).sendFileToServer(),state);
                     }else if(state.excelFile ==null){
-                      material.showDialog(context: context, builder:(context)=> ContentDialog(content:const Text("please select one file to continue"),actions: [Button(child: Text("Okay"), onPressed: (){Navigator.pop(context);})],));
+                      material.showDialog(context: context, builder:(context)=> ContentDialog(content:const Text("please select one file to continue"),actions: [Button(child: const Text("Okay"), onPressed: (){Navigator.pop(context);})],));
                     }
 
                     else if(state.selectedList.isNotEmpty && state.currentIndex == 1){
@@ -204,7 +204,7 @@ class _StepsWidgetState extends State<StepsWidget> {
                   steps:  [
                     material.Step(
                         isActive: state.currentIndex == 0,
-                        title: Text("Import Excel file"),
+                        title: const Text("Import Excel file"),
                         content:const ImportExcelStep()),
                     material.Step(
                         isActive: state.currentIndex == 1,

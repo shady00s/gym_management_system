@@ -18,7 +18,7 @@ class PlayersListWidget extends StatelessWidget {
 
           switch(snapshot.connectionState){
             case ConnectionState.waiting:
-              return Center(child: ProgressRing(),);
+              return const Center(child: ProgressRing(),);
 
             case ConnectionState.done:
               if(snapshot.hasData){
@@ -37,12 +37,12 @@ class PlayersListWidget extends StatelessWidget {
                   ],
                 ) ;
               }else{
-                return Center(child: Text("No data found"),);
+                return const Center(child: Text("No data found"),);
               }
 
 
             default:
-              return Center(child: ProgressBar(),);
+              return const Center(child: ProgressBar(),);
           }
 
         }

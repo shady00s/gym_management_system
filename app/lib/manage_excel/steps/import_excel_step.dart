@@ -48,24 +48,24 @@ class _ImportExcelStepState extends State<ImportExcelStep> {
                         children: [
                         selectedFile == null? SizedBox(child: Column(children: [
                             Icon(FluentIcons.file_template,color: Colors.grey[90],size: 26,),
-                            SizedBox(height: 12,),
+                            const SizedBox(height: 12,),
 
                             Text( "Drag and Drop file",style: TextStyle(color: Colors.grey[90]),),
 
-                            SizedBox(height:20,),
-                            SizedBox(width:200,child:
+                            const SizedBox(height:20,),
+                            const SizedBox(width:200,child:
                             Row(
                               mainAxisSize:MainAxisSize.min,
                               children: [
                                 DecoratedBox(decoration: BoxDecoration(color: Colors.grey,),child: SizedBox(height: 1,width: 70,),)
                                 ,
                                 Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: EdgeInsets.all(8.0),
                                   child: Text("OR"),
                                 ),
                                 DecoratedBox(decoration: BoxDecoration(color: Colors.grey,),child: SizedBox(height: 1,width: 70,),)
                               ],) ,),
-                            SizedBox(height:20,),
+                            const SizedBox(height:20,),
 
                           ],),): SizedBox(
                           width: MediaQuery.sizeOf(context).width * 0.32,
@@ -73,38 +73,38 @@ class _ImportExcelStepState extends State<ImportExcelStep> {
                             children: [
 
                             Icon(FluentIcons.file_comment,color: Colors.grey[30],size: 85,),
-                              SizedBox(height: 20,),
+                              const SizedBox(height: 20,),
 
                               Row(
                               children: [
-                              Text("Name: "),
-                                SizedBox(width: 60,),
+                              const Text("Name: "),
+                                const SizedBox(width: 60,),
 
                                 Text(fileDetails?.name??"",),
                             ],),
-                            SizedBox(height: 20,),
+                            const SizedBox(height: 20,),
                             Row(
 
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                              Text("Path: "),
-                                SizedBox(width: 60,),
+                              const Text("Path: "),
+                                const SizedBox(width: 60,),
 
                                 SizedBox(width: 290,child: Text(selectedFile?.path??"",)),
                             ],),
-                            SizedBox(height: 20,),
+                            const SizedBox(height: 20,),
 
 
                           ],),
                         ),
-                          SizedBox(height: 20,),
+                          const SizedBox(height: 20,),
 
                           Row(
                             mainAxisSize:MainAxisSize.min,
                             children: [
                               Text(fileDetails?.name??"Choose Excel file"),
-                              SizedBox(width: 12,),
-                              SizedBox(width: 12,),
+                              const SizedBox(width: 12,),
+                              const SizedBox(width: 12,),
                               Button(child: Text(selectedFile== null? "Select file":"Change file"), onPressed: ()async{
                                 await FilePicker.platform.pickFiles(
                                    type: FileType.custom ,

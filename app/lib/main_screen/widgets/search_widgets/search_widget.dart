@@ -10,7 +10,7 @@ class SearchWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return  Column(
       children: [
-        Text("Search"),
+        const Text("Search"),
 
        const SearchBarWidget(),
            Expanded(child: PlayersListWidget(teamId: teamId,))

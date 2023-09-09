@@ -50,7 +50,7 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                   await showDialog(
                       context: context,
                       builder: (context) => ContentDialog(
-                          title: Text("Subscription info"),
+                          title: const Text("Subscription info"),
                           content: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Form(
@@ -93,7 +93,7 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                   const SizedBox(
                                     height: 8,
                                   ),
-                                  Text("Set subscription duration"),
+                                  const Text("Set subscription duration"),
                                   const SizedBox(
                                     height: 8,
                                   ),
@@ -132,16 +132,16 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                                   return null;
                                                 },
                                               )),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 20,
                                           ),
-                                          Text("Days")
+                                          const Text("Days")
                                         ],
                                       )),
                                   const SizedBox(
                                     height: 21,
                                   ),
-                                  Text("Set subscription value"),
+                                  const Text("Set subscription value"),
                                   const SizedBox(
                                     height: 8,
                                   ),
@@ -181,16 +181,16 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                                   return null;
                                                 },
                                               )),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 20,
                                           ),
-                                          Text("LE")
+                                          const Text("LE")
                                         ],
                                       )),
                                   const SizedBox(
                                     height: 21,
                                   ),
-                                  Text("Set freeze limit"),
+                                  const Text("Set freeze limit"),
                                   const SizedBox(
                                     height: 8,
                                   ),
@@ -230,16 +230,16 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                                   return null;
                                                 },
                                               )),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 20,
                                           ),
-                                          Text("Days")
+                                          const Text("Days")
                                         ],
                                       )),
                                   const SizedBox(
                                     height: 21,
                                   ),
-                                  Text("Set number of invitations"),
+                                  const Text("Set number of invitations"),
                                   const SizedBox(
                                     height: 8,
                                   ),
@@ -280,10 +280,10 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                                   return null;
                                                 },
                                               )),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 20,
                                           ),
-                                          Text("Invitations")
+                                          const Text("Invitations")
                                         ],
                                       )),
                                   const SizedBox(
@@ -325,8 +325,8 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
 
 
                                       Button(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
+                                          child: const Padding(
+                                            padding: EdgeInsets.all(8.0),
                                             child: Text("Cancel"),
                                           ),
                                           onPressed: () {
@@ -345,25 +345,25 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(widget.data.subscriptionName),
-                      IconButton(icon: Icon(FluentIcons.delete), onPressed: () async{
-                       await showDialog(context: context, builder: (context)=>ContentDialog(title: Text("Delete subscription information"),content: Text("Are you sure you want to delete this subscripton information?"),
+                      IconButton(icon: const Icon(FluentIcons.delete), onPressed: () async{
+                       await showDialog(context: context, builder: (context)=>ContentDialog(title: const Text("Delete subscription information"),content: const Text("Are you sure you want to delete this subscripton information?"),
 
                           actions: [
-                            Button(child:  Text("Delete"), onPressed: ()async{
-                              await SubscriptionInformationManager().deleteSubscriptionData(widget.data.id!).then((value) async =>Future.delayed(Duration(seconds: 0,),(){
+                            Button(child:  const Text("Delete"), onPressed: ()async{
+                              await SubscriptionInformationManager().deleteSubscriptionData(widget.data.id!).then((value) async =>Future.delayed(const Duration(seconds: 0,),(){
                                 ref.invalidate(allSubscriptionsProvider);
                                 Navigator.pushReplacement(context, m.MaterialPageRoute (
                                   builder: (BuildContext context) => const AddNewSubscriptionValueWidget(),
                                 ),);
                               }) ).then((value){
-                                showSnackbar(context, InfoBar(title: Text("Succssess"),content: Text("Subscription is successfully deleted"),));
+                                showSnackbar(context, const InfoBar(title: Text("Succssess"),content: Text("Subscription is successfully deleted"),));
                                 Navigator.pop(context);
                               });
 
 
 
                             }),
-                            FilledButton(child: Text("Cancel"), onPressed: (){
+                            FilledButton(child: const Text("Cancel"), onPressed: (){
                               Navigator.pop(context);
                             })
                           ],

@@ -1,10 +1,9 @@
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_status/player_status_widget.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
 import '../../../../database_management/tables/generate_table.dart';
 import '../../../../database_management/tables/players/player_database_manager.dart';
-import '../../combo_box_widget.dart';
 import '../player_name_widget.dart';
 
 class ActivePlayersWidget extends StatelessWidget {
@@ -21,7 +20,7 @@ class ActivePlayersWidget extends StatelessWidget {
             ref.watch(activePlayersDurationProviderListLength);
 
             return Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: Card(
                 child: SizedBox(
                   width: 230,
@@ -31,10 +30,10 @@ class ActivePlayersWidget extends StatelessWidget {
                     MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(list.toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 36,
                               fontWeight: FontWeight.w500)),
-                      Text("Total active players")
+                      const Text("Total active players")
                     ],
                   ),
                 ),
@@ -46,12 +45,12 @@ class ActivePlayersWidget extends StatelessWidget {
         // filter
 
 
-                Expander(header: Text("Filter by"), content: Column(children: [
+                const Expander(header: Text("Filter by"), content: Column(children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
 
-                     const Text("Not selected")
+                     Text("Not selected")
                     ],)
                 ],)),
 
@@ -95,11 +94,11 @@ class ActivePlayersWidget extends StatelessWidget {
                               playersListLength.state =
                                   snapshot.data!.length;
                             });
-                        return Center(
+                        return const Center(
                           child: Text("No new players"),
                         );
                       default:
-                        return Center(
+                        return const Center(
                           child: ProgressRing(),
                         );
                     }

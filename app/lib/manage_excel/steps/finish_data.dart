@@ -31,8 +31,8 @@ class FinishDataWidget extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                      Text("Succssess"),
-                     SizedBox(height: 20,),
+                      const Text("Succssess"),
+                     const SizedBox(height: 20,),
                       Text("Found $playersListLength players in the excel sheet")
             ],),
                   ) ,)),
@@ -50,13 +50,13 @@ class FinishDataWidget extends StatelessWidget {
                             children: [
                               const  Text("Reset Players database:",style: TextStyle(fontWeight: FontWeight.bold),),
                               Padding(
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 child: Text("Removes every player / subscription from your database",style: TextStyle(color: Colors.grey[80]),),
                               ),
                             ]),
 
-                        Button(child: Text("Reset database"),onPressed: ()async{
-                          await loadingDialog(context, -1, PlayersDatabaseManager().dropPlayersAndSubscriptionsTable(), null).then((value) => displayInfoBar(context, builder: (context,close)=>InfoBar(title: Text("Successfully deleted")))
+                        Button(child: const Text("Reset database"),onPressed: ()async{
+                          await loadingDialog(context, -1, PlayersDatabaseManager().dropPlayersAndSubscriptionsTable(), null).then((value) => displayInfoBar(context, builder: (context,close)=>const InfoBar(title: Text("Successfully deleted")))
                           );
                         },)
 
@@ -78,13 +78,13 @@ class FinishDataWidget extends StatelessWidget {
                           children: [
                             const  Text("Insert new Players data:",style: TextStyle(fontWeight: FontWeight.bold),),
                             Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: Text("Add new data to existed database",style: TextStyle(color: Colors.grey[80]),),
                             ),
                           ]),
 
-                      Button(child: Text("Insert players"),onPressed: ()async{
-                        await loadingDialog(context, -1, PlayersDatabaseManager().insertPlayersFromExcelOffline(excelPlayers), null).then((value) => displayInfoBar(context, builder: (context,close)=>InfoBar(title: Text("Added successfully to database"))));
+                      Button(child: const Text("Insert players"),onPressed: ()async{
+                        await loadingDialog(context, -1, PlayersDatabaseManager().insertPlayersFromExcelOffline(excelPlayers), null).then((value) => displayInfoBar(context, builder: (context,close)=>const InfoBar(title: Text("Added successfully to database"))));
                       },)
 
                     ]

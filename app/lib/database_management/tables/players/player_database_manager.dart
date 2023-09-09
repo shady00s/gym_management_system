@@ -99,7 +99,6 @@ class PlayersDatabaseManager {
       })
       ..get();
 
-    var x = await res.get();
 
 
     return await res.get();
@@ -157,7 +156,7 @@ class PlayersDatabaseManager {
 
 Future insertPlayersFromExcelOffline(List<ExcelPlayers> playersData)async{
 
-    Iterable <PlayersCompanion> playersCompanion = playersData.map((playerData) => PlayersCompanion.insert(playerIndexId: playerData.playerIndexId, playerId: playerData.player_id, playerName: playerData.player_name, playerPhoneNumber: -1, imagePath: "no image", playerAge: -1, playerFirstJoinDate: DateTime.parse(playerData.subscriptions![0].beginning_date), playerGender: "un recorded", subscriptionId: playerData.playerIndexId!));
+    Iterable <PlayersCompanion> playersCompanion = playersData.map((playerData) => PlayersCompanion.insert(playerIndexId: playerData.playerIndexId, playerId: playerData.player_id, playerName: playerData.player_name, playerPhoneNumber: -1, imagePath: "no image", playerAge: -1, playerFirstJoinDate: DateTime.parse(playerData.subscriptions![0].beginning_date), playerGender: "un recorded", subscriptionId: playerData.playerIndexId));
 
     //get teams data
     List<PlayersAndTeamsTableCompanion> playersTeamCompanion = [];

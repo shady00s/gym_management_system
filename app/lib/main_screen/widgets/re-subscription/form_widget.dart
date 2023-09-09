@@ -29,9 +29,9 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
         child: Column(
         crossAxisAlignment:CrossAxisAlignment.start,
         children: [
-          Text("Re-subscription form",style: TextStyle(fontSize: 21,fontWeight: FontWeight.bold),),
-          SizedBox(height: 10,),
-          Text("New duration"),
+          const Text("Re-subscription form",style: TextStyle(fontSize: 21,fontWeight: FontWeight.bold),),
+          const SizedBox(height: 10,),
+          const Text("New duration"),
           // new subscription and offer id
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -58,7 +58,7 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
             builder: (context, ref,child) {
               var lastSeenPlayerDate = ref.watch(playerLastSeenProvider);
               Future.delayed(Duration.zero,(){
-                 _beginDateController.text =lastSeenPlayerDate == null? DateFormat.yMMMEd().format(DateTime.now()):   DateTime.now().difference(lastSeenPlayerDate!).inDays <= 2? DateFormat.yMMMEd().format(lastSeenPlayerDate): DateFormat.yMMMEd().format(DateTime.now() );
+                 _beginDateController.text =lastSeenPlayerDate == null? DateFormat.yMMMEd().format(DateTime.now()):   DateTime.now().difference(lastSeenPlayerDate).inDays <= 2? DateFormat.yMMMEd().format(lastSeenPlayerDate): DateFormat.yMMMEd().format(DateTime.now() );
               });
 
               print(lastSeenPlayerDate);
@@ -70,32 +70,32 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
                 controller: _beginDateController,);
             }
           ),
-          SizedBox(height: 10,),
-          Text("pay amount"),
-      SizedBox(height: 10,),
+          const SizedBox(height: 10,),
+          const Text("pay amount"),
+      const SizedBox(height: 10,),
           NumberFormBox(value:billValue,initialValue: billValue.toString(),),
 
 
 
-          SizedBox(height: 10,)
+          const SizedBox(height: 10,)
 
-          , Text("collector id"),
-          SizedBox(height: 10,),
+          , const Text("collector id"),
+          const SizedBox(height: 10,),
           TextFormBox(),
-          SizedBox(height: 10,)
-          ,Divider(),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10,)
+          ,const Divider(),
+          const SizedBox(height: 10,),
 
 
 
-      SizedBox(height: 10,),
-          Text("Bill image"),
+      const SizedBox(height: 10,),
+          const Text("Bill image"),
 
         const  TakeNewImageWidget(path: "re-subscription_images",),
         Consumer(
             builder: (context, ref,child) {
               XFile? image = ref.watch(imageProvider);
-              return FilledButton(child: Text("Re-subscribe"), onPressed:  ()async{
+              return FilledButton(child: const Text("Re-subscribe"), onPressed:  ()async{
                 if(_key.currentState!.validate() && image != null){
 
                   // PlayersSubscriptionsCompanion data = PlayersSubscriptionsCompanion.insert(

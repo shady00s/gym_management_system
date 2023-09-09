@@ -79,7 +79,7 @@ class _CreateNewSubscriptionWidgetState
                           const SizedBox(
                             height: 8,
                           ),
-                          Text("Set subscription duration"),
+                          const Text("Set subscription duration"),
                           const SizedBox(
                             height: 8,
                           ),
@@ -111,16 +111,16 @@ class _CreateNewSubscriptionWidgetState
                                           return null;
                                         },
                                       )),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
-                                  Text("Days")
+                                  const Text("Days")
                                 ],
                               )),
                           const SizedBox(
                             height: 21,
                           ),
-                          Text("Set subscription value"),
+                          const Text("Set subscription value"),
                           const SizedBox(
                             height: 8,
                           ),
@@ -152,16 +152,16 @@ class _CreateNewSubscriptionWidgetState
                                           return null;
                                         },
                                       )),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
-                                  Text("LE")
+                                  const Text("LE")
                                 ],
                               )),
                           const SizedBox(
                             height: 21,
                           ),
-                          Text("Set freeze limit"),
+                          const Text("Set freeze limit"),
                           const SizedBox(
                             height: 8,
                           ),
@@ -193,16 +193,16 @@ class _CreateNewSubscriptionWidgetState
                                           return null;
                                         },
                                       )),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
-                                  Text("Days")
+                                  const Text("Days")
                                 ],
                               )),
                           const SizedBox(
                             height: 21,
                           ),
-                          Text("Set number of invitations"),
+                          const Text("Set number of invitations"),
                           const SizedBox(
                             height: 8,
                           ),
@@ -235,10 +235,10 @@ class _CreateNewSubscriptionWidgetState
                                           return null;
                                         },
                                       )),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
-                                  Text("Invitations")
+                                  const Text("Invitations")
                                 ],
                               )),
                           const SizedBox(

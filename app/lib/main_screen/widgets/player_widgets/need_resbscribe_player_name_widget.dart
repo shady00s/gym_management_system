@@ -61,12 +61,12 @@ class NeedToResubscribePlayerNameWidget extends StatelessWidget {
                     children: [
                       OptionsMenu( menuController,playerIndexId),
                       const Spacer(),
-                      Text(playerName??"No name"),
-                      Text(" - $playerId "??"no id",style: TextStyle(fontSize: 12),)
+                      Text(playerName),
+                      Text(" - $playerId ",style: const TextStyle(fontSize: 12),)
 
                     ],
                   ),
-                Text("Subscription ended ${date ==0?  "today" : date==1?"yesterday": ' $date days ago'} ",style: TextStyle(color: Color.fromRGBO(
+                Text("Subscription ended ${date ==0?  "today" : date==1?"yesterday": ' $date days ago'} ",style: const TextStyle(color: Color.fromRGBO(
                     255, 166, 0, 0.7019607843137254)),)
                 ],
               )

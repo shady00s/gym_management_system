@@ -29,13 +29,13 @@ Future _showDateRangePicker(BuildContext context,dynamic provider) async {
          var setFilter = ref.read(provider.notifier);
 
           return ContentDialog(
-              title: Text("Select custom date"),
+              title: const Text("Select custom date"),
               content: StatefulBuilder(builder: (context, setState) {
                 return   Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
+                    const Padding(
+                      padding: EdgeInsets.all(12.0),
                       child: Text("Please select beginning date and end date"),
                     ),
                     DatePicker(
@@ -45,7 +45,7 @@ Future _showDateRangePicker(BuildContext context,dynamic provider) async {
                       },
                       selected: begCurrentDateTime,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 12,
                     ),
                     DatePicker(
@@ -61,7 +61,7 @@ Future _showDateRangePicker(BuildContext context,dynamic provider) async {
                 Consumer(builder: (key, ref, child) {
 
                   return Button(
-                      child: Text("Proceed"),
+                      child: const Text("Proceed"),
                       onPressed: () {
                         setFilter.setDuration( DurationModel(title:"Custom",value:DurationTime(begDate: begCurrentDateTime, endDate: endCurrentDateTime)));
 
@@ -69,7 +69,7 @@ Future _showDateRangePicker(BuildContext context,dynamic provider) async {
                       });
                 }),
                 Button(
-                    child: Text("Cancel"),
+                    child: const Text("Cancel"),
                     onPressed: () {
 
                       Navigator.pop(context);
@@ -134,7 +134,7 @@ class _ComboBoxWidgetState extends State<ComboBoxWidget> {
               },
               items: [
                 if(widget.allButton)
-                  ComboBoxItem(
+                  const ComboBoxItem(
                     value: "null",
                     child: Text("All"),
 
@@ -214,7 +214,7 @@ class _ComboBoxWidgetForFilterState extends State<ComboBoxWidgetForFilter> {
               },
               items: [
                 if(widget.allButton && !widget.isSubscriptionWithName)
-                ComboBoxItem(
+                const ComboBoxItem(
                   value: "null",
                   child: Text("All"),
 
@@ -229,7 +229,7 @@ class _ComboBoxWidgetForFilterState extends State<ComboBoxWidgetForFilter> {
                 if(!widget.allButton)
                  ComboBoxItem(
                   value: 0,
-                  child: Text("Custom"),
+                  child: const Text("Custom"),
                   onTap: () async {
                     await _showDateRangePicker(context,widget.provider);
                   },

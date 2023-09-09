@@ -33,7 +33,7 @@ class TakeNewImageWidget extends StatelessWidget {
 
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Button(child: Text("take photo"), onPressed: () async{
+                child: Button(child: const Text("take photo"), onPressed: () async{
 
                   await showDialog(context: context, builder: (context)=>
                       ContentDialog(
@@ -44,8 +44,8 @@ class TakeNewImageWidget extends StatelessWidget {
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Camera"),
-                            IconButton(icon: Icon(FluentIcons.cancel), onPressed: (){Navigator.pop(context);})
+                            const Text("Camera"),
+                            IconButton(icon: const Icon(FluentIcons.cancel), onPressed: (){Navigator.pop(context);})
                           ],), content:   TakeNewPhoto(path:path),));
 
                 }),
