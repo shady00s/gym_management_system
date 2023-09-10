@@ -101,12 +101,13 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
                 Future.delayed(Duration.zero,(){
                   if(customDate ==null) {
                     _beginDateController.text = lastSeenPlayerDate == null? DateFormat.yMMMEd().format(DateTime.now()):   DateTime.now().difference(lastSeenPlayerDate).inDays <= 2? DateFormat.yMMMEd().format(lastSeenPlayerDate): DateFormat.yMMMEd().format(DateTime.now() );
-
+                    _beginningDate = lastSeenPlayerDate ?? DateTime.now();
 
 
 
                   }else{
                     _beginDateController.text = DateFormat.yMMMEd().format(customDate!);
+                    _beginningDate = lastSeenPlayerDate ?? customDate;
 
 
 
@@ -116,9 +117,7 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
 
                 return TextFormBox(
                   onChanged: (val){
-                    setState(() {
-                      _beginningDate =DateTime.parse(val) ;
-                    });
+
                   },
                   onTap: ()async{
                    await showDialog(context: context, builder:(context)=> StatefulBuilder(

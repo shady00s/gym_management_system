@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:gym_management/main_screen/widgets/freeze_widget.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_card_information.dart';
 
 import '../invitation_widget.dart';
@@ -102,7 +103,7 @@ class OptionsMenu extends StatelessWidget {
                 text: const Text('Freeze'),
                 onPressed: ()async{
                   Navigator.pop(context);
-                  await showInvitationWidget(context,playerIndexId);
+                  await showFreezeWidget(context,playerIndexId);
                 },
               ),
               MenuFlyoutItem(

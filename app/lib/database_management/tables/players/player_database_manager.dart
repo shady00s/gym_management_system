@@ -201,4 +201,13 @@ Future reSubscribePlayer(PlayersSubscriptionsCompanion data)async{
       throw e.toString();
     }
    }
+
+   Future<GetRemainingInvitationResult> getInvitations(int playerIndexId) async{
+     GetRemainingInvitationResult invitations = await playersDatabase.getRemainingInvitation(playerIndexId).getSingle();
+    return invitations;
+   }
+   Future<GetRemainingFreezeResult> getFreeze(int playerIndexId) async{
+     GetRemainingFreezeResult freeze = await playersDatabase.getRemainingFreeze(playerIndexId).getSingle();
+     return freeze;
+   }
 }

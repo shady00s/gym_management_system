@@ -3077,6 +3077,37 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
         ));
   }
 
+  Selectable<GetRemainingInvitationResult> getRemainingInvitation(
+      int playerIndexId) {
+    return customSelect(
+        'SELECT PlayersSubscriptions.invitation_available, MAX(PlayersSubscriptions.beginning_date) AS _c0 FROM PlayersSubscriptions WHERE PlayersSubscriptions.player_subscription_id = ?1',
+        variables: [
+          Variable<int>(playerIndexId)
+        ],
+        readsFrom: {
+          playersSubscriptions,
+        }).map((QueryRow row) => GetRemainingInvitationResult(
+          invitationAvailable: row.read<int>('invitation_available'),
+          mAXPlayersSubscriptionsbeginningDate:
+              row.readNullable<DateTime>('_c0'),
+        ));
+  }
+
+  Selectable<GetRemainingFreezeResult> getRemainingFreeze(int playerIndexId) {
+    return customSelect(
+        'SELECT PlayersSubscriptions.freeze_available, MAX(PlayersSubscriptions.beginning_date) AS _c0 FROM PlayersSubscriptions WHERE PlayersSubscriptions.player_subscription_id = ?1',
+        variables: [
+          Variable<int>(playerIndexId)
+        ],
+        readsFrom: {
+          playersSubscriptions,
+        }).map((QueryRow row) => GetRemainingFreezeResult(
+          freezeAvailable: row.read<int>('freeze_available'),
+          mAXPlayersSubscriptionsbeginningDate:
+              row.readNullable<DateTime>('_c0'),
+        ));
+  }
+
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3251,5 +3282,23 @@ class EnterPlayerToGymResult {
     this.mAXPlayersSubscriptionsendDate,
     this.teamPlayerId,
     this.teamId,
+  });
+}
+
+class GetRemainingInvitationResult {
+  final int invitationAvailable;
+  final DateTime? mAXPlayersSubscriptionsbeginningDate;
+  GetRemainingInvitationResult({
+    required this.invitationAvailable,
+    this.mAXPlayersSubscriptionsbeginningDate,
+  });
+}
+
+class GetRemainingFreezeResult {
+  final int freezeAvailable;
+  final DateTime? mAXPlayersSubscriptionsbeginningDate;
+  GetRemainingFreezeResult({
+    required this.freezeAvailable,
+    this.mAXPlayersSubscriptionsbeginningDate,
   });
 }

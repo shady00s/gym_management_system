@@ -247,7 +247,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                               ],
                                             ),
                                             const SizedBox(height: 9,),
-                                            Text(snapshot.data![index].billValue == -1? "Unknown" : snapshot.data![index].billValue.toString())
+                                            Text(snapshot.data![index].freezeAvailable.toString())
                                           ],),
                                       ),
                                       const Divider(),
@@ -266,7 +266,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                             ],),
 
                                             const SizedBox(height: 9,),
-                                            Text(snapshot.data![index].billValue == -1? "Unknown" : snapshot.data![index].billValue.toString())
+                                            Text( snapshot.data![index].invitationAvailable.toString())
                                           ],),
                                       ),
           ],

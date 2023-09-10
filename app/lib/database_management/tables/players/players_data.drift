@@ -93,3 +93,10 @@ enterPlayerToGym(REQUIRED :teamId AS INT,REQUIRED :playerId AS INT, :playerName 
                                             AND (Players.player_name = COALESCE(:playerName, Players.player_name) OR :playerName IS NULL)
                                             AND PlayersAndTeamsTable.team_id = :teamId;
 
+getRemainingInvitation(REQUIRED :playerIndexId AS INT): SELECT PlayersSubscriptions.invitation_available,MAX(PlayersSubscriptions.beginning_date)  FROM PlayersSubscriptions
+                                                    WHERE PlayersSubscriptions.player_subscription_id = :playerIndexId;
+
+
+getRemainingFreeze(REQUIRED :playerIndexId AS INT): SELECT PlayersSubscriptions.freeze_available,MAX(PlayersSubscriptions.beginning_date)  FROM PlayersSubscriptions
+                                                    WHERE PlayersSubscriptions.player_subscription_id = :playerIndexId;
+
