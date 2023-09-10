@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/database_management/tables/gym_player_logs/gym_log_manager.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 import 'package:gym_management/main_screen/widgets/re-subscription/form_widget.dart';
+import 'package:gym_management/main_screen/widgets/take_new_image_widget.dart';
 import 'package:intl/intl.dart';
 import '../../../database_management/tables/generate_table.dart';
 
@@ -25,7 +26,7 @@ class ReSubscriptionWidget extends StatelessWidget {
     return  Card(backgroundColor: const Color.fromRGBO(12, 2, 3, 0.3),child: Center(
       child: SizedBox(
         width: MediaQuery.sizeOf(context).width * 0.85,
-        height: MediaQuery.sizeOf(context).height * 0.95,
+        height: MediaQuery.sizeOf(context).height * 0.99,
         child: Card(
           backgroundColor: Colors.black,
           child: Column(
@@ -35,10 +36,27 @@ class ReSubscriptionWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                        Text("Player Re-subscription",style: TextStyle(fontSize: 31,color: Colors.yellow),),
-                      IconButton(onPressed: (){
-                        Navigator.of(context).pop();
-                      },
-                        icon:const Icon(FluentIcons.cancel),
+                      Consumer(
+
+                        builder: (context, ref,child) {
+                          var image = ref.watch(imageProvider);
+
+                          return IconButton(onPressed: () async{
+                            if(image != null) {
+                              print(image);
+                              await File(image).delete(recursive: true).then((value) =>  Navigator.of(context).pop());
+                            var  imageState =  ref.read(imageProvider.notifier);
+
+                              imageState.state = null;
+                           ;
+                            }else {
+                              Navigator.of(context).pop();
+                            }
+
+                          },
+                            icon:const Icon(FluentIcons.cancel),
+                          );
+                        }
                       )
                     ],
                   ),
@@ -170,142 +188,144 @@ class ReSubscriptionWidget extends StatelessWidget {
                                             4, 4, 4, 1.0),child:  Column(children: [
                                           const  Text("Last subscription",style: TextStyle(fontSize: 21,fontWeight: FontWeight.bold),),
                                           const  SizedBox(height: 20,),
-                                          Card(
+                                          SingleChildScrollView(
+                                              child: Card(
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(children: [
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.all(8.0),
+
+                                                        child: Icon(FluentIcons.bill,color: Colors.yellow,),
+                                                      ),
+                                                      Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+
+                                                        children: [
+                                                          Text(snapshot.data![0].duration == 1? "1 Month":snapshot.data![0].duration == 3?"3 Months":snapshot.data![0].duration == 6? "6 Months":snapshot.data![0].duration == 11?"1 session":snapshot.data![0].duration == 12?"1 Year":"Unknown",
+                                                            style: const TextStyle(fontSize: 18),
+                                                          ),
+                                                          const Padding(
+                                                            padding: EdgeInsets.all(8.0),
+                                                            child: Text("no discount code"),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ],),
+
+                                                    const SizedBox(height: 10,),
+
+
                                                     Padding(
-                                                      padding: const EdgeInsets.all(8.0),
-
-                                                      child: Icon(FluentIcons.bill,color: Colors.yellow,),
-                                                    ),
-                                                    Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                      children: [
-                                                        Text(snapshot.data![0].duration == 1? "1 Month":snapshot.data![0].duration == 3?"3 Months":snapshot.data![0].duration == 6? "6 Months":snapshot.data![0].duration == 11?"1 session":snapshot.data![0].duration == 12?"1 Year":"Unknown",
-                                                          style: const TextStyle(fontSize: 18),
-                                                        ),
-                                                        const Padding(
-                                                          padding: EdgeInsets.all(8.0),
-                                                          child: Text("no discount code"),
-                                                        ),
-                                                      ],
-                                                    )
-                                                  ],),
-
-                                                  const SizedBox(height: 10,),
-
-
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(8.0),
-                                                              child: Icon(FluentIcons.timer,color: Colors.grey[90],),
-                                                            ),
-                                                            const   Text("Beginnig date:"),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(height: 9,),
-                                                        Padding(
-                                                          padding: const EdgeInsets.symmetric(horizontal:12.0),
-                                                          child: Text((DateFormat.yMMMEd().format(snapshot.data![0].beginningDate))),
-                                                        )
-                                                      ],),
-                                                  ),
-
-                                                  const Divider(),
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(8.0),
-                                                              child: Icon(FluentIcons.timer,color: Colors.grey[90],),
-                                                            ),
-                                                            const    Text("end date:"),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(height: 9,),
-                                                        Padding(
-                                                          padding: const EdgeInsets.symmetric(horizontal:12.0),
-                                                          child: Text(DateFormat.yMMMEd().format(snapshot.data![0].endDate)),
-                                                        )
-                                                      ],),
-                                                  ),
-                                                  const Divider(),
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                      children: [
-                                                        Row(
-                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                          children: [ Padding(
-                                                            padding: const EdgeInsets.all(8.0),
-                                                            child: Icon(FluentIcons.money,color: Colors.grey[90],),
+                                                      padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets.all(8.0),
+                                                                child: Icon(FluentIcons.timer,color: Colors.grey[90],),
+                                                              ),
+                                                              const   Text("Beginnig date:"),
+                                                            ],
                                                           ),
-                                                            const Text("Value :"),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(height: 9,),
-                                                        Text(snapshot.data![0].billValue == -1? "Unknown" : snapshot.data![0].billValue.toString())
-                                                      ],),
-                                                  ),
-                                                  const Divider(),
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(8.0),
-                                                              child: Icon(FluentIcons.snowflake,color: Colors.grey[90],),
-                                                            ),
-                                                            const Text("Freeze left :"),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(height: 9,),
-                                                        Text(snapshot.data![0].billValue == -1? "Unknown" : snapshot.data![0].billValue.toString())
-                                                      ],),
-                                                  ),
-                                                  const Divider(),
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                      children: [
-                                                        Row(children: [
+                                                          const SizedBox(height: 9,),
                                                           Padding(
-                                                            padding: const EdgeInsets.all(8.0),
-                                                            child: Icon(FluentIcons.people,color: Colors.grey[90],),
-                                                          ),
-                                                          const Text("Invitations left :"),
+                                                            padding: const EdgeInsets.symmetric(horizontal:12.0),
+                                                            child: Text((DateFormat.yMMMEd().format(snapshot.data![0].beginningDate))),
+                                                          )
                                                         ],),
+                                                    ),
 
-                                                        const SizedBox(height: 9,),
-                                                        Text(snapshot.data![0].billValue == -1? "Unknown" : snapshot.data![0].billValue.toString())
-                                                      ],),
-                                                  ),
-                                                ],
+                                                    const Divider(),
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets.all(8.0),
+                                                                child: Icon(FluentIcons.timer,color: Colors.grey[90],),
+                                                              ),
+                                                              const    Text("end date:"),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(height: 9,),
+                                                          Padding(
+                                                            padding: const EdgeInsets.symmetric(horizontal:12.0),
+                                                            child: Text(DateFormat.yMMMEd().format(snapshot.data![0].endDate)),
+                                                          )
+                                                        ],),
+                                                    ),
+                                                    const Divider(),
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Row(
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children: [ Padding(
+                                                              padding: const EdgeInsets.all(8.0),
+                                                              child: Icon(FluentIcons.money,color: Colors.grey[90],),
+                                                            ),
+                                                              const Text("Value :"),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(height: 9,),
+                                                          Text(snapshot.data![0].billValue == -1? "Unknown" : snapshot.data![0].billValue.toString())
+                                                        ],),
+                                                    ),
+                                                    const Divider(),
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets.all(8.0),
+                                                                child: Icon(FluentIcons.snowflake,color: Colors.grey[90],),
+                                                              ),
+                                                              const Text("Freeze left :"),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(height: 9,),
+                                                          Text(snapshot.data![0].billValue == -1? "Unknown" : snapshot.data![0].billValue.toString())
+                                                        ],),
+                                                    ),
+                                                    const Divider(),
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Row(children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets.all(8.0),
+                                                              child: Icon(FluentIcons.people,color: Colors.grey[90],),
+                                                            ),
+                                                            const Text("Invitations left :"),
+                                                          ],),
+
+                                                          const SizedBox(height: 9,),
+                                                          Text(snapshot.data![0].billValue == -1? "Unknown" : snapshot.data![0].billValue.toString())
+                                                        ],),
+                                                    ),
+                                                  ],
 
 
+                                                ),
                                               )
                                           ),
                                           const   SizedBox(height: 20,),
@@ -345,7 +365,7 @@ class ReSubscriptionWidget extends StatelessWidget {
                                       ),
 
                                       // subscription form
-                                       const ReSubscriptionFormWidget()
+                                        ReSubscriptionFormWidget(playerIndexId: snapshot.data![0].playerIndexId,)
 
 
                                     ],

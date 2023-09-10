@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:camera_platform_interface/camera_platform_interface.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,7 +26,7 @@ class TakeNewImageWidget extends StatelessWidget {
               ) : SizedBox(
                   width: 200,
                   height: 100,
-                  child: Image(image: FileImage(File(image.path)),fit: BoxFit.contain,)),
+                  child: Image(image: FileImage(File(image)),fit: BoxFit.contain,)),
 
 
               Padding(
@@ -58,4 +56,4 @@ class TakeNewImageWidget extends StatelessWidget {
   }
 }
 
-StateProvider<XFile?> imageProvider = StateProvider((ref) => null);
+StateProvider<String?> imageProvider = StateProvider((ref) => null);

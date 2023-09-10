@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:camera_platform_interface/camera_platform_interface.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -182,9 +183,14 @@ class _TakeNewPhotoState extends State<TakeNewPhoto> {
 
   Future<XFile> _takePicture() async {
     final XFile file = await CameraPlatform.instance.takePicture(_cameraId);
+
+
       await file.saveTo(p.join('assets/${widget.path}',file.name)).then((value) {
-        _showInSnackBar('Picture captured to: ${file.path}');
-        Navigator.pop(context);
+        File(file.path).delete(recursive: true).then((value){
+          _showInSnackBar('Picture captured to: ${file.path}');
+          Navigator.pop(context);
+        });
+
       });
 
     return file;
@@ -295,7 +301,8 @@ class _TakeNewPhotoState extends State<TakeNewPhoto> {
                         child: FilledButton(
                           onPressed: _initialized ?()async{
                            await _takePicture().then((value){
-                             image.state = value;
+
+                             image.state =  p.join('assets/${widget.path}',value.name) ;
                            });
                           }  : null,
                           child: const Text('Take picture'),

@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS SubscriptionsInfoTable (
     id INT PRIMARY KEY AUTOINCREMENT,
     subscription_name TEXT NOT NULL,
     subscription_value INT NOT NULL,
+    team_id INT NOT NULL,
     subscription_duration INT NOT NULL,
     subscription_freeze_limit INT NOT NULL,
     subscription_invitation_limit INT NOT NULL

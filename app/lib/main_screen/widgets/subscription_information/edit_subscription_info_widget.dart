@@ -86,7 +86,7 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                                     .subscriptionFreezeLimit,
                                                 subscriptionInvitationLimit:
                                                 editSubData!
-                                                    .subscriptionInvitationLimit);
+                                                    .subscriptionInvitationLimit, teamId: 0);
                                           });
                                         },
                                       )),
@@ -121,7 +121,7 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                                             .subscriptionFreezeLimit,
                                                         subscriptionInvitationLimit:
                                                         editSubData!
-                                                            .subscriptionInvitationLimit);
+                                                            .subscriptionInvitationLimit, teamId: 0);
                                                   });
                                                 },
                                                 validator: (val) {
@@ -170,7 +170,7 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                                             .subscriptionFreezeLimit,
                                                         subscriptionInvitationLimit:
                                                         editSubData!
-                                                            .subscriptionInvitationLimit);
+                                                            .subscriptionInvitationLimit, teamId: 0);
                                                   });
                                                 },
                                                 validator: (val) {
@@ -219,7 +219,7 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                                         subscriptionFreezeLimit: val!,
                                                         subscriptionInvitationLimit:
                                                         editSubData!
-                                                            .subscriptionInvitationLimit);
+                                                            .subscriptionInvitationLimit, teamId: 0);
                                                   });
                                                 },
                                                 validator: (val) {
@@ -269,7 +269,7 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                                         editSubData!
                                                             .subscriptionFreezeLimit,
                                                         subscriptionInvitationLimit:
-                                                        val!);
+                                                        val!, teamId: 0);
                                                   });
                                                 },
                                                 validator: (val) {

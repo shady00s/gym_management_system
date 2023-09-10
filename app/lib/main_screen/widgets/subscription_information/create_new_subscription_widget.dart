@@ -21,7 +21,7 @@ class _CreateNewSubscriptionWidgetState
       subscriptionValue: 0,
       subscriptionDuration: 0,
       subscriptionFreezeLimit: 0,
-      subscriptionInvitationLimit: 0);
+      subscriptionInvitationLimit: 0, teamId: 0);
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
@@ -72,7 +72,7 @@ class _CreateNewSubscriptionWidgetState
                                         subscriptionFreezeLimit:
                                         subData.subscriptionFreezeLimit,
                                         subscriptionInvitationLimit:
-                                        subData.subscriptionInvitationLimit);
+                                        subData.subscriptionInvitationLimit, teamId: 0);
                                   });
                                 },
                               )),
@@ -100,7 +100,7 @@ class _CreateNewSubscriptionWidgetState
                                                 subscriptionFreezeLimit:
                                                 subData.subscriptionFreezeLimit,
                                                 subscriptionInvitationLimit:
-                                                subData.subscriptionInvitationLimit);
+                                                subData.subscriptionInvitationLimit, teamId: 0);
                                           });
                                         },
                                         validator: (val) {
@@ -141,7 +141,7 @@ class _CreateNewSubscriptionWidgetState
                                                 subscriptionFreezeLimit:
                                                 subData.subscriptionFreezeLimit,
                                                 subscriptionInvitationLimit:
-                                                subData.subscriptionInvitationLimit);
+                                                subData.subscriptionInvitationLimit, teamId: 0);
                                           });
                                         },
                                         validator: (val) {
@@ -182,7 +182,7 @@ class _CreateNewSubscriptionWidgetState
                                                 subData.subscriptionDuration,
                                                 subscriptionFreezeLimit: val!,
                                                 subscriptionInvitationLimit:
-                                                subData.subscriptionInvitationLimit);
+                                                subData.subscriptionInvitationLimit, teamId: 0);
                                           });
                                         },
                                         validator: (val) {
@@ -224,7 +224,7 @@ class _CreateNewSubscriptionWidgetState
                                                 subData.subscriptionDuration,
                                                 subscriptionFreezeLimit:
                                                 subData.subscriptionFreezeLimit,
-                                                subscriptionInvitationLimit: val!);
+                                                subscriptionInvitationLimit: val!, teamId: 0);
                                           });
                                         },
                                         validator: (val) {
@@ -267,7 +267,7 @@ class _CreateNewSubscriptionWidgetState
                                               subscriptionValue: 0,
                                               subscriptionDuration: 0,
                                               subscriptionFreezeLimit: 0,
-                                              subscriptionInvitationLimit: 0);
+                                              subscriptionInvitationLimit: 0, teamId: 0);
                                         });
                                         await Future.delayed(const Duration(seconds: 0),
                                                 () async {

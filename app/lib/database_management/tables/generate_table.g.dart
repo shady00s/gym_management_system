@@ -1558,6 +1558,12 @@ class SubscriptionsInfoTable extends Table
       type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
+  static const VerificationMeta _teamIdMeta = const VerificationMeta('teamId');
+  late final GeneratedColumn<int> teamId = GeneratedColumn<int>(
+      'team_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
   static const VerificationMeta _subscriptionDurationMeta =
       const VerificationMeta('subscriptionDuration');
   late final GeneratedColumn<int> subscriptionDuration = GeneratedColumn<int>(
@@ -1584,6 +1590,7 @@ class SubscriptionsInfoTable extends Table
         id,
         subscriptionName,
         subscriptionValue,
+        teamId,
         subscriptionDuration,
         subscriptionFreezeLimit,
         subscriptionInvitationLimit
@@ -1616,6 +1623,12 @@ class SubscriptionsInfoTable extends Table
               data['subscription_value']!, _subscriptionValueMeta));
     } else if (isInserting) {
       context.missing(_subscriptionValueMeta);
+    }
+    if (data.containsKey('team_id')) {
+      context.handle(_teamIdMeta,
+          teamId.isAcceptableOrUnknown(data['team_id']!, _teamIdMeta));
+    } else if (isInserting) {
+      context.missing(_teamIdMeta);
     }
     if (data.containsKey('subscription_duration')) {
       context.handle(
@@ -1659,6 +1672,8 @@ class SubscriptionsInfoTable extends Table
           DriftSqlType.string, data['${effectivePrefix}subscription_name'])!,
       subscriptionValue: attachedDatabase.typeMapping.read(
           DriftSqlType.int, data['${effectivePrefix}subscription_value'])!,
+      teamId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}team_id'])!,
       subscriptionDuration: attachedDatabase.typeMapping.read(
           DriftSqlType.int, data['${effectivePrefix}subscription_duration'])!,
       subscriptionFreezeLimit: attachedDatabase.typeMapping.read(
@@ -1684,6 +1699,7 @@ class SubscriptionsInfoTableData extends DataClass
   final int? id;
   final String subscriptionName;
   final int subscriptionValue;
+  final int teamId;
   final int subscriptionDuration;
   final int subscriptionFreezeLimit;
   final int subscriptionInvitationLimit;
@@ -1691,6 +1707,7 @@ class SubscriptionsInfoTableData extends DataClass
       {this.id,
       required this.subscriptionName,
       required this.subscriptionValue,
+      required this.teamId,
       required this.subscriptionDuration,
       required this.subscriptionFreezeLimit,
       required this.subscriptionInvitationLimit});
@@ -1702,6 +1719,7 @@ class SubscriptionsInfoTableData extends DataClass
     }
     map['subscription_name'] = Variable<String>(subscriptionName);
     map['subscription_value'] = Variable<int>(subscriptionValue);
+    map['team_id'] = Variable<int>(teamId);
     map['subscription_duration'] = Variable<int>(subscriptionDuration);
     map['subscription_freeze_limit'] = Variable<int>(subscriptionFreezeLimit);
     map['subscription_invitation_limit'] =
@@ -1714,6 +1732,7 @@ class SubscriptionsInfoTableData extends DataClass
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       subscriptionName: Value(subscriptionName),
       subscriptionValue: Value(subscriptionValue),
+      teamId: Value(teamId),
       subscriptionDuration: Value(subscriptionDuration),
       subscriptionFreezeLimit: Value(subscriptionFreezeLimit),
       subscriptionInvitationLimit: Value(subscriptionInvitationLimit),
@@ -1727,6 +1746,7 @@ class SubscriptionsInfoTableData extends DataClass
       id: serializer.fromJson<int?>(json['id']),
       subscriptionName: serializer.fromJson<String>(json['subscription_name']),
       subscriptionValue: serializer.fromJson<int>(json['subscription_value']),
+      teamId: serializer.fromJson<int>(json['team_id']),
       subscriptionDuration:
           serializer.fromJson<int>(json['subscription_duration']),
       subscriptionFreezeLimit:
@@ -1742,6 +1762,7 @@ class SubscriptionsInfoTableData extends DataClass
       'id': serializer.toJson<int?>(id),
       'subscription_name': serializer.toJson<String>(subscriptionName),
       'subscription_value': serializer.toJson<int>(subscriptionValue),
+      'team_id': serializer.toJson<int>(teamId),
       'subscription_duration': serializer.toJson<int>(subscriptionDuration),
       'subscription_freeze_limit':
           serializer.toJson<int>(subscriptionFreezeLimit),
@@ -1754,6 +1775,7 @@ class SubscriptionsInfoTableData extends DataClass
           {Value<int?> id = const Value.absent(),
           String? subscriptionName,
           int? subscriptionValue,
+          int? teamId,
           int? subscriptionDuration,
           int? subscriptionFreezeLimit,
           int? subscriptionInvitationLimit}) =>
@@ -1761,6 +1783,7 @@ class SubscriptionsInfoTableData extends DataClass
         id: id.present ? id.value : this.id,
         subscriptionName: subscriptionName ?? this.subscriptionName,
         subscriptionValue: subscriptionValue ?? this.subscriptionValue,
+        teamId: teamId ?? this.teamId,
         subscriptionDuration: subscriptionDuration ?? this.subscriptionDuration,
         subscriptionFreezeLimit:
             subscriptionFreezeLimit ?? this.subscriptionFreezeLimit,
@@ -1773,6 +1796,7 @@ class SubscriptionsInfoTableData extends DataClass
           ..write('id: $id, ')
           ..write('subscriptionName: $subscriptionName, ')
           ..write('subscriptionValue: $subscriptionValue, ')
+          ..write('teamId: $teamId, ')
           ..write('subscriptionDuration: $subscriptionDuration, ')
           ..write('subscriptionFreezeLimit: $subscriptionFreezeLimit, ')
           ..write('subscriptionInvitationLimit: $subscriptionInvitationLimit')
@@ -1785,6 +1809,7 @@ class SubscriptionsInfoTableData extends DataClass
       id,
       subscriptionName,
       subscriptionValue,
+      teamId,
       subscriptionDuration,
       subscriptionFreezeLimit,
       subscriptionInvitationLimit);
@@ -1795,6 +1820,7 @@ class SubscriptionsInfoTableData extends DataClass
           other.id == this.id &&
           other.subscriptionName == this.subscriptionName &&
           other.subscriptionValue == this.subscriptionValue &&
+          other.teamId == this.teamId &&
           other.subscriptionDuration == this.subscriptionDuration &&
           other.subscriptionFreezeLimit == this.subscriptionFreezeLimit &&
           other.subscriptionInvitationLimit ==
@@ -1806,6 +1832,7 @@ class SubscriptionsInfoTableCompanion
   final Value<int?> id;
   final Value<String> subscriptionName;
   final Value<int> subscriptionValue;
+  final Value<int> teamId;
   final Value<int> subscriptionDuration;
   final Value<int> subscriptionFreezeLimit;
   final Value<int> subscriptionInvitationLimit;
@@ -1813,6 +1840,7 @@ class SubscriptionsInfoTableCompanion
     this.id = const Value.absent(),
     this.subscriptionName = const Value.absent(),
     this.subscriptionValue = const Value.absent(),
+    this.teamId = const Value.absent(),
     this.subscriptionDuration = const Value.absent(),
     this.subscriptionFreezeLimit = const Value.absent(),
     this.subscriptionInvitationLimit = const Value.absent(),
@@ -1821,11 +1849,13 @@ class SubscriptionsInfoTableCompanion
     this.id = const Value.absent(),
     required String subscriptionName,
     required int subscriptionValue,
+    required int teamId,
     required int subscriptionDuration,
     required int subscriptionFreezeLimit,
     required int subscriptionInvitationLimit,
   })  : subscriptionName = Value(subscriptionName),
         subscriptionValue = Value(subscriptionValue),
+        teamId = Value(teamId),
         subscriptionDuration = Value(subscriptionDuration),
         subscriptionFreezeLimit = Value(subscriptionFreezeLimit),
         subscriptionInvitationLimit = Value(subscriptionInvitationLimit);
@@ -1833,6 +1863,7 @@ class SubscriptionsInfoTableCompanion
     Expression<int>? id,
     Expression<String>? subscriptionName,
     Expression<int>? subscriptionValue,
+    Expression<int>? teamId,
     Expression<int>? subscriptionDuration,
     Expression<int>? subscriptionFreezeLimit,
     Expression<int>? subscriptionInvitationLimit,
@@ -1841,6 +1872,7 @@ class SubscriptionsInfoTableCompanion
       if (id != null) 'id': id,
       if (subscriptionName != null) 'subscription_name': subscriptionName,
       if (subscriptionValue != null) 'subscription_value': subscriptionValue,
+      if (teamId != null) 'team_id': teamId,
       if (subscriptionDuration != null)
         'subscription_duration': subscriptionDuration,
       if (subscriptionFreezeLimit != null)
@@ -1854,6 +1886,7 @@ class SubscriptionsInfoTableCompanion
       {Value<int?>? id,
       Value<String>? subscriptionName,
       Value<int>? subscriptionValue,
+      Value<int>? teamId,
       Value<int>? subscriptionDuration,
       Value<int>? subscriptionFreezeLimit,
       Value<int>? subscriptionInvitationLimit}) {
@@ -1861,6 +1894,7 @@ class SubscriptionsInfoTableCompanion
       id: id ?? this.id,
       subscriptionName: subscriptionName ?? this.subscriptionName,
       subscriptionValue: subscriptionValue ?? this.subscriptionValue,
+      teamId: teamId ?? this.teamId,
       subscriptionDuration: subscriptionDuration ?? this.subscriptionDuration,
       subscriptionFreezeLimit:
           subscriptionFreezeLimit ?? this.subscriptionFreezeLimit,
@@ -1880,6 +1914,9 @@ class SubscriptionsInfoTableCompanion
     }
     if (subscriptionValue.present) {
       map['subscription_value'] = Variable<int>(subscriptionValue.value);
+    }
+    if (teamId.present) {
+      map['team_id'] = Variable<int>(teamId.value);
     }
     if (subscriptionDuration.present) {
       map['subscription_duration'] = Variable<int>(subscriptionDuration.value);
@@ -1901,6 +1938,7 @@ class SubscriptionsInfoTableCompanion
           ..write('id: $id, ')
           ..write('subscriptionName: $subscriptionName, ')
           ..write('subscriptionValue: $subscriptionValue, ')
+          ..write('teamId: $teamId, ')
           ..write('subscriptionDuration: $subscriptionDuration, ')
           ..write('subscriptionFreezeLimit: $subscriptionFreezeLimit, ')
           ..write('subscriptionInvitationLimit: $subscriptionInvitationLimit')

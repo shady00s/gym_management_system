@@ -5,7 +5,7 @@ class SubscriptionInformationManager extends PlayersDatabaseManager{
 
   SystemDatabase db = PlayersDatabaseManager.playersDatabase;
  Future insertSubscriptionInformation(SubscriptionsInfoTableData data)async{
-   db.into(SubscriptionsInfoTable(db)).insert(SubscriptionsInfoTableCompanion.insert(subscriptionName: data.subscriptionName, subscriptionValue: data.subscriptionValue, subscriptionDuration: data.subscriptionDuration, subscriptionFreezeLimit: data.subscriptionFreezeLimit, subscriptionInvitationLimit: data.subscriptionInvitationLimit));
+   db.into(SubscriptionsInfoTable(db)).insert(SubscriptionsInfoTableCompanion.insert(subscriptionName: data.subscriptionName, subscriptionValue: data.subscriptionValue, subscriptionDuration: data.subscriptionDuration, subscriptionFreezeLimit: data.subscriptionFreezeLimit, subscriptionInvitationLimit: data.subscriptionInvitationLimit, teamId: 0));
   }
 
  Future<List<SubscriptionsInfoTableData>> getAllSubscriptions()async{
