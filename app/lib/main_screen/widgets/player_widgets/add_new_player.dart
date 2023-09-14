@@ -120,9 +120,10 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
   Widget build(BuildContext context) {
     return Center(
       child: SizedBox(
-        child: SizedBox(
-          height: MediaQuery.sizeOf(context).height * 0.85,
-          width: MediaQuery.sizeOf(context).width * 0.8,
+        height: MediaQuery.sizeOf(context).height * 0.96,
+        width: MediaQuery.sizeOf(context).width * 0.8,
+        child: AspectRatio(
+          aspectRatio:4/3,
           child: Card(
             backgroundColor: Colors.black,
             child: Column(
@@ -130,7 +131,10 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text("Add new player"),
+                     Padding(
+                       padding: const EdgeInsets.all(8.0),
+                       child: Text("Add new player",style: TextStyle(color:Colors.yellow,fontSize:21,fontWeight:FontWeight.bold),),
+                     ),
                     Consumer(builder: (context, ref, child) {
                       var image1 = ref.watch(billImageProvider);
                       var image2 = ref.watch(playerImageProvider);
@@ -177,219 +181,222 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                         child: Form(
                           key: key,
                           child: SizedBox(
-                            height: 500,
+                            height: MediaQuery.sizeOf(context).height * 0.71,
                             width: 400,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Player Info",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
-                                  ),
-
-                                  // select player image
-                                  const Padding(
-                                      padding: EdgeInsets.all(8),
-                                      child: Text(
-                                        "Player image",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 19),
-                                      )),
-                                  TakeNewImageWidget(
-                                    path: 'players_images',
-                                    state: playerImageProvider,
-                                  ),
-                                  const Divider(),
-                                  const SizedBox(
-                                    height: 12,
-                                  ),
-                                  // player name
-                                  const Padding(
-                                      padding: EdgeInsets.all(8),
-                                      child: Text(
-                                        "Player name",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 19),
-                                      )),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                          child: TextFormBox(
-                                        placeholder: "first name",
-                                        controller: firstName,
-                                      )),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Expanded(
-                                          child: TextFormBox(
-                                        placeholder: "second name",
-                                        controller: middleName,
-                                      )),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Expanded(
-                                          child: TextFormBox(
-                                        placeholder: "third name",
-                                        controller: lastName,
-                                      )),
-                                    ],
-                                  ),
-                                  const Divider(),
-                                  const SizedBox(
-                                    height: 12,
-                                  ),
-                                  // age
-                                  const Padding(
-                                      padding: EdgeInsets.all(8),
-                                      child: Text(
-                                        "Player Age",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 19),
-                                      )),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: NumberFormBox(
-                                      value: age,
-                                      onChanged: (val) {
-                                        setState(() {
-                                          age = val!;
-                                        });
-                                      },
+                            child: AspectRatio(
+                              aspectRatio:3/2,
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Player Info",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
                                     ),
-                                  ),
-                                  const Divider(),
-                                  const SizedBox(
-                                    height: 12,
-                                  ),
-                                  //phone number
-                                  const Padding(
-                                      padding: EdgeInsets.all(8),
-                                      child: Text(
-                                        "Phone number",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 19),
-                                      )),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: NumberFormBox(
-                                      value: phoneNumber,
-                                      onChanged: (val) {
-                                        setState(() {
-                                          phoneNumber = val!;
-                                        });
-                                      },
+
+                                    // select player image
+                                    const Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: Text(
+                                          "Player image",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 19),
+                                        )),
+                                    TakeNewImageWidget(
+                                      path: 'players_images',
+                                      state: playerImageProvider,
                                     ),
-                                  ),
-                                  const Divider(),
-                                  const SizedBox(
-                                    height: 12,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          const Padding(
-                                              padding: EdgeInsets.all(8),
-                                              child: Text(
-                                                "Gender",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 19),
-                                              )),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: ComboBox(
-                                                value: gender,
-                                                onChanged: (data) {
-                                                  setState(() {
-                                                    gender = data!;
-                                                  });
-                                                },
-                                                items: const [
-                                                  ComboBoxItem(
-                                                      value: "Male",
-                                                      child: Text("Male")),
-                                                  ComboBoxItem(
-                                                      value: "Female",
-                                                      child: Text("Female"))
-                                                ]),
-                                          ),
-                                        ],
+                                    const Divider(),
+                                    const SizedBox(
+                                      height: 12,
+                                    ),
+                                    // player name
+                                    const Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: Text(
+                                          "Player name",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 19),
+                                        )),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            child: TextFormBox(
+                                          placeholder: "first name",
+                                          controller: firstName,
+                                        )),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                            child: TextFormBox(
+                                          placeholder: "second name",
+                                          controller: middleName,
+                                        )),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                            child: TextFormBox(
+                                          placeholder: "third name",
+                                          controller: lastName,
+                                        )),
+                                      ],
+                                    ),
+                                    const Divider(),
+                                    const SizedBox(
+                                      height: 12,
+                                    ),
+                                    // age
+                                    const Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: Text(
+                                          "Player Age",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 19),
+                                        )),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: NumberFormBox(
+                                        value: age,
+                                        onChanged: (val) {
+                                          setState(() {
+                                            age = val!;
+                                          });
+                                        },
                                       ),
-                                      const Divider(),
-                                      const SizedBox(
-                                        height: 12,
+                                    ),
+                                    const Divider(),
+                                    const SizedBox(
+                                      height: 12,
+                                    ),
+                                    //phone number
+                                    const Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: Text(
+                                          "Phone number",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 19),
+                                        )),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: NumberFormBox(
+                                        value: phoneNumber,
+                                        onChanged: (val) {
+                                          setState(() {
+                                            phoneNumber = val!;
+                                          });
+                                        },
                                       ),
+                                    ),
+                                    const Divider(),
+                                    const SizedBox(
+                                      height: 12,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            const Padding(
+                                                padding: EdgeInsets.all(8),
+                                                child: Text(
+                                                  "Gender",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w600,
+                                                      fontSize: 19),
+                                                )),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: ComboBox(
+                                                  value: gender,
+                                                  onChanged: (data) {
+                                                    setState(() {
+                                                      gender = data!;
+                                                    });
+                                                  },
+                                                  items: const [
+                                                    ComboBoxItem(
+                                                        value: "Male",
+                                                        child: Text("Male")),
+                                                    ComboBoxItem(
+                                                        value: "Female",
+                                                        child: Text("Female"))
+                                                  ]),
+                                            ),
+                                          ],
+                                        ),
+                                        const Divider(),
+                                        const SizedBox(
+                                          height: 12,
+                                        ),
 
-                                      // player subscription
-                                      Column(
-                                        children: [
-                                          const Padding(
-                                              padding: EdgeInsets.all(8),
-                                              child: Text(
-                                                "Subscription",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 19),
-                                              )),
-                                          Consumer(
+                                        // player subscription
+                                        Column(
+                                          children: [
+                                            const Padding(
+                                                padding: EdgeInsets.all(8),
+                                                child: Text(
+                                                  "Subscription",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w600,
+                                                      fontSize: 19),
+                                                )),
+                                            Consumer(
 
-                                            builder: (context, ref,child) {
-                                              var subscription = ref.read(subscriptionProvider.notifier);
-                                              var getSubscriptions = ref.watch(getSubscriptionsProvider);
+                                              builder: (context, ref,child) {
+                                                var subscription = ref.read(subscriptionProvider.notifier);
+                                                var getSubscriptions = ref.watch(getSubscriptionsProvider);
 
 
-                                            return   getSubscriptions.when(data: (snapshot){
-                                                 if (snapshot
-                                                     .isNotEmpty) {
-                                                   return ComboBox(
-                                                       value:test,
-                                                       placeholder:const Text(
-                                                           "Select subscription"),
-                                                       onChanged: (val) async{
-                                                         subscription.state = val;
-                                                         Future.delayed(Duration.zero,(){setState(() {
-                                                           test = val;
-                                                         });});
-                                                       },
-                                                       items: snapshot
-                                                           .map((e) =>
-                                                           ComboBoxItem(
-                                                               value: e,
-                                                               child: Text(
-                                                                   e.subscriptionName)))
-                                                           .toList());
-                                                 }
-                                                 return const Center(
-                                                   child: Padding(
-                                                     padding:
-                                                     EdgeInsets.all(8.0),
-                                                     child: Text(
-                                                         "No subscription found"),
-                                                   ),
-                                                 );
-                                               }, error: (err,state)=>Text(err.toString()), loading: ()=> const Center(
-                                                 child: ProgressBar(),
-                                               ));
+                                              return   getSubscriptions.when(data: (snapshot){
+                                                   if (snapshot
+                                                       .isNotEmpty) {
+                                                     return ComboBox(
+                                                         value:test,
+                                                         placeholder:const Text(
+                                                             "Select subscription"),
+                                                         onChanged: (val) async{
+                                                           subscription.state = val;
+                                                           Future.delayed(Duration.zero,(){setState(() {
+                                                             test = val;
+                                                           });});
+                                                         },
+                                                         items: snapshot
+                                                             .map((e) =>
+                                                             ComboBoxItem(
+                                                                 value: e,
+                                                                 child: Text(
+                                                                     e.subscriptionName)))
+                                                             .toList());
+                                                   }
+                                                   return const Center(
+                                                     child: Padding(
+                                                       padding:
+                                                       EdgeInsets.all(8.0),
+                                                       child: Text(
+                                                           "No subscription found"),
+                                                     ),
+                                                   );
+                                                 }, error: (err,state)=>Text(err.toString()), loading: ()=> const Center(
+                                                   child: ProgressBar(),
+                                                 ));
 
-                                            }
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  // player gender
-                                ],
+                                              }
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    // player gender
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -400,236 +407,237 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                       width: 30,
                     ),
                     SizedBox(
-                      height: 550,
+                      height: MediaQuery.sizeOf(context).height * 0.77,
                       width: 450,
-                      child: Card(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Bill Info",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 20),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              const Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Text(
-                                    "Enter beginning date",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18),
-                                  )),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              TextFormBox(
-                                showCursor: false,
-                                onTap: () async {
-                                  await showDialog(
-                                      context: context,
-                                      builder: (context) => StatefulBuilder(
-                                              builder: (context, setState) {
-                                            return ContentDialog(
-                                              title: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  const Text(
-                                                      "Select custom date"),
-                                                  IconButton(
-                                                      icon: const Icon(
-                                                          FluentIcons.cancel),
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      })
-                                                ],
-                                              ),
-                                              content: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  const Text(
-                                                      "NOTE: system cannot accept old date"),
-                                                  const SizedBox(
-                                                    height: 12,
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: DatePicker(
-                                                      showYear: false,
-                                                      startDate: DateTime.now(),
-                                                      selected: customDate,
-                                                      onChanged: (val) {
-                                                        setState(() {
-                                                          customDate = val;
-                                                        });
-                                                      },
-                                                    ),
-                                                  ),
-                                                  if (customDate != null &&
-                                                      customDate!
-                                                          .difference(
-                                                              DateTime.now())
-                                                          .inDays
-                                                          .isNegative)
-                                                    Text(
-                                                      "please select date newer  date",
-                                                      style: TextStyle(
-                                                          color: Colors.red,
-                                                          fontSize: 19),
-                                                    ),
-                                                ],
-                                              ),
-                                              actions: customDate != null &&
-                                                      !customDate!
-                                                          .difference(
-                                                              DateTime.now())
-                                                          .inDays
-                                                          .isNegative
-                                                  ? [
-                                                      FilledButton(
-                                                          onPressed:
-                                                              submitFunction,
-                                                          child: const Text(
-                                                              "submit")),
-                                                      Button(
-                                                          onPressed:
-                                                              cancelFunction,
-                                                          child: const Text(
-                                                              "cancel")),
-                                                    ]
-                                                  : null,
-                                            );
-                                          }));
-                                },
-                                readOnly: true,
-                                controller: _beginDateController,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              const Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Text(
-                                    "pay amount",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18),
-                                  )),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              SizedBox(
-                                  width: 170,
-                                  child:Consumer(
-
-                                    builder: (context, ref,child) {
-                                      var subData = ref.watch(subscriptionProvider);
-                                      return NumberFormBox(
-                                        value: subData?.subscriptionValue,
-                                        initialValue: subData.toString(),
-                                      );
-                                    }
-                                  )),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              const Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Text(
-                                    "collector id",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18),
-                                  )),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              TextFormBox(
-                                onChanged: (val) {
-                                  setState(() {
-                                    collectorId = val;
-                                  });
-                                },
-                                validator: (val) {
-                                  if (val!.isEmpty) {
-                                    return "Please add your ID";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              const Divider(),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              const Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Text(
-                                    "Bill image",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18),
-                                  )),
-                              SizedBox(
-                                  height: 140,
-                                  child: TakeNewImageWidget(
-                                    path: "re-subscription_images",
-                                    state: billImageProvider,
-                                  )),
-                              if (isNoImage)
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    'please add bill image',
-                                    style: TextStyle(
-                                        color: Colors.red.lighter,
-                                        fontWeight: FontWeight.w500),
-                                  ),
+                      child: AspectRatio(
+                        aspectRatio: 3/4,
+                        child: Card(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Bill Info",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold, fontSize: 20),
                                 ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              const Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Text(
-                                    "Bill ID",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18),
-                                  )),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              NumberFormBox(
-                                value: billId,
-                                onChanged: (val) {
-                                  setState(() {
-                                    billId = val!;
-                                  });
-                                },
-                                validator: (val) {
-                                  if (val == null) {
-                                    return "Please add bill ID";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                            ],
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                const Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Text(
+                                      "Enter beginning date",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18),
+                                    )),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                TextFormBox(
+                                  showCursor: false,
+                                  onTap: () async {
+                                    await showDialog(
+                                        context: context,
+                                        builder: (context) => StatefulBuilder(
+                                                builder: (context, setState) {
+                                              return ContentDialog(
+                                                title: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    const Text(
+                                                        "Select custom date"),
+                                                    IconButton(
+                                                        icon: const Icon(
+                                                            FluentIcons.cancel),
+                                                        onPressed: () {
+                                                          Navigator.pop(context);
+                                                        })
+                                                  ],
+                                                ),
+                                                content: Column(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    const Text(
+                                                        "NOTE: system cannot accept old date"),
+                                                    const SizedBox(
+                                                      height: 12,
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: DatePicker(
+                                                        showYear: false,
+                                                        startDate: DateTime.now(),
+                                                        selected: customDate,
+                                                        onChanged: (val) {
+                                                          setState(() {
+                                                            customDate = val;
+                                                          });
+                                                        },
+                                                      ),
+                                                    ),
+                                                    if (customDate != null &&
+                                                        customDate!
+                                                            .difference(
+                                                                DateTime.now())
+                                                            .inDays
+                                                            .isNegative)
+                                                      Text(
+                                                        "please select date newer  date",
+                                                        style: TextStyle(
+                                                            color: Colors.red,
+                                                            fontSize: 19),
+                                                      ),
+                                                  ],
+                                                ),
+                                                actions: customDate != null &&
+                                                        !customDate!
+                                                            .difference(
+                                                                DateTime.now())
+                                                            .inDays
+                                                            .isNegative
+                                                    ? [
+                                                        FilledButton(
+                                                            onPressed:
+                                                                submitFunction,
+                                                            child: const Text(
+                                                                "submit")),
+                                                        Button(
+                                                            onPressed:
+                                                                cancelFunction,
+                                                            child: const Text(
+                                                                "cancel")),
+                                                      ]
+                                                    : null,
+                                              );
+                                            }));
+                                  },
+                                  readOnly: true,
+                                  controller: _beginDateController,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                const Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Text(
+                                      "pay amount",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18),
+                                    )),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                    width: 170,
+                                    child:Consumer(
+
+                                      builder: (context, ref,child) {
+                                        var subData = ref.watch(subscriptionProvider);
+                                        return NumberFormBox(
+                                          value: subData?.subscriptionValue,
+                                          initialValue: subData.toString(),
+                                        );
+                                      }
+                                    )),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                const Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Text(
+                                      "collector id",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18),
+                                    )),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                TextFormBox(
+                                  onChanged: (val) {
+                                    setState(() {
+                                      collectorId = val;
+                                    });
+                                  },
+                                  validator: (val) {
+                                    if (val!.isEmpty) {
+                                      return "Please add your ID";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                const Divider(),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+
+                                const Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Text(
+                                      "Bill image",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18),
+                                    )),
+                                SizedBox(
+                                    height: 120,
+                                    child: TakeNewImageWidget(
+                                      path: "re-subscription_images",
+                                      state: billImageProvider,
+                                    )),
+                                if (isNoImage)
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      'please add bill image',
+                                      style: TextStyle(
+                                          color: Colors.red.lighter,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                const Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Text(
+                                      "Bill ID",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18),
+                                    )),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                NumberFormBox(
+                                  value: billId,
+                                  onChanged: (val) {
+                                    setState(() {
+                                      billId = val!;
+                                    });
+                                  },
+                                  validator: (val) {
+                                    if (val == null) {
+                                      return "Please add bill ID";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

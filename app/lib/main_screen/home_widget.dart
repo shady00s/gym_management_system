@@ -48,7 +48,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             case ConnectionState.waiting:
               return const Center(child: ProgressBar(),);
             default:
-              return const Center(child: ProgressBar(),);
+              return const SizedBox();
 
           }
         }
