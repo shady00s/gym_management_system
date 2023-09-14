@@ -210,4 +210,29 @@ Future reSubscribePlayer(PlayersSubscriptionsCompanion data)async{
      GetRemainingFreezeResult freeze = await playersDatabase.getRemainingFreeze(playerIndexId).getSingle();
      return freeze;
    }
+   Future<int> addNewPlayer(PlayersCompanion player,PlayersSubscriptionsCompanion sub)async{
+    try{
+      var players =  playersDatabase.select(Players(playersDatabase))..where((tbl) => tbl.playerPhoneNumber.equals(player.playerPhoneNumber.value))..get();
+      List<Player> playersList = await players.get();
+      if (playersList.isEmpty) {
+        playersDatabase.transaction(() async{
+          await playersDatabase.into(Players(playersDatabase)).insert(player);
+          await  playersDatabase.into(PlayersSubscriptions(playersDatabase)).insert(sub);
+        });
+        return 200;
+      }else{
+        return 600;
+      }
+
+    }catch(e){
+      print(e);
+      return 400;
+    }
+
+   }
+   Future<int> createPlayerId()async{
+    List<Player> db = await playersDatabase.select(Players(playersDatabase)).get();
+
+    return db.length +1;
+   }
 }

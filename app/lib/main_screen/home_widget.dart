@@ -120,7 +120,7 @@ class HomeTabWidget extends StatelessWidget {
                           CardsWithIcon(
                               title: 'Add new player',
                               icon: FluentIcons.add_friend, onTap: () async{
-                                await showDialog(context: context, builder: (context)=>const AddNewPlayerWidget());
+                                await showGeneralDialog(context: context, pageBuilder: (context,animation,animation2)=>const AddNewPlayerWidget());
                           },),
                         ],
                       ),)

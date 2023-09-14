@@ -6,7 +6,8 @@ import '../../camera_widget.dart';
 
 class TakeNewImageWidget extends StatelessWidget {
   final String path;
-  const TakeNewImageWidget({super.key,required this.path});
+  final StateProvider<String?> state;
+  const TakeNewImageWidget({super.key,required this.path,required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class TakeNewImageWidget extends StatelessWidget {
       child: Consumer(
 
         builder: (context,ref,child) {
-          var image = ref.watch(imageProvider);
+          var image = ref.watch(state);
           return Row(
             children: [
               image == null?const CircleAvatar(
@@ -44,7 +45,7 @@ class TakeNewImageWidget extends StatelessWidget {
                           children: [
                             const Text("Camera"),
                             IconButton(icon: const Icon(FluentIcons.cancel), onPressed: (){Navigator.pop(context);})
-                          ],), content:   TakeNewPhoto(path:path),));
+                          ],), content:   TakeNewPhoto(path:path, state: state,),));
 
                 }),
               ),
@@ -56,4 +57,3 @@ class TakeNewImageWidget extends StatelessWidget {
   }
 }
 
-StateProvider<String?> imageProvider = StateProvider((ref) => null);

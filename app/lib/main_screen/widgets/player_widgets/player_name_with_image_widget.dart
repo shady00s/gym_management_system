@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/main_screen/widgets/freeze_widget.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_card_information.dart';
@@ -67,7 +69,7 @@ class PlayerNameWithImage extends StatelessWidget {
                   Text(playerName),
                   Text(" - $playerId "),
                   const  SizedBox(width: 9,),
-                    imagePath !="no image"?Image(image: NetworkImage(imagePath),):const CircleAvatar(
+                    imagePath !="no image"?Image(image: FileImage(File(imagePath)),width: 80,):const CircleAvatar(
                       radius: 17,
                       backgroundColor: Color.fromRGBO(
                           176, 175, 175, 0.7019607843137254),

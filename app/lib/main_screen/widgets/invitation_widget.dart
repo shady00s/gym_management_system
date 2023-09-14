@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
+import 'package:gym_management/main_screen/widgets/player_widgets/add_new_player.dart';
 
 import 'package:gym_management/main_screen/widgets/take_new_image_widget.dart';
 
@@ -98,7 +99,7 @@ class InvitationWidget extends StatelessWidget {
                                     children: [
                                       // select player image
                                       const Padding(padding: EdgeInsets.all(8),child: Text("Player image",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 17),)),
-                                      const TakeNewImageWidget(path: 'players_images'),
+                                       TakeNewImageWidget(path: 'players_images', state: playerImageProvider,),
                                       if(isNoImage)
                                         Padding(
                                           padding:const  EdgeInsets.all(8.0),
@@ -171,7 +172,7 @@ class InvitationWidget extends StatelessWidget {
                                         child: Consumer(
 
                                             builder: (context, ref,child) {
-                                              var imagePath = ref.watch(imageProvider);
+                                              var imagePath = ref.watch(playerImageProvider);
                                               return FilledButton(child: const Padding(
                                                 padding: EdgeInsets.all(8.0),
                                                 child: Text("Submit invitation"),

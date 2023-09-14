@@ -17,8 +17,9 @@ import 'package:path/path.dart' as p;
 /// Example app for Camera Windows plugin.
 class TakeNewPhoto extends StatefulWidget {
   final String path;
+  final StateProvider<String?> state;
   /// Default Constructor
-  const TakeNewPhoto({super.key,required this.path});
+  const TakeNewPhoto({super.key,required this.path,required this.state});
 
   @override
   State<TakeNewPhoto> createState() => _TakeNewPhotoState();
@@ -51,6 +52,7 @@ class _TakeNewPhotoState extends State<TakeNewPhoto> {
     _cameraClosingStreamSubscription = null;
     super.dispose();
   }
+
 
   /// Fetches list of available cameras from camera_windows plugin.
   Future<void> _fetchCameras() async {
@@ -295,7 +297,7 @@ class _TakeNewPhotoState extends State<TakeNewPhoto> {
                   const SizedBox(width: 5),
                   Consumer(
                     builder: (context, ref,child) {
-                      var image =ref.read(imageProvider.notifier);
+                      var image =ref.read(widget.state.notifier);
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: FilledButton(

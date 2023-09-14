@@ -52,6 +52,21 @@ Future loadingDialog(context ,newNumber,function,state)async{
 
           );
         }
+        else if(status != 600){
+
+          await showDialog(context:context,  builder:(context){
+
+            return  ContentDialog(
+              actions: [
+                Button(child: const Text("CLose"), onPressed: (){
+                  Navigator.pop(context);
+                })
+              ],
+              content:const Text("This number is already registered"),);
+          },
+
+          );
+        }
         else{
           Navigator.pop(context);
         }

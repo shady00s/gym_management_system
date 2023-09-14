@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gym_management/main_screen/widgets/player_widgets/add_new_player.dart';
 import 'package:gym_management/main_screen/widgets/re-subscription/re_subscription_widget.dart';
 import 'package:gym_management/manage_excel/ui_widget.dart';
 import 'package:intl/intl.dart';
@@ -94,6 +95,7 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
 
           const Text("Subscription beginning date"),
             const SizedBox(height: 10,),
+            //subscription beg date
             Consumer(
 
               builder: (context, ref,child) {
@@ -114,11 +116,9 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
                   }
                 });
 
-
+// select custom date
                 return TextFormBox(
-                  onChanged: (val){
 
-                  },
                   onTap: ()async{
                    await showDialog(context: context, builder:(context)=> StatefulBuilder(
 
@@ -160,6 +160,7 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
                   controller: _beginDateController,);
               }
             ),
+
             const SizedBox(height: 10,),
             const Text("pay amount"),
             const SizedBox(height: 10,),
@@ -192,7 +193,7 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
         const SizedBox(height: 10,),
             const Text("Bill image"),
 
-            const SizedBox(height:140,child:   TakeNewImageWidget(path: "re-subscription_images",)),
+             SizedBox(height:140,child:   TakeNewImageWidget(path: "re-subscription_images", state: billImageProvider,)),
           if(isNoImage)
              Padding(
               padding:const  EdgeInsets.all(8.0),
@@ -220,7 +221,7 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
 
             Consumer(
               builder: (context, ref,child) {
-               String? imagePath = ref.watch(imageProvider);
+               String? imagePath = ref.watch(billImageProvider);
                 return FilledButton(child: const Text("Re-subscribe"), onPressed:  ()async{
                   if(imagePath == null){
                     setState(() {

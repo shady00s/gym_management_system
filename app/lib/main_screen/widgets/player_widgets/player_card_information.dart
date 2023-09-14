@@ -22,7 +22,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
             case ConnectionState.done:
               if(snapshot.hasData){
                 int date = DateTime.now().difference(snapshot.data![0].endDate).inDays;
-                print(snapshot.data![0].playerIndexId);
+                print(snapshot.data!.length);
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(

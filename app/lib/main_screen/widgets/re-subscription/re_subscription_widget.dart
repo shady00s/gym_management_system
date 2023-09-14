@@ -3,8 +3,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/database_management/tables/gym_player_logs/gym_log_manager.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
+import 'package:gym_management/main_screen/widgets/player_widgets/add_new_player.dart';
 import 'package:gym_management/main_screen/widgets/re-subscription/form_widget.dart';
-import 'package:gym_management/main_screen/widgets/take_new_image_widget.dart';
 import 'package:intl/intl.dart';
 import '../../../database_management/tables/generate_table.dart';
 
@@ -39,16 +39,15 @@ class ReSubscriptionWidget extends StatelessWidget {
                       Consumer(
 
                         builder: (context, ref,child) {
-                          var image = ref.watch(imageProvider);
+                          var image = ref.watch(billImageProvider);
 
                           return IconButton(onPressed: () async{
                             if(image != null) {
-                              print(image);
                               await File(image).delete(recursive: true).then((value) =>  Navigator.of(context).pop());
-                            var  imageState =  ref.read(imageProvider.notifier);
+                            var  imageState =  ref.read(billImageProvider.notifier);
 
                               imageState.state = null;
-                           ;
+
                             }else {
                               Navigator.of(context).pop();
                             }

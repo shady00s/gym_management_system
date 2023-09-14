@@ -2192,6 +2192,14 @@ class PlayersSubscriptions extends Table
       type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
+  static const VerificationMeta _billImagePathMeta =
+      const VerificationMeta('billImagePath');
+  late final GeneratedColumn<String> billImagePath = GeneratedColumn<String>(
+      'bill_image_path', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL DEFAULT \'no-image\'',
+      defaultValue: const CustomExpression('\'no-image\''));
   static const VerificationMeta _discountCodeMeta =
       const VerificationMeta('discountCode');
   late final GeneratedColumn<String> discountCode = GeneratedColumn<String>(
@@ -2272,6 +2280,7 @@ class PlayersSubscriptions extends Table
   List<GeneratedColumn> get $columns => [
         subId,
         teamId,
+        billImagePath,
         discountCode,
         freezeAvailable,
         invitationAvailable,
@@ -2303,6 +2312,12 @@ class PlayersSubscriptions extends Table
           teamId.isAcceptableOrUnknown(data['team_id']!, _teamIdMeta));
     } else if (isInserting) {
       context.missing(_teamIdMeta);
+    }
+    if (data.containsKey('bill_image_path')) {
+      context.handle(
+          _billImagePathMeta,
+          billImagePath.isAcceptableOrUnknown(
+              data['bill_image_path']!, _billImagePathMeta));
     }
     if (data.containsKey('discount_code')) {
       context.handle(
@@ -2395,6 +2410,8 @@ class PlayersSubscriptions extends Table
           .read(DriftSqlType.int, data['${effectivePrefix}sub_id']),
       teamId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}team_id'])!,
+      billImagePath: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}bill_image_path'])!,
       discountCode: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}discount_code']),
       freezeAvailable: attachedDatabase.typeMapping
@@ -2434,6 +2451,7 @@ class PlayersSubscription extends DataClass
     implements Insertable<PlayersSubscription> {
   final int? subId;
   final int teamId;
+  final String billImagePath;
   final String? discountCode;
   final int freezeAvailable;
   final int invitationAvailable;
@@ -2448,6 +2466,7 @@ class PlayersSubscription extends DataClass
   const PlayersSubscription(
       {this.subId,
       required this.teamId,
+      required this.billImagePath,
       this.discountCode,
       required this.freezeAvailable,
       required this.invitationAvailable,
@@ -2466,6 +2485,7 @@ class PlayersSubscription extends DataClass
       map['sub_id'] = Variable<int>(subId);
     }
     map['team_id'] = Variable<int>(teamId);
+    map['bill_image_path'] = Variable<String>(billImagePath);
     if (!nullToAbsent || discountCode != null) {
       map['discount_code'] = Variable<String>(discountCode);
     }
@@ -2487,6 +2507,7 @@ class PlayersSubscription extends DataClass
       subId:
           subId == null && nullToAbsent ? const Value.absent() : Value(subId),
       teamId: Value(teamId),
+      billImagePath: Value(billImagePath),
       discountCode: discountCode == null && nullToAbsent
           ? const Value.absent()
           : Value(discountCode),
@@ -2509,6 +2530,7 @@ class PlayersSubscription extends DataClass
     return PlayersSubscription(
       subId: serializer.fromJson<int?>(json['sub_id']),
       teamId: serializer.fromJson<int>(json['team_id']),
+      billImagePath: serializer.fromJson<String>(json['bill_image_path']),
       discountCode: serializer.fromJson<String?>(json['discount_code']),
       freezeAvailable: serializer.fromJson<int>(json['freeze_available']),
       invitationAvailable:
@@ -2531,6 +2553,7 @@ class PlayersSubscription extends DataClass
     return <String, dynamic>{
       'sub_id': serializer.toJson<int?>(subId),
       'team_id': serializer.toJson<int>(teamId),
+      'bill_image_path': serializer.toJson<String>(billImagePath),
       'discount_code': serializer.toJson<String?>(discountCode),
       'freeze_available': serializer.toJson<int>(freezeAvailable),
       'invitation_available': serializer.toJson<int>(invitationAvailable),
@@ -2548,6 +2571,7 @@ class PlayersSubscription extends DataClass
   PlayersSubscription copyWith(
           {Value<int?> subId = const Value.absent(),
           int? teamId,
+          String? billImagePath,
           Value<String?> discountCode = const Value.absent(),
           int? freezeAvailable,
           int? invitationAvailable,
@@ -2562,6 +2586,7 @@ class PlayersSubscription extends DataClass
       PlayersSubscription(
         subId: subId.present ? subId.value : this.subId,
         teamId: teamId ?? this.teamId,
+        billImagePath: billImagePath ?? this.billImagePath,
         discountCode:
             discountCode.present ? discountCode.value : this.discountCode,
         freezeAvailable: freezeAvailable ?? this.freezeAvailable,
@@ -2580,6 +2605,7 @@ class PlayersSubscription extends DataClass
     return (StringBuffer('PlayersSubscription(')
           ..write('subId: $subId, ')
           ..write('teamId: $teamId, ')
+          ..write('billImagePath: $billImagePath, ')
           ..write('discountCode: $discountCode, ')
           ..write('freezeAvailable: $freezeAvailable, ')
           ..write('invitationAvailable: $invitationAvailable, ')
@@ -2599,6 +2625,7 @@ class PlayersSubscription extends DataClass
   int get hashCode => Object.hash(
       subId,
       teamId,
+      billImagePath,
       discountCode,
       freezeAvailable,
       invitationAvailable,
@@ -2616,6 +2643,7 @@ class PlayersSubscription extends DataClass
       (other is PlayersSubscription &&
           other.subId == this.subId &&
           other.teamId == this.teamId &&
+          other.billImagePath == this.billImagePath &&
           other.discountCode == this.discountCode &&
           other.freezeAvailable == this.freezeAvailable &&
           other.invitationAvailable == this.invitationAvailable &&
@@ -2633,6 +2661,7 @@ class PlayersSubscriptionsCompanion
     extends UpdateCompanion<PlayersSubscription> {
   final Value<int?> subId;
   final Value<int> teamId;
+  final Value<String> billImagePath;
   final Value<String?> discountCode;
   final Value<int> freezeAvailable;
   final Value<int> invitationAvailable;
@@ -2647,6 +2676,7 @@ class PlayersSubscriptionsCompanion
   const PlayersSubscriptionsCompanion({
     this.subId = const Value.absent(),
     this.teamId = const Value.absent(),
+    this.billImagePath = const Value.absent(),
     this.discountCode = const Value.absent(),
     this.freezeAvailable = const Value.absent(),
     this.invitationAvailable = const Value.absent(),
@@ -2662,6 +2692,7 @@ class PlayersSubscriptionsCompanion
   PlayersSubscriptionsCompanion.insert({
     this.subId = const Value.absent(),
     required int teamId,
+    this.billImagePath = const Value.absent(),
     this.discountCode = const Value.absent(),
     required int freezeAvailable,
     required int invitationAvailable,
@@ -2687,6 +2718,7 @@ class PlayersSubscriptionsCompanion
   static Insertable<PlayersSubscription> custom({
     Expression<int>? subId,
     Expression<int>? teamId,
+    Expression<String>? billImagePath,
     Expression<String>? discountCode,
     Expression<int>? freezeAvailable,
     Expression<int>? invitationAvailable,
@@ -2702,6 +2734,7 @@ class PlayersSubscriptionsCompanion
     return RawValuesInsertable({
       if (subId != null) 'sub_id': subId,
       if (teamId != null) 'team_id': teamId,
+      if (billImagePath != null) 'bill_image_path': billImagePath,
       if (discountCode != null) 'discount_code': discountCode,
       if (freezeAvailable != null) 'freeze_available': freezeAvailable,
       if (invitationAvailable != null)
@@ -2722,6 +2755,7 @@ class PlayersSubscriptionsCompanion
   PlayersSubscriptionsCompanion copyWith(
       {Value<int?>? subId,
       Value<int>? teamId,
+      Value<String>? billImagePath,
       Value<String?>? discountCode,
       Value<int>? freezeAvailable,
       Value<int>? invitationAvailable,
@@ -2736,6 +2770,7 @@ class PlayersSubscriptionsCompanion
     return PlayersSubscriptionsCompanion(
       subId: subId ?? this.subId,
       teamId: teamId ?? this.teamId,
+      billImagePath: billImagePath ?? this.billImagePath,
       discountCode: discountCode ?? this.discountCode,
       freezeAvailable: freezeAvailable ?? this.freezeAvailable,
       invitationAvailable: invitationAvailable ?? this.invitationAvailable,
@@ -2758,6 +2793,9 @@ class PlayersSubscriptionsCompanion
     }
     if (teamId.present) {
       map['team_id'] = Variable<int>(teamId.value);
+    }
+    if (billImagePath.present) {
+      map['bill_image_path'] = Variable<String>(billImagePath.value);
     }
     if (discountCode.present) {
       map['discount_code'] = Variable<String>(discountCode.value);
@@ -2801,6 +2839,7 @@ class PlayersSubscriptionsCompanion
     return (StringBuffer('PlayersSubscriptionsCompanion(')
           ..write('subId: $subId, ')
           ..write('teamId: $teamId, ')
+          ..write('billImagePath: $billImagePath, ')
           ..write('discountCode: $discountCode, ')
           ..write('freezeAvailable: $freezeAvailable, ')
           ..write('invitationAvailable: $invitationAvailable, ')
@@ -2932,6 +2971,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           subscriptionId: row.read<int>('subscription_id'),
           subId: row.readNullable<int>('sub_id'),
           teamId: row.read<int>('team_id'),
+          billImagePath: row.read<String>('bill_image_path'),
           discountCode: row.readNullable<String>('discount_code'),
           freezeAvailable: row.read<int>('freeze_available'),
           invitationAvailable: row.read<int>('invitation_available'),
@@ -3003,6 +3043,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           subscriptionId: row.read<int>('subscription_id'),
           subId: row.readNullable<int>('sub_id'),
           teamId: row.readNullable<int>('team_id'),
+          billImagePath: row.readNullable<String>('bill_image_path'),
           discountCode: row.readNullable<String>('discount_code'),
           freezeAvailable: row.readNullable<int>('freeze_available'),
           invitationAvailable: row.readNullable<int>('invitation_available'),
@@ -3164,6 +3205,7 @@ class GetPlayerSubscriptionResult {
   final int subscriptionId;
   final int? subId;
   final int teamId;
+  final String billImagePath;
   final String? discountCode;
   final int freezeAvailable;
   final int invitationAvailable;
@@ -3188,6 +3230,7 @@ class GetPlayerSubscriptionResult {
     required this.subscriptionId,
     this.subId,
     required this.teamId,
+    required this.billImagePath,
     this.discountCode,
     required this.freezeAvailable,
     required this.invitationAvailable,
@@ -3226,6 +3269,7 @@ class GetEndedSubscriptionByTeamResult {
   final int subscriptionId;
   final int? subId;
   final int? teamId;
+  final String? billImagePath;
   final String? discountCode;
   final int? freezeAvailable;
   final int? invitationAvailable;
@@ -3250,6 +3294,7 @@ class GetEndedSubscriptionByTeamResult {
     required this.subscriptionId,
     this.subId,
     this.teamId,
+    this.billImagePath,
     this.discountCode,
     this.freezeAvailable,
     this.invitationAvailable,
