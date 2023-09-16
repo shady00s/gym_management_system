@@ -29,3 +29,9 @@ getTodayPlayerLogs(REQUIRED :playerIndexId AS INT, REQUIRED :teamId AS INT,REQUI
                                               AND  PlayersLogsTable.team_id = :teamId
                                               AND PlayersLogsTable.player_entrance_date BETWEEN :begDate AND :endDate
                                               ORDER BY PlayersLogsTable.player_entrance_date ASC;
+
+getListOfPlayersLogs(REQUIRED :teamId AS INT, REQUIRED :currentDate AS DATETIME):
+                                    SELECT Players.player_index_id, Players.player_name, Players.player_id, PlayersLogsTable.player_entrance_date FROM Players
+                                    INNER JOIN PlayersTeamsTable ON PlayersAndTeamsTable.team_id = :teamId
+                                    INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id
+                                    WHERE PlayersLogsTable.player_entrance_date = :currentDate;

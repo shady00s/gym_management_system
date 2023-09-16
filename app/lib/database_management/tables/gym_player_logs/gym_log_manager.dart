@@ -59,4 +59,8 @@ class GymLogsManager{
 
       return await db.getLastPlayerLog(playerIndex, teamId).getSingle();
     }
+
+    Future getListOfPlayersLogs(int teamId,DateTime date)async{
+      //await db
+    }
 }

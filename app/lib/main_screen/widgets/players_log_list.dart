@@ -9,6 +9,9 @@ class TimeModel{
 }
 
 var playersLogProvider = StateProvider<TimeModel>((ref) => TimeModel(day: DateTime.now().day, month: DateTime.now().month, year: DateTime.now().year));
+var selectedTeam = StateProvider((ref)=>null);
+var getTeams = FutureProvider((ref)=>);
+
 class PlayersLogsWidget extends StatelessWidget {
   const PlayersLogsWidget({super.key});
 
