@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 import 'package:intl/intl.dart';
@@ -22,7 +24,6 @@ class PlayerCardInformationWidget extends StatelessWidget {
             case ConnectionState.done:
               if(snapshot.hasData){
                 int date = DateTime.now().difference(snapshot.data![0].endDate).inDays;
-                print(snapshot.data!.length);
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
@@ -34,12 +35,14 @@ class PlayerCardInformationWidget extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const   CircleAvatar(
+                              snapshot.data![0].imagePath == 'no-image'?   const   CircleAvatar(
                                 radius: 33,
                                 backgroundColor: Color.fromRGBO(
                                     176, 175, 175, 0.7019607843137254),
                                 child: Icon(FluentIcons.contact ,size: 41,),
-                              ),
+                              ) : CircleAvatar(
+                                  radius: 45,
+                                  backgroundImage: FileImage(File(snapshot.data![0].imagePath))),
                               const  SizedBox(height: 22,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

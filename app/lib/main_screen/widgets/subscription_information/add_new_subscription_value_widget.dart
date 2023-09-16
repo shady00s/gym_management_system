@@ -78,12 +78,15 @@ class CurrentSubscriptions extends ConsumerWidget {
                   height: 450,
                   width: 400,
                   child: allSubscriptions.when(
+                      skipLoadingOnRefresh:false,
                       data: (snapshot){
 
                         if(snapshot.isNotEmpty){
-                          List<Widget> data = snapshot.map((e) => SubscriptionCard(data: e)).toList();
-                          return ListView(
-                            children: data,
+                          return ListView.builder(
+                            itemCount: snapshot.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return SubscriptionCard(data: snapshot[index]);
+                            },
                           );
                         }else{
                          return const Center(child: Text("No subscriptions found"));

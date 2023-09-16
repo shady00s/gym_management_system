@@ -60,7 +60,7 @@ class GymLogsManager{
       return await db.getLastPlayerLog(playerIndex, teamId).getSingle();
     }
 
-    Future getListOfPlayersLogs(int teamId,DateTime date)async{
-      //await db
+  Future<List<GetListOfPlayersLogsResult>> getListOfPlayersLogs(int? teamId,DateTime date)async{
+      return await db.getListOfPlayersLogs(teamId, date,date.add(const Duration(hours: 23))).get();
     }
 }

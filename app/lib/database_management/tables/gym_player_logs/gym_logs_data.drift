@@ -1,5 +1,6 @@
 import '../players/players_data.drift';
 import '../teams/teams.drift';
+import '../teams/players_teams.drift';
 
 CREATE TABLE IF NOT EXISTS PlayersLogsTable(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,8 +31,9 @@ getTodayPlayerLogs(REQUIRED :playerIndexId AS INT, REQUIRED :teamId AS INT,REQUI
                                               AND PlayersLogsTable.player_entrance_date BETWEEN :begDate AND :endDate
                                               ORDER BY PlayersLogsTable.player_entrance_date ASC;
 
-getListOfPlayersLogs(REQUIRED :teamId AS INT, REQUIRED :currentDate AS DATETIME):
-                                    SELECT Players.player_index_id, Players.player_name, Players.player_id, PlayersLogsTable.player_entrance_date FROM Players
-                                    INNER JOIN PlayersTeamsTable ON PlayersAndTeamsTable.team_id = :teamId
-                                    INNER JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id
-                                    WHERE PlayersLogsTable.player_entrance_date = :currentDate;
+getListOfPlayersLogs(REQUIRED :teamId AS INT, REQUIRED :currentDate AS DATETIME, REQUIRED :endDate):
+                                   SELECT
+                                       Players.player_index_id, Players.image_path, Players.player_name, Players.player_id, PlayersLogsTable.player_entrance_date
+                                   FROM PlayersLogsTable
+                                   INNER JOIN Players ON Players.player_index_id = PlayersLogsTable.player_index_id
+                                   WHERE (PlayersLogsTable.team_id = COALESCE(:teamId, PlayersLogsTable.team_id) OR :teamId IS NULL ) AND PlayersLogsTable.player_entrance_date BETWEEN :currentDate AND :endDate AND PlayersLogsTable.player_index_id = Players.player_index_id;

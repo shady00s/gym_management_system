@@ -25,7 +25,7 @@ class GymStatusManager{
   Future<int?> getBestMonthInProfit(DateTime begValue,DateTime endVal)async{
     var data = await db.customSelect('''
        SELECT SUM(PlayersSubscriptions.billValue)  FROM PlayersSubscriptions
-    WHERE PlayersSubscriptions.beginning_date BETWEEN ?1 AND ?2 
+       WHERE PlayersSubscriptions.subscription_pay_date BETWEEN ?1 AND ?2 
   
     ''',readsFrom: {PlayersSubscriptions(db)},variables: [Variable.withDateTime(begValue),Variable.withDateTime(endVal)]).getSingle();
     return data.readNullable<int>("SUM(PlayersSubscriptions.billValue)");

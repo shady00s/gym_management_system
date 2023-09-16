@@ -29,7 +29,9 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
         editSubData = widget.data;
         _subName.text = editSubData!.subscriptionName;
       });
+  setState(() {
 
+  });
 
     super.initState();
   }
@@ -373,9 +375,10 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
 
                       })
                     ],
-                  ),
+                  )
                 ));
           },
         ));
+
   }
 }

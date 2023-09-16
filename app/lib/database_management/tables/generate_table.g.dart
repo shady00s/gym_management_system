@@ -2920,6 +2920,27 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
         }).map((QueryRow row) => row.read<DateTime>('player_entrance_date'));
   }
 
+  Selectable<GetListOfPlayersLogsResult> getListOfPlayersLogs(
+      int? teamId, DateTime currentDate, DateTime endDate) {
+    return customSelect(
+        'SELECT Players.player_index_id, Players.image_path, Players.player_name, Players.player_id, PlayersLogsTable.player_entrance_date FROM PlayersLogsTable INNER JOIN Players ON Players.player_index_id = PlayersLogsTable.player_index_id WHERE(PlayersLogsTable.team_id = COALESCE(?1, PlayersLogsTable.team_id) OR ?1 IS NULL)AND PlayersLogsTable.player_entrance_date BETWEEN ?2 AND ?3 AND PlayersLogsTable.player_index_id = Players.player_index_id',
+        variables: [
+          Variable<int>(teamId),
+          Variable<DateTime>(currentDate),
+          Variable<DateTime>(endDate)
+        ],
+        readsFrom: {
+          players,
+          playersLogsTable,
+        }).map((QueryRow row) => GetListOfPlayersLogsResult(
+          playerIndexId: row.read<int>('player_index_id'),
+          imagePath: row.read<String>('image_path'),
+          playerName: row.read<String>('player_name'),
+          playerId: row.read<int>('player_id'),
+          playerEntranceDate: row.read<DateTime>('player_entrance_date'),
+        ));
+  }
+
   Selectable<Player> allPlayers() {
     return customSelect('SELECT * FROM Players', variables: [], readsFrom: {
       players,
@@ -3177,6 +3198,21 @@ class GetTodayLogsResult {
     required this.playerId,
     required this.playerIndexId,
     required this.imagePath,
+    required this.playerEntranceDate,
+  });
+}
+
+class GetListOfPlayersLogsResult {
+  final int playerIndexId;
+  final String imagePath;
+  final String playerName;
+  final int playerId;
+  final DateTime playerEntranceDate;
+  GetListOfPlayersLogsResult({
+    required this.playerIndexId,
+    required this.imagePath,
+    required this.playerName,
+    required this.playerId,
     required this.playerEntranceDate,
   });
 }

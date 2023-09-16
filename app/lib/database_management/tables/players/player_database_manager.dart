@@ -217,7 +217,8 @@ Future reSubscribePlayer(PlayersSubscriptionsCompanion data)async{
       if (playersList.isEmpty) {
         playersDatabase.transaction(() async{
           await playersDatabase.into(Players(playersDatabase)).insert(player);
-          await  playersDatabase.into(PlayersSubscriptions(playersDatabase)).insert(sub);
+          await playersDatabase.into(PlayersSubscriptions(playersDatabase)).insert(sub);
+          await playersDatabase.into(PlayersAndTeamsTable(playersDatabase)).insert(PlayersAndTeamsTableCompanion.insert(teamId: sub.teamId.value, teamPlayerId: player.playerIndexId.value));
         });
         return 200;
       }else{

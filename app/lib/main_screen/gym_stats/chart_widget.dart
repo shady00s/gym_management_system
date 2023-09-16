@@ -106,7 +106,7 @@ List<int> setLeftSideChartData(List<int> data){
 Future <CalenderModel> getProfit(int year) async{
   List<int> profit = [];
   await  GymStatusManager().getBestMonthInProfit(DateTime(year,1,1),DateTime(year,1,31)).then((value) => profit.insert(0,value??0));
-  await  GymStatusManager().getBestMonthInProfit(DateTime(year,2,1),DateTime(year,2,28)).then((value) => profit.insert(1,value??0));
+  await  GymStatusManager().getBestMonthInProfit(DateTime(year,2,1),DateTime(year,2,29)).then((value) => profit.insert(1,value??0));
   await  GymStatusManager().getBestMonthInProfit(DateTime(year,3,1),DateTime(year,3,31)).then((value) => profit.insert(2,value??0));
   await  GymStatusManager().getBestMonthInProfit(DateTime(year,4,1),DateTime(year,4,30)).then((value) => profit.insert(3,value??0));
   await  GymStatusManager().getBestMonthInProfit(DateTime(year,5,1),DateTime(year,5,31)).then((value) => profit.insert(4,value??0));
@@ -116,7 +116,9 @@ Future <CalenderModel> getProfit(int year) async{
   await  GymStatusManager().getBestMonthInProfit(DateTime(year,9,1),DateTime(year,9,30)).then((value) => profit.insert(8,value??0));
   await  GymStatusManager().getBestMonthInProfit(DateTime(year,10,1),DateTime(year,10,31)).then((value) => profit.insert(9,value??0));
   await  GymStatusManager().getBestMonthInProfit(DateTime(year,11,1),DateTime(year,11,30)).then((value) => profit.insert(10,value??0));
-  await  GymStatusManager().getBestMonthInProfit(DateTime(year,12,1),DateTime(year,12,31)).then((value) => profit.insert(11,value??0));
+  await  GymStatusManager().getBestMonthInProfit(DateTime(year,12,1),DateTime(year,12,31)).then((value) {
+    return profit.insert(11,value??0);
+  } );
 
 
   return CalenderModel(chart:setChartBarHeight(profit) , leftSide: setLeftSideChartData(profit)) ;
