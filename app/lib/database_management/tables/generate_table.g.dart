@@ -2249,6 +2249,20 @@ class PlayersSubscriptions extends Table
       type: DriftSqlType.dateTime,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
+  static const VerificationMeta _freezeBeginDateMeta =
+      const VerificationMeta('freezeBeginDate');
+  late final GeneratedColumn<DateTime> freezeBeginDate =
+      GeneratedColumn<DateTime>('freeze_begin_date', aliasedName, true,
+          type: DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          $customConstraints: '');
+  static const VerificationMeta _freezeEndDateMeta =
+      const VerificationMeta('freezeEndDate');
+  late final GeneratedColumn<DateTime> freezeEndDate =
+      GeneratedColumn<DateTime>('freeze_end_date', aliasedName, true,
+          type: DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          $customConstraints: '');
   static const VerificationMeta _billIdMeta = const VerificationMeta('billId');
   late final GeneratedColumn<int> billId = GeneratedColumn<int>(
       'billId', aliasedName, false,
@@ -2288,6 +2302,8 @@ class PlayersSubscriptions extends Table
         playerSubscriptionId,
         beginningDate,
         endDate,
+        freezeBeginDate,
+        freezeEndDate,
         billId,
         billValue,
         duration,
@@ -2371,6 +2387,18 @@ class PlayersSubscriptions extends Table
     } else if (isInserting) {
       context.missing(_endDateMeta);
     }
+    if (data.containsKey('freeze_begin_date')) {
+      context.handle(
+          _freezeBeginDateMeta,
+          freezeBeginDate.isAcceptableOrUnknown(
+              data['freeze_begin_date']!, _freezeBeginDateMeta));
+    }
+    if (data.containsKey('freeze_end_date')) {
+      context.handle(
+          _freezeEndDateMeta,
+          freezeEndDate.isAcceptableOrUnknown(
+              data['freeze_end_date']!, _freezeEndDateMeta));
+    }
     if (data.containsKey('billId')) {
       context.handle(_billIdMeta,
           billId.isAcceptableOrUnknown(data['billId']!, _billIdMeta));
@@ -2427,6 +2455,10 @@ class PlayersSubscriptions extends Table
           DriftSqlType.dateTime, data['${effectivePrefix}beginning_date'])!,
       endDate: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}end_date'])!,
+      freezeBeginDate: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}freeze_begin_date']),
+      freezeEndDate: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}freeze_end_date']),
       billId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}billId'])!,
       billValue: attachedDatabase.typeMapping
@@ -2459,6 +2491,8 @@ class PlayersSubscription extends DataClass
   final int playerSubscriptionId;
   final DateTime beginningDate;
   final DateTime endDate;
+  final DateTime? freezeBeginDate;
+  final DateTime? freezeEndDate;
   final int billId;
   final int billValue;
   final int duration;
@@ -2474,6 +2508,8 @@ class PlayersSubscription extends DataClass
       required this.playerSubscriptionId,
       required this.beginningDate,
       required this.endDate,
+      this.freezeBeginDate,
+      this.freezeEndDate,
       required this.billId,
       required this.billValue,
       required this.duration,
@@ -2495,6 +2531,12 @@ class PlayersSubscription extends DataClass
     map['player_subscription_id'] = Variable<int>(playerSubscriptionId);
     map['beginning_date'] = Variable<DateTime>(beginningDate);
     map['end_date'] = Variable<DateTime>(endDate);
+    if (!nullToAbsent || freezeBeginDate != null) {
+      map['freeze_begin_date'] = Variable<DateTime>(freezeBeginDate);
+    }
+    if (!nullToAbsent || freezeEndDate != null) {
+      map['freeze_end_date'] = Variable<DateTime>(freezeEndDate);
+    }
     map['billId'] = Variable<int>(billId);
     map['billValue'] = Variable<int>(billValue);
     map['duration'] = Variable<int>(duration);
@@ -2517,6 +2559,12 @@ class PlayersSubscription extends DataClass
       playerSubscriptionId: Value(playerSubscriptionId),
       beginningDate: Value(beginningDate),
       endDate: Value(endDate),
+      freezeBeginDate: freezeBeginDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(freezeBeginDate),
+      freezeEndDate: freezeEndDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(freezeEndDate),
       billId: Value(billId),
       billValue: Value(billValue),
       duration: Value(duration),
@@ -2541,6 +2589,9 @@ class PlayersSubscription extends DataClass
           serializer.fromJson<int>(json['player_subscription_id']),
       beginningDate: serializer.fromJson<DateTime>(json['beginning_date']),
       endDate: serializer.fromJson<DateTime>(json['end_date']),
+      freezeBeginDate:
+          serializer.fromJson<DateTime?>(json['freeze_begin_date']),
+      freezeEndDate: serializer.fromJson<DateTime?>(json['freeze_end_date']),
       billId: serializer.fromJson<int>(json['billId']),
       billValue: serializer.fromJson<int>(json['billValue']),
       duration: serializer.fromJson<int>(json['duration']),
@@ -2561,6 +2612,8 @@ class PlayersSubscription extends DataClass
       'player_subscription_id': serializer.toJson<int>(playerSubscriptionId),
       'beginning_date': serializer.toJson<DateTime>(beginningDate),
       'end_date': serializer.toJson<DateTime>(endDate),
+      'freeze_begin_date': serializer.toJson<DateTime?>(freezeBeginDate),
+      'freeze_end_date': serializer.toJson<DateTime?>(freezeEndDate),
       'billId': serializer.toJson<int>(billId),
       'billValue': serializer.toJson<int>(billValue),
       'duration': serializer.toJson<int>(duration),
@@ -2579,6 +2632,8 @@ class PlayersSubscription extends DataClass
           int? playerSubscriptionId,
           DateTime? beginningDate,
           DateTime? endDate,
+          Value<DateTime?> freezeBeginDate = const Value.absent(),
+          Value<DateTime?> freezeEndDate = const Value.absent(),
           int? billId,
           int? billValue,
           int? duration,
@@ -2595,6 +2650,11 @@ class PlayersSubscription extends DataClass
         playerSubscriptionId: playerSubscriptionId ?? this.playerSubscriptionId,
         beginningDate: beginningDate ?? this.beginningDate,
         endDate: endDate ?? this.endDate,
+        freezeBeginDate: freezeBeginDate.present
+            ? freezeBeginDate.value
+            : this.freezeBeginDate,
+        freezeEndDate:
+            freezeEndDate.present ? freezeEndDate.value : this.freezeEndDate,
         billId: billId ?? this.billId,
         billValue: billValue ?? this.billValue,
         duration: duration ?? this.duration,
@@ -2613,6 +2673,8 @@ class PlayersSubscription extends DataClass
           ..write('playerSubscriptionId: $playerSubscriptionId, ')
           ..write('beginningDate: $beginningDate, ')
           ..write('endDate: $endDate, ')
+          ..write('freezeBeginDate: $freezeBeginDate, ')
+          ..write('freezeEndDate: $freezeEndDate, ')
           ..write('billId: $billId, ')
           ..write('billValue: $billValue, ')
           ..write('duration: $duration, ')
@@ -2633,6 +2695,8 @@ class PlayersSubscription extends DataClass
       playerSubscriptionId,
       beginningDate,
       endDate,
+      freezeBeginDate,
+      freezeEndDate,
       billId,
       billValue,
       duration,
@@ -2651,6 +2715,8 @@ class PlayersSubscription extends DataClass
           other.playerSubscriptionId == this.playerSubscriptionId &&
           other.beginningDate == this.beginningDate &&
           other.endDate == this.endDate &&
+          other.freezeBeginDate == this.freezeBeginDate &&
+          other.freezeEndDate == this.freezeEndDate &&
           other.billId == this.billId &&
           other.billValue == this.billValue &&
           other.duration == this.duration &&
@@ -2669,6 +2735,8 @@ class PlayersSubscriptionsCompanion
   final Value<int> playerSubscriptionId;
   final Value<DateTime> beginningDate;
   final Value<DateTime> endDate;
+  final Value<DateTime?> freezeBeginDate;
+  final Value<DateTime?> freezeEndDate;
   final Value<int> billId;
   final Value<int> billValue;
   final Value<int> duration;
@@ -2684,6 +2752,8 @@ class PlayersSubscriptionsCompanion
     this.playerSubscriptionId = const Value.absent(),
     this.beginningDate = const Value.absent(),
     this.endDate = const Value.absent(),
+    this.freezeBeginDate = const Value.absent(),
+    this.freezeEndDate = const Value.absent(),
     this.billId = const Value.absent(),
     this.billValue = const Value.absent(),
     this.duration = const Value.absent(),
@@ -2700,6 +2770,8 @@ class PlayersSubscriptionsCompanion
     required int playerSubscriptionId,
     required DateTime beginningDate,
     required DateTime endDate,
+    this.freezeBeginDate = const Value.absent(),
+    this.freezeEndDate = const Value.absent(),
     required int billId,
     required int billValue,
     required int duration,
@@ -2726,6 +2798,8 @@ class PlayersSubscriptionsCompanion
     Expression<int>? playerSubscriptionId,
     Expression<DateTime>? beginningDate,
     Expression<DateTime>? endDate,
+    Expression<DateTime>? freezeBeginDate,
+    Expression<DateTime>? freezeEndDate,
     Expression<int>? billId,
     Expression<int>? billValue,
     Expression<int>? duration,
@@ -2745,6 +2819,8 @@ class PlayersSubscriptionsCompanion
         'player_subscription_id': playerSubscriptionId,
       if (beginningDate != null) 'beginning_date': beginningDate,
       if (endDate != null) 'end_date': endDate,
+      if (freezeBeginDate != null) 'freeze_begin_date': freezeBeginDate,
+      if (freezeEndDate != null) 'freeze_end_date': freezeEndDate,
       if (billId != null) 'billId': billId,
       if (billValue != null) 'billValue': billValue,
       if (duration != null) 'duration': duration,
@@ -2763,6 +2839,8 @@ class PlayersSubscriptionsCompanion
       Value<int>? playerSubscriptionId,
       Value<DateTime>? beginningDate,
       Value<DateTime>? endDate,
+      Value<DateTime?>? freezeBeginDate,
+      Value<DateTime?>? freezeEndDate,
       Value<int>? billId,
       Value<int>? billValue,
       Value<int>? duration,
@@ -2778,6 +2856,8 @@ class PlayersSubscriptionsCompanion
       playerSubscriptionId: playerSubscriptionId ?? this.playerSubscriptionId,
       beginningDate: beginningDate ?? this.beginningDate,
       endDate: endDate ?? this.endDate,
+      freezeBeginDate: freezeBeginDate ?? this.freezeBeginDate,
+      freezeEndDate: freezeEndDate ?? this.freezeEndDate,
       billId: billId ?? this.billId,
       billValue: billValue ?? this.billValue,
       duration: duration ?? this.duration,
@@ -2819,6 +2899,12 @@ class PlayersSubscriptionsCompanion
     if (endDate.present) {
       map['end_date'] = Variable<DateTime>(endDate.value);
     }
+    if (freezeBeginDate.present) {
+      map['freeze_begin_date'] = Variable<DateTime>(freezeBeginDate.value);
+    }
+    if (freezeEndDate.present) {
+      map['freeze_end_date'] = Variable<DateTime>(freezeEndDate.value);
+    }
     if (billId.present) {
       map['billId'] = Variable<int>(billId.value);
     }
@@ -2847,6 +2933,8 @@ class PlayersSubscriptionsCompanion
           ..write('playerSubscriptionId: $playerSubscriptionId, ')
           ..write('beginningDate: $beginningDate, ')
           ..write('endDate: $endDate, ')
+          ..write('freezeBeginDate: $freezeBeginDate, ')
+          ..write('freezeEndDate: $freezeEndDate, ')
           ..write('billId: $billId, ')
           ..write('billValue: $billValue, ')
           ..write('duration: $duration, ')
@@ -3000,6 +3088,8 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           playerSubscriptionId: row.read<int>('player_subscription_id'),
           beginningDate: row.read<DateTime>('beginning_date'),
           endDate: row.read<DateTime>('end_date'),
+          freezeBeginDate: row.readNullable<DateTime>('freeze_begin_date'),
+          freezeEndDate: row.readNullable<DateTime>('freeze_end_date'),
           billId: row.read<int>('billId'),
           billValue: row.read<int>('billValue'),
           duration: row.read<int>('duration'),
@@ -3073,6 +3163,8 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           playerSubscriptionId: row.readNullable<int>('player_subscription_id'),
           beginningDate: row.readNullable<DateTime>('beginning_date'),
           endDate: row.readNullable<DateTime>('end_date'),
+          freezeBeginDate: row.readNullable<DateTime>('freeze_begin_date'),
+          freezeEndDate: row.readNullable<DateTime>('freeze_end_date'),
           billId: row.readNullable<int>('billId'),
           billValue: row.readNullable<int>('billValue'),
           duration: row.readNullable<int>('duration'),
@@ -3157,7 +3249,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
 
   Selectable<GetRemainingFreezeResult> getRemainingFreeze(int playerIndexId) {
     return customSelect(
-        'SELECT PlayersSubscriptions.freeze_available, MAX(PlayersSubscriptions.beginning_date) AS _c0 FROM PlayersSubscriptions WHERE PlayersSubscriptions.player_subscription_id = ?1',
+        'SELECT PlayersSubscriptions.freeze_available, MAX(PlayersSubscriptions.beginning_date) AS _c0, PlayersSubscriptions.end_date, PlayersSubscriptions.sub_id FROM PlayersSubscriptions WHERE PlayersSubscriptions.player_subscription_id = ?1',
         variables: [
           Variable<int>(playerIndexId)
         ],
@@ -3167,6 +3259,8 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           freezeAvailable: row.read<int>('freeze_available'),
           mAXPlayersSubscriptionsbeginningDate:
               row.readNullable<DateTime>('_c0'),
+          endDate: row.read<DateTime>('end_date'),
+          subId: row.readNullable<int>('sub_id'),
         ));
   }
 
@@ -3249,6 +3343,8 @@ class GetPlayerSubscriptionResult {
   final int playerSubscriptionId;
   final DateTime beginningDate;
   final DateTime endDate;
+  final DateTime? freezeBeginDate;
+  final DateTime? freezeEndDate;
   final int billId;
   final int billValue;
   final int duration;
@@ -3274,6 +3370,8 @@ class GetPlayerSubscriptionResult {
     required this.playerSubscriptionId,
     required this.beginningDate,
     required this.endDate,
+    this.freezeBeginDate,
+    this.freezeEndDate,
     required this.billId,
     required this.billValue,
     required this.duration,
@@ -3313,6 +3411,8 @@ class GetEndedSubscriptionByTeamResult {
   final int? playerSubscriptionId;
   final DateTime? beginningDate;
   final DateTime? endDate;
+  final DateTime? freezeBeginDate;
+  final DateTime? freezeEndDate;
   final int? billId;
   final int? billValue;
   final int? duration;
@@ -3338,6 +3438,8 @@ class GetEndedSubscriptionByTeamResult {
     this.playerSubscriptionId,
     this.beginningDate,
     this.endDate,
+    this.freezeBeginDate,
+    this.freezeEndDate,
     this.billId,
     this.billValue,
     this.duration,
@@ -3378,8 +3480,12 @@ class GetRemainingInvitationResult {
 class GetRemainingFreezeResult {
   final int freezeAvailable;
   final DateTime? mAXPlayersSubscriptionsbeginningDate;
+  final DateTime endDate;
+  final int? subId;
   GetRemainingFreezeResult({
     required this.freezeAvailable,
     this.mAXPlayersSubscriptionsbeginningDate,
+    required this.endDate,
+    this.subId,
   });
 }

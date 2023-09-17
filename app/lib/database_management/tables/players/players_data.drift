@@ -26,11 +26,15 @@ CREATE TABLE IF NOT EXISTS PlayersSubscriptions(
     player_subscription_id INT NOT NULL,
     beginning_date DATETIME NOT NULL,
     end_date DATETIME NOT NULL,
+    freeze_begin_date DATETIME,
+    freeze_end_date DATETIME,
     billId INT NOT NULL,
     billValue INT NOT NULL,
     duration INT NOT NULL,
     billCollector TEXT NOT NULL
 );
+
+
 
 allPlayers: SELECT * FROM Players;
 getAllNames: SELECT player_id, player_index_id, player_name FROM Players ORDER BY player_id ASC;
@@ -98,6 +102,6 @@ getRemainingInvitation(REQUIRED :playerIndexId AS INT): SELECT PlayersSubscripti
                                                     WHERE PlayersSubscriptions.player_subscription_id = :playerIndexId;
 
 
-getRemainingFreeze(REQUIRED :playerIndexId AS INT): SELECT PlayersSubscriptions.freeze_available,MAX(PlayersSubscriptions.beginning_date)  FROM PlayersSubscriptions
+getRemainingFreeze(REQUIRED :playerIndexId AS INT): SELECT PlayersSubscriptions.freeze_available,MAX(PlayersSubscriptions.beginning_date),PlayersSubscriptions.end_date, PlayersSubscriptions.sub_id  FROM PlayersSubscriptions
                                                     WHERE PlayersSubscriptions.player_subscription_id = :playerIndexId;
 

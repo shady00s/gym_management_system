@@ -187,7 +187,7 @@ class _TakeNewPhotoState extends State<TakeNewPhoto> {
     final XFile file = await CameraPlatform.instance.takePicture(_cameraId);
 
 
-      await file.saveTo(p.join('assets/${widget.path}',file.name)).then((value) {
+      await file.saveTo(p.join('assets/${widget.path}/',file.name)).then((value) {
         File(file.path).delete(recursive: true).then((value){
           _showInSnackBar('Picture captured to: ${file.path}');
           Navigator.pop(context);

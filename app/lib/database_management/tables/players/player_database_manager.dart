@@ -236,4 +236,16 @@ Future reSubscribePlayer(PlayersSubscriptionsCompanion data)async{
 
     return db.length +1;
    }
+
+   Future<int> freezePlayerSubscription(int subscriptionId,DateTime freezeBeginningDate, DateTime freezeEndDate,int freezeDuration ,DateTime subscriptionEndDate) async{
+
+     var playerUpdated =  playersDatabase.update(PlayersSubscriptions(playersDatabase))..where((tbl) => tbl.subId.equals(subscriptionId));
+
+     try{
+         await playerUpdated.write(PlayersSubscriptionsCompanion(freezeBeginDate:Value(freezeBeginningDate),endDate: Value(subscriptionEndDate.add(Duration(days: freezeDuration))) ,freezeEndDate: Value(freezeEndDate),freezeAvailable:const Value(0) ));
+      return 200;
+     }catch(e){
+       return 400;
+     }
+   }
 }
