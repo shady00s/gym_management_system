@@ -1,6 +1,6 @@
 import '../teams/players_teams.drift';
 import 'players_data.drift';
-
+import '../subscriptions/subscriptions_info_table.drift';
 CREATE TABLE IF NOT EXISTS Players (
     id INT NOT NULL PRIMARY KEY AUTOINCREMENT,
     player_index_id INT NOT NULL,
@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS PlayersSubscriptions(
     billId INT NOT NULL,
     billValue INT NOT NULL,
     duration INT NOT NULL,
-    billCollector TEXT NOT NULL
+    billCollector TEXT NOT NULL,
+    subscription_info_id INT NOT NULL
 );
 
 
@@ -40,9 +41,13 @@ allPlayers: SELECT * FROM Players;
 getAllNames: SELECT player_id, player_index_id, player_name FROM Players ORDER BY player_id ASC;
 allSubscriptions: SELECT * FROM PlayersSubscriptions;
 
-getPlayerSubscription: SELECT DISTINCT Players.*, PlayersSubscriptions.*  FROM Players
+getPlayerSubscription: SELECT DISTINCT Players.*, PlayersSubscriptions.*, SubscriptionsInfoTable.subscription_name   FROM Players
                         INNER JOIN PlayersSubscriptions ON  PlayersSubscriptions.player_subscription_id = :player_index_id
                         INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = :player_index_id
+                         LEFT JOIN SubscriptionsInfoTable ON
+                               (PlayersSubscriptions.subscription_info_id <> -1 AND SubscriptionsInfoTable.id = PlayersSubscriptions.subscription_info_id)
+
+
                         WHERE Players.player_index_id = :player_index_id  ORDER BY end_date DESC;
 
 getPlayerTeam (REQUIRED :player_index_id): SELECT DISTINCT TeamsDataTable.* FROM Players
@@ -90,7 +95,7 @@ filterEndedSubPlayers(REQUIRED :beginDate AS DATETIME OR NUll,REQUIRED :endDate 
                   ORDER BY PLAYERS.player_first_join_date DESC;
 
 enterPlayerToGym(REQUIRED :teamId AS INT,REQUIRED :playerId AS INT, :playerName AS TEXT):
-                                            SELECT DISTINCT  Players.player_id, Players.player_index_id, Players.player_name, PlayersSubscriptions.player_subscription_id,PlayersSubscriptions.end_date, MAX(PlayersSubscriptions.end_date), PlayersAndTeamsTable.team_player_id, PlayersAndTeamsTable.team_id
+                                            SELECT DISTINCT  Players.player_id, Players.player_index_id, Players.player_name, PlayersSubscriptions.freeze_begin_date, PlayersSubscriptions.freeze_end_date, PlayersSubscriptions.player_subscription_id,PlayersSubscriptions.end_date, MAX(PlayersSubscriptions.end_date), PlayersAndTeamsTable.team_player_id, PlayersAndTeamsTable.team_id
                                                 FROM Players
                                             LEFT JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id
                                             LEFT JOIN PlayersAndTeamsTable ON Players.player_index_id = PlayersAndTeamsTable.team_player_id
@@ -102,6 +107,6 @@ getRemainingInvitation(REQUIRED :playerIndexId AS INT): SELECT PlayersSubscripti
                                                     WHERE PlayersSubscriptions.player_subscription_id = :playerIndexId;
 
 
-getRemainingFreeze(REQUIRED :playerIndexId AS INT): SELECT PlayersSubscriptions.freeze_available,MAX(PlayersSubscriptions.beginning_date),PlayersSubscriptions.end_date, PlayersSubscriptions.sub_id  FROM PlayersSubscriptions
+getRemainingFreeze(REQUIRED :playerIndexId AS INT): SELECT PlayersSubscriptions.freeze_available,PlayersSubscriptions.freeze_begin_date, PlayersSubscriptions.freeze_end_date, MAX(PlayersSubscriptions.beginning_date),PlayersSubscriptions.end_date, PlayersSubscriptions.sub_id  FROM PlayersSubscriptions
                                                     WHERE PlayersSubscriptions.player_subscription_id = :playerIndexId;
 

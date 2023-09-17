@@ -9,7 +9,6 @@ import 'package:camera_platform_interface/camera_platform_interface.dart';
 import 'package:fluent_ui/fluent_ui.dart';
  import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gym_management/main_screen/widgets/take_new_image_widget.dart';
 import 'package:path/path.dart' as p;
 
 
@@ -187,9 +186,9 @@ class _TakeNewPhotoState extends State<TakeNewPhoto> {
     final XFile file = await CameraPlatform.instance.takePicture(_cameraId);
 
 
-      await file.saveTo(p.join('assets/${widget.path}/',file.name)).then((value) {
+      await file.saveTo('assets/${widget.path}/${file.name}').then((value) {
         File(file.path).delete(recursive: true).then((value){
-          _showInSnackBar('Picture captured to: ${file.path}');
+          _showInSnackBar('Picture captured!');
           Navigator.pop(context);
         });
 
@@ -304,7 +303,7 @@ class _TakeNewPhotoState extends State<TakeNewPhoto> {
                           onPressed: _initialized ?()async{
                            await _takePicture().then((value){
 
-                             image.state =  p.join('assets/${widget.path}',value.name) ;
+                             image.state =  'assets/${widget.path}/${value.name}' ;
                            });
                           }  : null,
                           child: const Text('Take picture'),

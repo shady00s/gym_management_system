@@ -64,14 +64,7 @@ class OnBoardPlayers extends StatelessWidget {
                           child: ProgressBar(),
                         );
                     }
-                    // return Scrollbar(
-                    //    controller: _firstController,
-                    //      thumbVisibility: true,
-                    //      child: ListView.builder(
-                    //          controller: _firstController,
-                    //        itemCount: 40,
-                    //      shrinkWrap: false,
-                    //      itemBuilder: (context,index)=>PlayerNameWidget("",0)));
+
                   })),
         ));
   }

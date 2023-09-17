@@ -90,7 +90,7 @@ class _CalenderWidgetState extends State<CalenderWidget> {
                 children: [
                   const Padding(
                     padding:  EdgeInsets.all(6.0),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text('Fri'),

@@ -236,7 +236,7 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
                         teamId: subValue!.teamId, subscriptionPayDate: DateTime.now(),
                         playerSubscriptionId: widget.playerIndexId, beginningDate: _beginningDate!,
                         endDate: _beginningDate!.add(Duration(days: subValue!.subscriptionDuration)), billId: billId!, billValue: subValue!.subscriptionValue, duration: subValue!.subscriptionDuration,
-                        billCollector: collectorId, freezeAvailable: subValue!.subscriptionFreezeLimit, invitationAvailable: subValue!.subscriptionInvitationLimit);
+                        billCollector: collectorId, freezeAvailable: subValue!.subscriptionFreezeLimit, invitationAvailable: subValue!.subscriptionInvitationLimit, subscriptionInfoId: subValue!.id!);
                   await loadingDialog(context, -1, PlayersDatabaseManager().reSubscribePlayer(data), null).then((value) async{
                     Navigator.pop(context);
                     await displayInfoBar(context, builder: (context,closr)=>const InfoBar(title: Text("successfully re-subscribed")));

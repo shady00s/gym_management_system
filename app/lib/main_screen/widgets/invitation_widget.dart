@@ -57,22 +57,22 @@ class InvitationWidget extends StatelessWidget {
                 switch (snapshot.connectionState){
 
                   case ConnectionState.waiting:
-                    return Expanded(child: const Center(child: ProgressRing(),));
+                    return const Expanded(child: Center(child: ProgressRing(),));
                   case ConnectionState.done:
                     if(snapshot.data != null ){
                       if(snapshot.data!.invitationAvailable == 0){
-                        return Expanded(child: Center(child:  Card(backgroundColor: Colors.red,child: Text("This player has no invitations left"))));
+                        return Expanded(child: Center(child:  Card(backgroundColor: Colors.red,child: const Text("This player has no invitations left"))));
                       }
                         return Expanded(
                           child: Column(children: [
                             // gym player invitation id
                             Padding(
-                              padding:  EdgeInsets.all(8.0),
+                              padding:  const EdgeInsets.all(8.0),
                               child: Card(
                                 child:  Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Player available invitations:"),
+                                    const Text("Player available invitations:"),
 
 
                                     Text(snapshot.data!.invitationAvailable.toString(),style: const TextStyle(fontWeight: FontWeight.bold,fontSize:18),)
@@ -206,7 +206,7 @@ class InvitationWidget extends StatelessWidget {
 
                     }
 
-                  return Center(child: Text("Error occured"),);
+                  return const Center(child: Text("Error occured"),);
                   default:
                   return const Center(child: ProgressRing(),);
                 }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/main_screen/widgets/freeze_widget.dart';
+import 'package:gym_management/main_screen/widgets/invitation_widget.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_card_information.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_name_widget.dart';
 import 'package:gym_management/main_screen/widgets/re-subscription/re_subscription_widget.dart';
@@ -51,9 +52,11 @@ class PlayerNameWithImage extends StatelessWidget {
                                 Button(child:const Text("Re-new") ,onPressed: ()async{
                                   await showReSubscriptionWidget(context,playerIndexId);},),
                                 Button(child:const Text("Invitation") ,onPressed: ()async{
-                                  await showFreezeWidget(context, playerIndexId);
+                                  await showInvitationWidget(context, playerIndexId);
                                 },),
-                                Button(child:const Text("Freeze") ,onPressed: (){},),
+                                Button(child:const Text("Freeze") ,onPressed: ()async{
+                                await showFreezeWidget(context,playerIndexId);
+                                },),
                               ],)
 
                             ],))))));
@@ -70,7 +73,7 @@ class PlayerNameWithImage extends StatelessWidget {
                   Text(" - $playerId "),
                   const  SizedBox(width: 9,),
                     imagePath !="no image"?Image(image: FileImage(File(imagePath)),width: 80,):const CircleAvatar(
-                      radius: 17,
+                      radius: 21,
                       backgroundColor: Color.fromRGBO(
                           176, 175, 175, 0.7019607843137254),
                       child: Icon(FluentIcons.contact ,size: 14,),

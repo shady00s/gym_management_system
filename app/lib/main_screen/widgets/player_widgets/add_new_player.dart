@@ -73,7 +73,7 @@ Future createNewPlayer(PlayerData player,SubscriptionsInfoTableData? subInfoData
       invitationAvailable: subInfoData.subscriptionInvitationLimit, subscriptionPayDate: DateTime.now(),
       playerSubscriptionId: player.indexId, beginningDate: subData.customDate,
       endDate: DateTime.now().add(Duration(days: subInfoData.subscriptionDuration)), billId: subData.billId, billValue: subInfoData.subscriptionValue, duration: subInfoData.subscriptionDuration,
-      billCollector: subData.collectorId);
+      billCollector: subData.collectorId, subscriptionInfoId: subInfoData.id!);
    return await PlayersDatabaseManager().addNewPlayer(playerData,subscription);
 }
 

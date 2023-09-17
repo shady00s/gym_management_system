@@ -1,7 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:gym_management/main_screen/widgets/invitation_widget.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_card_information.dart';
 import 'package:gym_management/main_screen/widgets/player_widgets/player_name_widget.dart';
 
+import '../freeze_widget.dart';
 import '../re-subscription/re_subscription_widget.dart';
 
 class NeedToResubscribePlayerNameWidget extends StatelessWidget {
@@ -45,8 +47,12 @@ class NeedToResubscribePlayerNameWidget extends StatelessWidget {
                               Row(children: [
                                 Button(child:const Text("Re-new") ,onPressed: ()async{
                                   await showReSubscriptionWidget(context,playerIndexId);},),
-                                Button(child:const Text("Invitation") ,onPressed: (){},),
-                                Button(child:const Text("Freeze") ,onPressed: (){},),
+                                Button(child:const Text("Invitation") ,onPressed: ()async{
+                                  await showInvitationWidget(context,playerIndexId);
+                                },),
+                                Button(child:const Text("Freeze") ,onPressed: ()async{
+                                  await showFreezeWidget(context,playerIndexId);
+                                },),
                               ],)
 
                             ],))))));

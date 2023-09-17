@@ -48,7 +48,7 @@ class PlayersLogsWidget extends StatelessWidget {
                 child: SizedBox(width:75,child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Day"),
+                    const Text("Day"),
                     NumberFormBox(mode:SpinButtonPlacementMode.none,value: getDateValue.day,onChanged: (val){setDateValue.state = TimeModel(day: val!, month: getDateValue.month, year:  getDateValue.year,);},),
                   ],
                 )),
@@ -58,7 +58,7 @@ class PlayersLogsWidget extends StatelessWidget {
                 child: SizedBox(width:75,child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Month"),
+                    const Text("Month"),
                     NumberFormBox(mode:SpinButtonPlacementMode.none ,value: getDateValue.month,onChanged: (val){setDateValue.state = TimeModel(day: getDateValue.day, month: val!, year:  getDateValue.year,);}),
                   ],
                 )),
@@ -68,7 +68,7 @@ class PlayersLogsWidget extends StatelessWidget {
                 child: SizedBox(width:90,child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Year"),
+                    const Text("Year"),
                     NumberFormBox(mode:SpinButtonPlacementMode.none,value: getDateValue.year,onChanged: (val3){setDateValue.state = TimeModel(day: getDateValue.day, month:  getDateValue.month, year:val3!);}),
                   ],
                 )),
@@ -89,13 +89,13 @@ class PlayersLogsWidget extends StatelessWidget {
                           items:[const ComboBoxItem(value: null, child: Text("All Teams")), ...data.map((e) => ComboBoxItem(value: e, child: Text(e.teamName))).toList()]),
                     ],
                   ),
-                ), error:  (err,state)=>Text("error"), loading:()=> Center(child: ProgressBar(),))
+                ), error:  (err,state)=>const Text("error"), loading:()=> const Center(child: ProgressBar(),))
             ]),
             SizedBox(
                 width: MediaQuery.sizeOf(context).width * 0.9,
                 height: MediaQuery.sizeOf(context).height * 0.7,
                 child: Wrap(children: getPlayers.when(data: (data)=> data.map((e) => SizedBox(width:330,child: PlayerNameWithImage(playerName: e.playerName, playerId: e.playerId, imagePath: e.imagePath, playerIndexId: e.playerIndexId))).toList(),
-                error: (err,state)=>[Text("error")], loading: ()=>[Center(child: ProgressRing(),)]),))
+                error: (err,state)=>[const Text("error")], loading: ()=>[const Center(child: ProgressRing(),)]),))
           ],
         );
       }

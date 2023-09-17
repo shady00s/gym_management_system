@@ -153,7 +153,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                           crossAxisAlignment: CrossAxisAlignment.start,
 
                                           children: [
-                                            Text(snapshot.data![index].duration == 1? "1 Month":snapshot.data![index].duration == 3?"3 Months":snapshot.data![index].duration == 6? "6 Months":snapshot.data![index].duration == 11?"1 session":snapshot.data![index].duration == 12?"1 Year":"Unknown",
+                                            Text( snapshot.data![index].duration == 1? "1 Month":snapshot.data![index].duration == 3?"3 Months":snapshot.data![index].duration == 6? "6 Months":snapshot.data![index].duration == 11?"1 session":snapshot.data![index].duration == 12?"1 Year" :snapshot.data![index].subscriptionName != null? snapshot.data![index].subscriptionName! : "Unknown",
                                               style: const TextStyle(fontSize: 18),
                                             ),
                                             const Padding(

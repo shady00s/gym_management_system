@@ -17,7 +17,7 @@ class GymStatMainScreenWidget extends StatelessWidget {
           ),
 
 
-          YearPerformanceWidget()
+          const YearPerformanceWidget()
 
 
         ],

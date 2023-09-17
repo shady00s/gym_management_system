@@ -31,10 +31,16 @@ class GymLogsManager{
         try{
           EnterPlayerToGymResult playerData = await db.enterPlayerToGym(null, playerId,teamId).getSingle();
 
-          if(!playerData.endDate!.difference(DateTime.now()).isNegative && playerData.teamId == teamId){
+          if(!playerData.endDate!.difference(DateTime.now()).isNegative && playerData.teamId == teamId && (playerData.freezeBeginDate == null || (  !playerData.freezeBeginDate!.isAfter(DateTime.now()) && !playerData.freezeEndDate!.isBefore(DateTime.now())))){
             await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now(), playerIndexId: playerData.playerIndexId));
 
-          }else{
+          }
+          if(playerData.freezeBeginDate!.isAfter(DateTime.now()) && playerData.freezeEndDate!.isBefore(DateTime.now())){
+            await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is in freeze"),));
+
+          }
+
+          else{
             await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is already ended"),));
 
           }

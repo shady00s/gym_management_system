@@ -2290,6 +2290,13 @@ class PlayersSubscriptions extends Table
       type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
+  static const VerificationMeta _subscriptionInfoIdMeta =
+      const VerificationMeta('subscriptionInfoId');
+  late final GeneratedColumn<int> subscriptionInfoId = GeneratedColumn<int>(
+      'subscription_info_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
   @override
   List<GeneratedColumn> get $columns => [
         subId,
@@ -2307,7 +2314,8 @@ class PlayersSubscriptions extends Table
         billId,
         billValue,
         duration,
-        billCollector
+        billCollector,
+        subscriptionInfoId
       ];
   @override
   String get aliasedName => _alias ?? 'PlayersSubscriptions';
@@ -2425,6 +2433,14 @@ class PlayersSubscriptions extends Table
     } else if (isInserting) {
       context.missing(_billCollectorMeta);
     }
+    if (data.containsKey('subscription_info_id')) {
+      context.handle(
+          _subscriptionInfoIdMeta,
+          subscriptionInfoId.isAcceptableOrUnknown(
+              data['subscription_info_id']!, _subscriptionInfoIdMeta));
+    } else if (isInserting) {
+      context.missing(_subscriptionInfoIdMeta);
+    }
     return context;
   }
 
@@ -2467,6 +2483,8 @@ class PlayersSubscriptions extends Table
           .read(DriftSqlType.int, data['${effectivePrefix}duration'])!,
       billCollector: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}billCollector'])!,
+      subscriptionInfoId: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}subscription_info_id'])!,
     );
   }
 
@@ -2497,6 +2515,7 @@ class PlayersSubscription extends DataClass
   final int billValue;
   final int duration;
   final String billCollector;
+  final int subscriptionInfoId;
   const PlayersSubscription(
       {this.subId,
       required this.teamId,
@@ -2513,7 +2532,8 @@ class PlayersSubscription extends DataClass
       required this.billId,
       required this.billValue,
       required this.duration,
-      required this.billCollector});
+      required this.billCollector,
+      required this.subscriptionInfoId});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2541,6 +2561,7 @@ class PlayersSubscription extends DataClass
     map['billValue'] = Variable<int>(billValue);
     map['duration'] = Variable<int>(duration);
     map['billCollector'] = Variable<String>(billCollector);
+    map['subscription_info_id'] = Variable<int>(subscriptionInfoId);
     return map;
   }
 
@@ -2569,6 +2590,7 @@ class PlayersSubscription extends DataClass
       billValue: Value(billValue),
       duration: Value(duration),
       billCollector: Value(billCollector),
+      subscriptionInfoId: Value(subscriptionInfoId),
     );
   }
 
@@ -2596,6 +2618,8 @@ class PlayersSubscription extends DataClass
       billValue: serializer.fromJson<int>(json['billValue']),
       duration: serializer.fromJson<int>(json['duration']),
       billCollector: serializer.fromJson<String>(json['billCollector']),
+      subscriptionInfoId:
+          serializer.fromJson<int>(json['subscription_info_id']),
     );
   }
   @override
@@ -2618,6 +2642,7 @@ class PlayersSubscription extends DataClass
       'billValue': serializer.toJson<int>(billValue),
       'duration': serializer.toJson<int>(duration),
       'billCollector': serializer.toJson<String>(billCollector),
+      'subscription_info_id': serializer.toJson<int>(subscriptionInfoId),
     };
   }
 
@@ -2637,7 +2662,8 @@ class PlayersSubscription extends DataClass
           int? billId,
           int? billValue,
           int? duration,
-          String? billCollector}) =>
+          String? billCollector,
+          int? subscriptionInfoId}) =>
       PlayersSubscription(
         subId: subId.present ? subId.value : this.subId,
         teamId: teamId ?? this.teamId,
@@ -2659,6 +2685,7 @@ class PlayersSubscription extends DataClass
         billValue: billValue ?? this.billValue,
         duration: duration ?? this.duration,
         billCollector: billCollector ?? this.billCollector,
+        subscriptionInfoId: subscriptionInfoId ?? this.subscriptionInfoId,
       );
   @override
   String toString() {
@@ -2678,7 +2705,8 @@ class PlayersSubscription extends DataClass
           ..write('billId: $billId, ')
           ..write('billValue: $billValue, ')
           ..write('duration: $duration, ')
-          ..write('billCollector: $billCollector')
+          ..write('billCollector: $billCollector, ')
+          ..write('subscriptionInfoId: $subscriptionInfoId')
           ..write(')'))
         .toString();
   }
@@ -2700,7 +2728,8 @@ class PlayersSubscription extends DataClass
       billId,
       billValue,
       duration,
-      billCollector);
+      billCollector,
+      subscriptionInfoId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2720,7 +2749,8 @@ class PlayersSubscription extends DataClass
           other.billId == this.billId &&
           other.billValue == this.billValue &&
           other.duration == this.duration &&
-          other.billCollector == this.billCollector);
+          other.billCollector == this.billCollector &&
+          other.subscriptionInfoId == this.subscriptionInfoId);
 }
 
 class PlayersSubscriptionsCompanion
@@ -2741,6 +2771,7 @@ class PlayersSubscriptionsCompanion
   final Value<int> billValue;
   final Value<int> duration;
   final Value<String> billCollector;
+  final Value<int> subscriptionInfoId;
   const PlayersSubscriptionsCompanion({
     this.subId = const Value.absent(),
     this.teamId = const Value.absent(),
@@ -2758,6 +2789,7 @@ class PlayersSubscriptionsCompanion
     this.billValue = const Value.absent(),
     this.duration = const Value.absent(),
     this.billCollector = const Value.absent(),
+    this.subscriptionInfoId = const Value.absent(),
   });
   PlayersSubscriptionsCompanion.insert({
     this.subId = const Value.absent(),
@@ -2776,6 +2808,7 @@ class PlayersSubscriptionsCompanion
     required int billValue,
     required int duration,
     required String billCollector,
+    required int subscriptionInfoId,
   })  : teamId = Value(teamId),
         freezeAvailable = Value(freezeAvailable),
         invitationAvailable = Value(invitationAvailable),
@@ -2786,7 +2819,8 @@ class PlayersSubscriptionsCompanion
         billId = Value(billId),
         billValue = Value(billValue),
         duration = Value(duration),
-        billCollector = Value(billCollector);
+        billCollector = Value(billCollector),
+        subscriptionInfoId = Value(subscriptionInfoId);
   static Insertable<PlayersSubscription> custom({
     Expression<int>? subId,
     Expression<int>? teamId,
@@ -2804,6 +2838,7 @@ class PlayersSubscriptionsCompanion
     Expression<int>? billValue,
     Expression<int>? duration,
     Expression<String>? billCollector,
+    Expression<int>? subscriptionInfoId,
   }) {
     return RawValuesInsertable({
       if (subId != null) 'sub_id': subId,
@@ -2825,6 +2860,8 @@ class PlayersSubscriptionsCompanion
       if (billValue != null) 'billValue': billValue,
       if (duration != null) 'duration': duration,
       if (billCollector != null) 'billCollector': billCollector,
+      if (subscriptionInfoId != null)
+        'subscription_info_id': subscriptionInfoId,
     });
   }
 
@@ -2844,7 +2881,8 @@ class PlayersSubscriptionsCompanion
       Value<int>? billId,
       Value<int>? billValue,
       Value<int>? duration,
-      Value<String>? billCollector}) {
+      Value<String>? billCollector,
+      Value<int>? subscriptionInfoId}) {
     return PlayersSubscriptionsCompanion(
       subId: subId ?? this.subId,
       teamId: teamId ?? this.teamId,
@@ -2862,6 +2900,7 @@ class PlayersSubscriptionsCompanion
       billValue: billValue ?? this.billValue,
       duration: duration ?? this.duration,
       billCollector: billCollector ?? this.billCollector,
+      subscriptionInfoId: subscriptionInfoId ?? this.subscriptionInfoId,
     );
   }
 
@@ -2917,6 +2956,9 @@ class PlayersSubscriptionsCompanion
     if (billCollector.present) {
       map['billCollector'] = Variable<String>(billCollector.value);
     }
+    if (subscriptionInfoId.present) {
+      map['subscription_info_id'] = Variable<int>(subscriptionInfoId.value);
+    }
     return map;
   }
 
@@ -2938,7 +2980,8 @@ class PlayersSubscriptionsCompanion
           ..write('billId: $billId, ')
           ..write('billValue: $billValue, ')
           ..write('duration: $duration, ')
-          ..write('billCollector: $billCollector')
+          ..write('billCollector: $billCollector, ')
+          ..write('subscriptionInfoId: $subscriptionInfoId')
           ..write(')'))
         .toString();
   }
@@ -3059,11 +3102,12 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
   Selectable<GetPlayerSubscriptionResult> getPlayerSubscription(
       int playerIndexId) {
     return customSelect(
-        'SELECT DISTINCT Players.*, PlayersSubscriptions.* FROM Players INNER JOIN PlayersSubscriptions ON PlayersSubscriptions.player_subscription_id = ?1 INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = ?1 WHERE Players.player_index_id = ?1 ORDER BY end_date DESC',
+        'SELECT DISTINCT Players.*, PlayersSubscriptions.*, SubscriptionsInfoTable.subscription_name FROM Players INNER JOIN PlayersSubscriptions ON PlayersSubscriptions.player_subscription_id = ?1 INNER JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = ?1 LEFT JOIN SubscriptionsInfoTable ON(PlayersSubscriptions.subscription_info_id <> -1 AND SubscriptionsInfoTable.id = PlayersSubscriptions.subscription_info_id)WHERE Players.player_index_id = ?1 ORDER BY end_date DESC',
         variables: [
           Variable<int>(playerIndexId)
         ],
         readsFrom: {
+          subscriptionsInfoTable,
           players,
           playersSubscriptions,
           playersAndTeamsTable,
@@ -3094,6 +3138,8 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           billValue: row.read<int>('billValue'),
           duration: row.read<int>('duration'),
           billCollector: row.read<String>('billCollector'),
+          subscriptionInfoId: row.read<int>('subscription_info_id'),
+          subscriptionName: row.readNullable<String>('subscription_name'),
         ));
   }
 
@@ -3169,6 +3215,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           billValue: row.readNullable<int>('billValue'),
           duration: row.readNullable<int>('duration'),
           billCollector: row.readNullable<String>('billCollector'),
+          subscriptionInfoId: row.readNullable<int>('subscription_info_id'),
         ));
   }
 
@@ -3209,7 +3256,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
   Selectable<EnterPlayerToGymResult> enterPlayerToGym(
       int? playerId, String? playerName, int teamId) {
     return customSelect(
-        'SELECT DISTINCT Players.player_id, Players.player_index_id, Players.player_name, PlayersSubscriptions.player_subscription_id, PlayersSubscriptions.end_date, MAX(PlayersSubscriptions.end_date) AS _c0, PlayersAndTeamsTable.team_player_id, PlayersAndTeamsTable.team_id FROM Players LEFT JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id LEFT JOIN PlayersAndTeamsTable ON Players.player_index_id = PlayersAndTeamsTable.team_player_id WHERE(Players.player_id = COALESCE(?1, Players.player_id) OR ?1 IS NULL)AND(Players.player_name = COALESCE(?2, Players.player_name) OR ?2 IS NULL)AND PlayersAndTeamsTable.team_id = ?3',
+        'SELECT DISTINCT Players.player_id, Players.player_index_id, Players.player_name, PlayersSubscriptions.freeze_begin_date, PlayersSubscriptions.freeze_end_date, PlayersSubscriptions.player_subscription_id, PlayersSubscriptions.end_date, MAX(PlayersSubscriptions.end_date) AS _c0, PlayersAndTeamsTable.team_player_id, PlayersAndTeamsTable.team_id FROM Players LEFT JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id LEFT JOIN PlayersAndTeamsTable ON Players.player_index_id = PlayersAndTeamsTable.team_player_id WHERE(Players.player_id = COALESCE(?1, Players.player_id) OR ?1 IS NULL)AND(Players.player_name = COALESCE(?2, Players.player_name) OR ?2 IS NULL)AND PlayersAndTeamsTable.team_id = ?3',
         variables: [
           Variable<int>(playerId),
           Variable<String>(playerName),
@@ -3223,6 +3270,8 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           playerId: row.read<int>('player_id'),
           playerIndexId: row.read<int>('player_index_id'),
           playerName: row.read<String>('player_name'),
+          freezeBeginDate: row.readNullable<DateTime>('freeze_begin_date'),
+          freezeEndDate: row.readNullable<DateTime>('freeze_end_date'),
           playerSubscriptionId: row.readNullable<int>('player_subscription_id'),
           endDate: row.readNullable<DateTime>('end_date'),
           mAXPlayersSubscriptionsendDate: row.readNullable<DateTime>('_c0'),
@@ -3249,7 +3298,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
 
   Selectable<GetRemainingFreezeResult> getRemainingFreeze(int playerIndexId) {
     return customSelect(
-        'SELECT PlayersSubscriptions.freeze_available, MAX(PlayersSubscriptions.beginning_date) AS _c0, PlayersSubscriptions.end_date, PlayersSubscriptions.sub_id FROM PlayersSubscriptions WHERE PlayersSubscriptions.player_subscription_id = ?1',
+        'SELECT PlayersSubscriptions.freeze_available, PlayersSubscriptions.freeze_begin_date, PlayersSubscriptions.freeze_end_date, MAX(PlayersSubscriptions.beginning_date) AS _c0, PlayersSubscriptions.end_date, PlayersSubscriptions.sub_id FROM PlayersSubscriptions WHERE PlayersSubscriptions.player_subscription_id = ?1',
         variables: [
           Variable<int>(playerIndexId)
         ],
@@ -3257,6 +3306,8 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           playersSubscriptions,
         }).map((QueryRow row) => GetRemainingFreezeResult(
           freezeAvailable: row.read<int>('freeze_available'),
+          freezeBeginDate: row.readNullable<DateTime>('freeze_begin_date'),
+          freezeEndDate: row.readNullable<DateTime>('freeze_end_date'),
           mAXPlayersSubscriptionsbeginningDate:
               row.readNullable<DateTime>('_c0'),
           endDate: row.read<DateTime>('end_date'),
@@ -3349,6 +3400,8 @@ class GetPlayerSubscriptionResult {
   final int billValue;
   final int duration;
   final String billCollector;
+  final int subscriptionInfoId;
+  final String? subscriptionName;
   GetPlayerSubscriptionResult({
     required this.id,
     required this.playerIndexId,
@@ -3376,6 +3429,8 @@ class GetPlayerSubscriptionResult {
     required this.billValue,
     required this.duration,
     required this.billCollector,
+    required this.subscriptionInfoId,
+    this.subscriptionName,
   });
 }
 
@@ -3417,6 +3472,7 @@ class GetEndedSubscriptionByTeamResult {
   final int? billValue;
   final int? duration;
   final String? billCollector;
+  final int? subscriptionInfoId;
   GetEndedSubscriptionByTeamResult({
     required this.id,
     required this.playerIndexId,
@@ -3444,6 +3500,7 @@ class GetEndedSubscriptionByTeamResult {
     this.billValue,
     this.duration,
     this.billCollector,
+    this.subscriptionInfoId,
   });
 }
 
@@ -3451,6 +3508,8 @@ class EnterPlayerToGymResult {
   final int playerId;
   final int playerIndexId;
   final String playerName;
+  final DateTime? freezeBeginDate;
+  final DateTime? freezeEndDate;
   final int? playerSubscriptionId;
   final DateTime? endDate;
   final DateTime? mAXPlayersSubscriptionsendDate;
@@ -3460,6 +3519,8 @@ class EnterPlayerToGymResult {
     required this.playerId,
     required this.playerIndexId,
     required this.playerName,
+    this.freezeBeginDate,
+    this.freezeEndDate,
     this.playerSubscriptionId,
     this.endDate,
     this.mAXPlayersSubscriptionsendDate,
@@ -3479,11 +3540,15 @@ class GetRemainingInvitationResult {
 
 class GetRemainingFreezeResult {
   final int freezeAvailable;
+  final DateTime? freezeBeginDate;
+  final DateTime? freezeEndDate;
   final DateTime? mAXPlayersSubscriptionsbeginningDate;
   final DateTime endDate;
   final int? subId;
   GetRemainingFreezeResult({
     required this.freezeAvailable,
+    this.freezeBeginDate,
+    this.freezeEndDate,
     this.mAXPlayersSubscriptionsbeginningDate,
     required this.endDate,
     this.subId,
