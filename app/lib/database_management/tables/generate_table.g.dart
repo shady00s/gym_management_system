@@ -3175,47 +3175,24 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
   }
 
   Selectable<GetEndedSubscriptionByTeamResult> getEndedSubscriptionByTeam(
-      DateTime beginDateTime, DateTime secondDateTime, int teamId) {
+      int teamId, DateTime secondDateTime, DateTime beginDateTime) {
     return customSelect(
-        'SELECT Players.*, PlayersSubscriptions.* FROM Players LEFT JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_player_id = Players.player_index_id INNER JOIN (SELECT PlayersSubscriptions.player_subscription_id, MAX(PlayersSubscriptions.beginning_date) AS _c0, MAX(PlayersSubscriptions.end_date) AS latest_end_date FROM PlayersSubscriptions WHERE end_date BETWEEN ?1 AND ?2 AND PlayersSubscriptions.beginning_date < ?2 AND PlayersSubscriptions.duration != 11 GROUP BY player_subscription_id) AS LatestSubscriptions ON Players.player_index_id = LatestSubscriptions.player_subscription_id LEFT JOIN PlayersSubscriptions ON PlayersSubscriptions.player_subscription_id = Players.player_index_id WHERE PlayersAndTeamsTable.team_id = ?3 AND PlayersSubscriptions.team_id = ?3 AND PlayersSubscriptions.end_date = LatestSubscriptions.latest_end_date AND PlayersSubscriptions.beginning_date < ?2 ORDER BY PlayersSubscriptions.end_date DESC',
+        'SELECT DISTINCT Players.player_index_id, Players.player_id, Players.player_name, Players.image_path, PlayersSubscriptions.end_date FROM Players LEFT JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_id = ?1 LEFT JOIN PlayersSubscriptions ON PlayersSubscriptions.player_subscription_id = Players.player_index_id WHERE PlayersSubscriptions.team_id = ?1 AND(PlayersSubscriptions.beginning_date <= ?2 OR PlayersSubscriptions.beginning_date != ?2)AND(PlayersSubscriptions.end_date BETWEEN ?3 AND ?2)AND PlayersSubscriptions.duration != 11 ORDER BY PlayersSubscriptions.end_date DESC',
         variables: [
-          Variable<DateTime>(beginDateTime),
+          Variable<int>(teamId),
           Variable<DateTime>(secondDateTime),
-          Variable<int>(teamId)
+          Variable<DateTime>(beginDateTime)
         ],
         readsFrom: {
           players,
-          playersAndTeamsTable,
           playersSubscriptions,
+          playersAndTeamsTable,
         }).map((QueryRow row) => GetEndedSubscriptionByTeamResult(
-          id: row.read<int>('id'),
           playerIndexId: row.read<int>('player_index_id'),
           playerId: row.read<int>('player_id'),
           playerName: row.read<String>('player_name'),
-          playerPhoneNumber: row.read<int>('player_phone_number'),
           imagePath: row.read<String>('image_path'),
-          playerAge: row.read<int>('player_age'),
-          playerFirstJoinDate: row.read<DateTime>('player_first_join_date'),
-          playerGender: row.read<String>('player_gender'),
-          subscriptionId: row.read<int>('subscription_id'),
-          subId: row.readNullable<int>('sub_id'),
-          teamId: row.readNullable<int>('team_id'),
-          billImagePath: row.readNullable<String>('bill_image_path'),
-          discountCode: row.readNullable<String>('discount_code'),
-          freezeAvailable: row.readNullable<int>('freeze_available'),
-          invitationAvailable: row.readNullable<int>('invitation_available'),
-          subscriptionPayDate:
-              row.readNullable<DateTime>('subscription_pay_date'),
-          playerSubscriptionId: row.readNullable<int>('player_subscription_id'),
-          beginningDate: row.readNullable<DateTime>('beginning_date'),
           endDate: row.readNullable<DateTime>('end_date'),
-          freezeBeginDate: row.readNullable<DateTime>('freeze_begin_date'),
-          freezeEndDate: row.readNullable<DateTime>('freeze_end_date'),
-          billId: row.readNullable<int>('billId'),
-          billValue: row.readNullable<int>('billValue'),
-          duration: row.readNullable<int>('duration'),
-          billCollector: row.readNullable<String>('billCollector'),
-          subscriptionInfoId: row.readNullable<int>('subscription_info_id'),
         ));
   }
 
@@ -3256,7 +3233,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
   Selectable<EnterPlayerToGymResult> enterPlayerToGym(
       int? playerId, String? playerName, int teamId) {
     return customSelect(
-        'SELECT DISTINCT Players.player_id, Players.player_index_id, Players.player_name, PlayersSubscriptions.freeze_begin_date, PlayersSubscriptions.freeze_end_date, PlayersSubscriptions.player_subscription_id, PlayersSubscriptions.end_date, MAX(PlayersSubscriptions.end_date) AS _c0, PlayersAndTeamsTable.team_player_id, PlayersAndTeamsTable.team_id FROM Players LEFT JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id LEFT JOIN PlayersAndTeamsTable ON Players.player_index_id = PlayersAndTeamsTable.team_player_id WHERE(Players.player_id = COALESCE(?1, Players.player_id) OR ?1 IS NULL)AND(Players.player_name = COALESCE(?2, Players.player_name) OR ?2 IS NULL)AND PlayersAndTeamsTable.team_id = ?3',
+        'SELECT DISTINCT Players.player_id, Players.player_index_id, Players.player_name, PlayersSubscriptions.freeze_begin_date, PlayersSubscriptions.freeze_end_date, PlayersSubscriptions.player_subscription_id, MAX(PlayersSubscriptions.end_date) AS _c0, PlayersAndTeamsTable.team_player_id, PlayersAndTeamsTable.team_id FROM Players LEFT JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id LEFT JOIN PlayersAndTeamsTable ON Players.player_index_id = PlayersAndTeamsTable.team_player_id WHERE(Players.player_id = COALESCE(?1, Players.player_id) OR ?1 IS NULL)AND(Players.player_name = COALESCE(?2, Players.player_name) OR ?2 IS NULL)AND PlayersAndTeamsTable.team_id = ?3',
         variables: [
           Variable<int>(playerId),
           Variable<String>(playerName),
@@ -3273,7 +3250,6 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           freezeBeginDate: row.readNullable<DateTime>('freeze_begin_date'),
           freezeEndDate: row.readNullable<DateTime>('freeze_end_date'),
           playerSubscriptionId: row.readNullable<int>('player_subscription_id'),
-          endDate: row.readNullable<DateTime>('end_date'),
           mAXPlayersSubscriptionsendDate: row.readNullable<DateTime>('_c0'),
           teamPlayerId: row.readNullable<int>('team_player_id'),
           teamId: row.readNullable<int>('team_id'),
@@ -3446,61 +3422,17 @@ class GetPlayersByTeamResult {
 }
 
 class GetEndedSubscriptionByTeamResult {
-  final int id;
   final int playerIndexId;
   final int playerId;
   final String playerName;
-  final int playerPhoneNumber;
   final String imagePath;
-  final int playerAge;
-  final DateTime playerFirstJoinDate;
-  final String playerGender;
-  final int subscriptionId;
-  final int? subId;
-  final int? teamId;
-  final String? billImagePath;
-  final String? discountCode;
-  final int? freezeAvailable;
-  final int? invitationAvailable;
-  final DateTime? subscriptionPayDate;
-  final int? playerSubscriptionId;
-  final DateTime? beginningDate;
   final DateTime? endDate;
-  final DateTime? freezeBeginDate;
-  final DateTime? freezeEndDate;
-  final int? billId;
-  final int? billValue;
-  final int? duration;
-  final String? billCollector;
-  final int? subscriptionInfoId;
   GetEndedSubscriptionByTeamResult({
-    required this.id,
     required this.playerIndexId,
     required this.playerId,
     required this.playerName,
-    required this.playerPhoneNumber,
     required this.imagePath,
-    required this.playerAge,
-    required this.playerFirstJoinDate,
-    required this.playerGender,
-    required this.subscriptionId,
-    this.subId,
-    this.teamId,
-    this.billImagePath,
-    this.discountCode,
-    this.freezeAvailable,
-    this.invitationAvailable,
-    this.subscriptionPayDate,
-    this.playerSubscriptionId,
-    this.beginningDate,
     this.endDate,
-    this.freezeBeginDate,
-    this.freezeEndDate,
-    this.billId,
-    this.billValue,
-    this.duration,
-    this.billCollector,
-    this.subscriptionInfoId,
   });
 }
 
@@ -3511,7 +3443,6 @@ class EnterPlayerToGymResult {
   final DateTime? freezeBeginDate;
   final DateTime? freezeEndDate;
   final int? playerSubscriptionId;
-  final DateTime? endDate;
   final DateTime? mAXPlayersSubscriptionsendDate;
   final int? teamPlayerId;
   final int? teamId;
@@ -3522,7 +3453,6 @@ class EnterPlayerToGymResult {
     this.freezeBeginDate,
     this.freezeEndDate,
     this.playerSubscriptionId,
-    this.endDate,
     this.mAXPlayersSubscriptionsendDate,
     this.teamPlayerId,
     this.teamId,

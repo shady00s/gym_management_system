@@ -9,10 +9,19 @@ class GymLogsManager{
       if(int.tryParse(playerId) !=null){
         try{
           EnterPlayerToGymResult playerData = await db.enterPlayerToGym(int.parse(playerId) ,null ,teamId).getSingle();
-          if(!playerData.endDate!.difference(DateTime.now()).isNegative && playerData.teamId == teamId){
+
+
+          if( (DateTime.now().compareTo(playerData.freezeBeginDate!) ==1 && DateTime.now().compareTo(playerData.freezeBeginDate!) == -1 ) || DateTime(DateTime.now().year ,DateTime.now().month, DateTime.now().day).compareTo(DateTime(playerData.freezeBeginDate!.year,playerData.freezeBeginDate!.month,playerData.freezeBeginDate!.day)) == 0){
+            await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is in freeze"),));
+
+          }
+
+        else  if(!playerData.mAXPlayersSubscriptionsendDate!.isBefore(DateTime.now()) && playerData.teamId == teamId){
             await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerIndexId:playerData.playerIndexId,playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now()));
 
-            }else{
+            }
+
+          else{
             await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is already ended"),));
 
           }
@@ -31,14 +40,15 @@ class GymLogsManager{
         try{
           EnterPlayerToGymResult playerData = await db.enterPlayerToGym(null, playerId,teamId).getSingle();
 
-          if(!playerData.endDate!.difference(DateTime.now()).isNegative && playerData.teamId == teamId && (playerData.freezeBeginDate == null || (  !playerData.freezeBeginDate!.isAfter(DateTime.now()) && !playerData.freezeEndDate!.isBefore(DateTime.now())))){
-            await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now(), playerIndexId: playerData.playerIndexId));
-
-          }
-          if(playerData.freezeBeginDate!.isAfter(DateTime.now()) && playerData.freezeEndDate!.isBefore(DateTime.now())){
+          if( (DateTime.now().compareTo(playerData.freezeBeginDate!) ==1 && DateTime.now().compareTo(playerData.freezeBeginDate!) == -1 ) || DateTime(DateTime.now().year ,DateTime.now().month, DateTime.now().day).compareTo(DateTime(playerData.freezeBeginDate!.year,playerData.freezeBeginDate!.month,playerData.freezeBeginDate!.day)) == 0){
             await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is in freeze"),));
 
           }
+          else if(!playerData.mAXPlayersSubscriptionsendDate!.isBefore(DateTime.now()) && playerData.teamId == teamId && (playerData.freezeBeginDate == null || (  !playerData.freezeBeginDate!.isAfter(DateTime.now()) && !playerData.freezeEndDate!.isBefore(DateTime.now())))){
+            await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now(), playerIndexId: playerData.playerIndexId));
+
+          }
+
 
           else{
             await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is already ended"),));

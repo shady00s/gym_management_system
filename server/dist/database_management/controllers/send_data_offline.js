@@ -1,9 +1,9 @@
+"use strict";
 // import IExcelDataModel from "../../excel_management/excel_data_model";
 // import { Request, Response } from 'express';
-
+Object.defineProperty(exports, "__esModule", { value: true });
 // export default function sendDataOffline(req:Request,res:Response){
 //     let results: IExcelDataModel[] = req.session.playerList
-
 //     const prossedPlayerSet = new Set()
 //     const resultData = []
 //     let playerData:IExcelDataModel = {
@@ -15,28 +15,19 @@
 //         name: ""
 //     };
 //     let playerId; 
-
 //     let prossedPlayerId;
-
 //     for (const player of results) {
 //          playerId = player.name;
-        
 //          prossedPlayerId = player.name;
-
-        
 //                if(playerData[playerId]){
 //                 if((playerData[playerId].name === player.name) ){      
-    
 //                     if (!(playerData[playerId].subscriptions!.every(e => player.subscriptions.every(
 //                                 f =>e.team === f.team && e.beginDate === f.beginDate && e.billId === f.billId && e.subscriptionDuration === f.subscriptionDuration && e.subscriptionValue === f.subscriptionValue)))) {
 //                                 playerData[playerId].subscriptions.push(...player.subscriptions);
-        
 //                             }
-                            
 //                             for(var e of playerData[playerId].subscriptions){
 //                                 e.playerSubscriptionId = playerData[playerId].playerIndexId
 //                             }
-
 //                         }  
 //                         let teamId = new Set()
 //                         for (const iterator of playerData[playerId].subscriptions) {
@@ -45,7 +36,6 @@
 //                             }
 //                             playerData[playerId].team = Array.from(teamId)
 //                     }
-                        
 //                         if(!prossedPlayerSet.has(playerId))
 //                         {
 //                             prossedPlayerSet.add(playerId)
@@ -65,4 +55,4 @@
 // }
 // res.json({message:"succssess",resultData})
 // }  
-
+//# sourceMappingURL=send_data_offline.js.map

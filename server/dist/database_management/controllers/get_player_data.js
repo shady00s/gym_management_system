@@ -1,3 +1,4 @@
+"use strict";
 // import { pool } from "./send_data_to_db_controller";
 // import { Response, Request } from "express";
 // export default async function getPlayerInformationData(req:Request,res:Response){
@@ -17,7 +18,7 @@
 //         WHERE PLAYERS.player_id = ${playerId}
 //     `)
 //     for (let data of result.rows) {
-       
+Object.defineProperty(exports, "__esModule", { value: true });
 //             playerInfo["player_name"] = data.player_name
 //             playerInfo["player_id"] = data.player_id
 //             playerInfo["player_phone_number"] = data.player_phone_number 
@@ -31,10 +32,7 @@
 //                 billCollector:data.billCollector
 //             })
 //             playerInfo.subscriptions.reverse()
-        
 //     }
-
-
-
 //     res.json({message:"succssess",data:playerInfo})
 // }
+//# sourceMappingURL=get_player_data.js.map

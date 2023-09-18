@@ -150,7 +150,7 @@ class PlayersDatabaseManager {
 
    Future<List<GetEndedSubscriptionByTeamResult>> getNeedToResubscribePlayersSubscriptions(teamId) async {
 
-     List<GetEndedSubscriptionByTeamResult>  data = await playersDatabase.getEndedSubscriptionByTeam( DateTime.now().subtract(const Duration(days: 20)),DateTime.now(),teamId,).get();
+     List<GetEndedSubscriptionByTeamResult>  data = await playersDatabase.getEndedSubscriptionByTeam(teamId,DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day), DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day).subtract(const Duration(days: 20)),).get();
      return data;
    }
 
@@ -196,9 +196,10 @@ Future insertPlayersFromExcelOffline(List<ExcelPlayers> playersData)async{
 Future reSubscribePlayer(PlayersSubscriptionsCompanion data)async{
     try{
       await playersDatabase.into(PlayersSubscriptions(playersDatabase)).insert(data);
-
+      return 200;
     }catch(e){
-      throw e.toString();
+      print( e.toString());
+      return 600;
     }
    }
 

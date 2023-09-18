@@ -1,5 +1,6 @@
+"use strict";
 // import { pool } from "./send_data_to_db_controller";
-
+Object.defineProperty(exports, "__esModule", { value: true });
 // export default async function createEmployeesTable(){
 //    await pool.query(`
 //             CREATE TABLE IF NOT EXISTS Employees(
@@ -13,3 +14,4 @@
 //             );
 //         `)
 // }
+//# sourceMappingURL=create_employees_table.js.map

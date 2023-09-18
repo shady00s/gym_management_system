@@ -4,7 +4,8 @@
         "moduleResolution": "NodeNext",
         "sourceMap": true,
         "target": "ES2021",
-        "outDir": "dist"
+        "outDir": "dist",
+    
     },
     "include": ["src/**/*"]
 }

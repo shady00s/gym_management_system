@@ -8,9 +8,26 @@ import "package:gym_management/manage_excel/steps/coaches_data.dart";
 import "package:gym_management/manage_excel/steps/finish_data.dart";
 import "package:gym_management/manage_excel/steps/import_excel_step.dart";
 import "package:gym_management/manage_excel/steps/set_sheets.dart";
-
+import 'dart:io' as io;
 import "cubit/cubit.dart";
 
+
+Future<int> uploadFileToServerAndStartServer(context) async{
+  try{
+    await ExcelFileCubit.get(context).sendFileToServer();
+
+    // await io.Process.run("assets/my-server.exe",['start'] ).then((value) async {
+    //   print(value.stdout);
+    //   print(value.stderr);
+    // });
+    return 200;
+  }catch(e){
+    print(e);
+    return 400;
+  }
+
+
+}
 class ImportExcelScreen extends StatelessWidget {
   const ImportExcelScreen({super.key});
 
@@ -177,8 +194,8 @@ class _StepsWidgetState extends State<StepsWidget> {
 
                   onStepContinue:() async{
                     if(state.excelFile !=null && state.currentIndex == 0 ){
+                     await  loadingDialog(context ,newNumber,uploadFileToServerAndStartServer(context),state);
 
-                      await  loadingDialog(context ,newNumber,ExcelFileCubit.get(context).sendFileToServer(),state);
                     }else if(state.excelFile ==null){
                       material.showDialog(context: context, builder:(context)=> ContentDialog(content:const Text("please select one file to continue"),actions: [Button(child: const Text("Okay"), onPressed: (){Navigator.pop(context);})],));
                     }

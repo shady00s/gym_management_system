@@ -1,7 +1,7 @@
+"use strict";
 // import { pool } from "./send_data_to_db_controller";
-
+Object.defineProperty(exports, "__esModule", { value: true });
 // export  async function createTeamsTable(){
-
 //     await pool.query(`
 //             CREATE TABLE IF NOT EXISTS Teams(
 //                 team_id INT PRIMARY KEY,
@@ -11,9 +11,7 @@
 //             );
 //     `)
 // }
-
 // export  async function createPlayerTeamTable(){
-
 //     await pool.query(`
 //             CREATE TABLE IF NOT EXISTS PlayersTeams(
 //                 id SERIAL PRIMARY KEY,
@@ -24,3 +22,4 @@
 //             );
 //     `)
 // }
+//# sourceMappingURL=create_teams_table.js.map
