@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const excel_routes_1 = __importDefault(require("./routes/excel_routes"));
-const routes_1 = __importDefault(require("./database_management/routes"));
+//import database_router from "./database_management/routes";
 const express_session_1 = __importDefault(require("express-session"));
 const app = (0, express_1.default)();
 app.use(express_1.default.urlencoded({ extended: true }));
@@ -22,7 +22,7 @@ app.use((0, express_session_1.default)({
     cookie: { sameSite: "strict", maxAge: 60000, secure: false }
 }));
 app.use('/', excel_routes_1.default);
-app.use('/', routes_1.default);
+//app.use('/',database_router)
 app.listen(3000, () => {
     console.log("connected");
 });

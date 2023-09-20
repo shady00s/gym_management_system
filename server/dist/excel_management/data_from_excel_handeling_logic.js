@@ -151,7 +151,7 @@ async function saveXlsxFileData(req, res) {
                 req.session.playerList = results;
                 req.session.selected_teams_list = selectedSheets;
                 res.redirect('/get_excel_data_offline');
-                //res.json(playersMap)
+                //res.json(results)
             }
             else {
                 res.json("no sheets added");
