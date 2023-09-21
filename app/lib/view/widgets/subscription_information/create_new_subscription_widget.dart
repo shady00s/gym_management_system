@@ -1,8 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gym_management/main_screen/widgets/player_widgets/add_new_player.dart';
 
 import '../../../database_management/tables/generate_table.dart';
 import '../../../database_management/tables/subscriptions/subscriptions_information_manager.dart';
+import '../../../database_management/tables/teams/teams_database_manager.dart';
 import 'add_new_subscription_value_widget.dart';
 
 class CreateNewSubscriptionWidget extends StatefulWidget {
@@ -12,6 +14,9 @@ class CreateNewSubscriptionWidget extends StatefulWidget {
   State<CreateNewSubscriptionWidget> createState() =>
       _CreateNewSubscriptionWidgetState();
 }
+var getTeamsProvider = FutureProvider<List<TeamsDataTableData>>((ref) => TeamsDatabaseManager().getAllTeams());
+var teamProvider = StateProvider<TeamsDataTableData?>((ref) => null);
+
 
 class _CreateNewSubscriptionWidgetState
     extends State<CreateNewSubscriptionWidget> {
@@ -37,7 +42,7 @@ class _CreateNewSubscriptionWidgetState
                 padding: const EdgeInsets.all(8.0),
                 child:  SizedBox(
                   width: MediaQuery.of(context).size.width * 0.5,
-                  height: MediaQuery.of(context).size.height * 0.68,
+                  height: MediaQuery.of(context).size.height * 0.65,
                   child: SingleChildScrollView(
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,7 +77,7 @@ class _CreateNewSubscriptionWidgetState
                                         subscriptionFreezeLimit:
                                         subData.subscriptionFreezeLimit,
                                         subscriptionInvitationLimit:
-                                        subData.subscriptionInvitationLimit, teamId: 0);
+                                        subData.subscriptionInvitationLimit, teamId: subData.teamId);
                                   });
                                 },
                               )),
@@ -100,7 +105,7 @@ class _CreateNewSubscriptionWidgetState
                                                 subscriptionFreezeLimit:
                                                 subData.subscriptionFreezeLimit,
                                                 subscriptionInvitationLimit:
-                                                subData.subscriptionInvitationLimit, teamId: 0);
+                                                subData.subscriptionInvitationLimit, teamId:  subData.teamId);
                                           });
                                         },
                                         validator: (val) {
@@ -141,7 +146,7 @@ class _CreateNewSubscriptionWidgetState
                                                 subscriptionFreezeLimit:
                                                 subData.subscriptionFreezeLimit,
                                                 subscriptionInvitationLimit:
-                                                subData.subscriptionInvitationLimit, teamId: 0);
+                                                subData.subscriptionInvitationLimit, teamId:  subData.teamId);
                                           });
                                         },
                                         validator: (val) {
@@ -182,7 +187,7 @@ class _CreateNewSubscriptionWidgetState
                                                 subData.subscriptionDuration,
                                                 subscriptionFreezeLimit: val!,
                                                 subscriptionInvitationLimit:
-                                                subData.subscriptionInvitationLimit, teamId: 0);
+                                                subData.subscriptionInvitationLimit, teamId: subData.teamId);
                                           });
                                         },
                                         validator: (val) {
@@ -206,47 +211,69 @@ class _CreateNewSubscriptionWidgetState
                           const SizedBox(
                             height: 8,
                           ),
-                          SizedBox(
-                              width: 220,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                      child: NumberFormBox(
-                                        value: subData.subscriptionInvitationLimit,
-                                        onChanged: (val) {
-                                          setState(() {
-                                            _subName.text = "";
-                                            subData = SubscriptionsInfoTableData(
-                                                subscriptionName: subData.subscriptionName,
-                                                subscriptionValue:
-                                                subData.subscriptionValue,
-                                                subscriptionDuration:
-                                                subData.subscriptionDuration,
-                                                subscriptionFreezeLimit:
-                                                subData.subscriptionFreezeLimit,
-                                                subscriptionInvitationLimit: val!, teamId: 0);
-                                          });
-                                        },
-                                        validator: (val) {
-                                          if (val == null) {
-                                            return "Please add number invitations";
-                                          }
+                          Row(
+                            children: [
+                              SizedBox(
+                                  width: 220,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: NumberFormBox(
+                                            value: subData.subscriptionInvitationLimit,
+                                            onChanged: (val) {
+                                              setState(() {
+                                                _subName.text = "";
+                                                subData = SubscriptionsInfoTableData(
+                                                    subscriptionName: subData.subscriptionName,
+                                                    subscriptionValue:
+                                                    subData.subscriptionValue,
+                                                    subscriptionDuration:
+                                                    subData.subscriptionDuration,
+                                                    subscriptionFreezeLimit:
+                                                    subData.subscriptionFreezeLimit,
+                                                    subscriptionInvitationLimit: val!, teamId: subData.teamId);
+                                              });
+                                            },
+                                            validator: (val) {
+                                              if (val == null) {
+                                                return "Please add number invitations";
+                                              }
 
-                                          return null;
-                                        },
-                                      )),
-                                  const SizedBox(
-                                    width: 20,
-                                  ),
-                                  const Text("Invitations")
-                                ],
-                              )),
+                                              return null;
+                                            },
+                                          )),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      const Text("Invitations")
+                                    ],
+                                  )),
+                              SizedBox(width: 20,),
+
+                              Consumer(
+                                builder: (context, ref,child) {
+                                  var teams = ref.watch(getTeamsProvider);
+                                  var setTeam =  ref.read(teamProvider.notifier);
+                                  var teamVal = ref.watch(teamProvider);
+                                  return teams.when(data: (data)=> ComboBox(
+                                    placeholder: Text("Select team"),
+                                    value: teamVal,
+                                    onChanged: (val){
+                                      setTeam.state = val;
+                                    },
+                                    items: data.map((e)=>ComboBoxItem(value: e, child: Text(e.teamName))).toList()
+                                  ), error: (err,state)=>Text("Error occured"), loading: ()=>Center(child: ProgressBar(),));
+                                }
+                              )
+                            ],
+                          ),
                           const SizedBox(
                             height: 41,
                           ),
                           Consumer(
                             builder:
                                 (BuildContext context, WidgetRef ref, Widget? child) {
+                                  var teamVal = ref.watch(teamProvider);
 
 
 
@@ -256,7 +283,19 @@ class _CreateNewSubscriptionWidgetState
                                     child: Text("save subscription"),
                                   ),
                                   onPressed: () async {
-                                    if (_formKey.currentState!.validate()) {
+                                    if (_formKey.currentState!.validate() && teamVal !=null) {
+                                      setState(() {
+                                        subData = SubscriptionsInfoTableData(
+                                            subscriptionName: subData.subscriptionName,
+                                            subscriptionValue:
+                                            subData.subscriptionValue,
+                                            subscriptionDuration:
+                                            subData.subscriptionDuration,
+                                            subscriptionFreezeLimit: subData.subscriptionFreezeLimit,
+                                            subscriptionInvitationLimit:
+                                            subData.subscriptionInvitationLimit, teamId: teamVal!.teamId);
+                                      });
+
                                       await SubscriptionInformationManager()
                                           .insertSubscriptionInformation(subData)
                                           .then((val) async {

@@ -75,7 +75,7 @@ class CurrentSubscriptions extends ConsumerWidget {
                 height: 15,
               ),
               SizedBox(
-                  height: 450,
+                  height: 430,
                   width: 400,
                   child: allSubscriptions.when(
                       skipLoadingOnRefresh:false,

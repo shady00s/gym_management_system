@@ -35,7 +35,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              snapshot.data![0].imagePath == 'no-image'?   const   CircleAvatar(
+                              snapshot.data![0].imagePath == 'no image'?   const   CircleAvatar(
                                 radius: 33,
                                 backgroundColor: Color.fromRGBO(
                                     176, 175, 175, 0.7019607843137254),
@@ -64,7 +64,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text("Phone number:"),
-                                  Text((snapshot.data![0].playerPhoneNumber != -3?snapshot.data![0].playerPhoneNumber:"unrecorded").toString()),
+                                  Text((snapshot.data![0].playerPhoneNumber != -1?snapshot.data![0].playerPhoneNumber:"unrecorded").toString()),
                                 ],
                               ),
                               const SizedBox(height: 14,),
