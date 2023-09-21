@@ -146,6 +146,7 @@ class FreezeWidget extends StatelessWidget {
                                     setState(() {
                                       _endDateController =
                                           TextEditingController();
+                                      _endDate = DateTime.now().add(Duration(days: snapshot.data!.freezeAvailable));
                                       _endDateController!.text =
                                           DateFormat.yMMMEd().format(
                                               DateTime.now().add(Duration(
@@ -159,6 +160,7 @@ class FreezeWidget extends StatelessWidget {
                                           DateFormat.yMMMEd()
                                               .format(customDate!);
                                       _beginningDate = customDate!;
+                                      _endDate = customDate!.add(Duration(days: snapshot.data!.freezeAvailable));
                                       _endDateController!.text =
                                           DateFormat.yMMMEd().format(customDate!
                                               .add(Duration(
@@ -322,7 +324,10 @@ class FreezeWidget extends StatelessWidget {
                                                                 .freezeAvailable,
                                                             snapshot
                                                                 .data!.endDate),
-                                                    null);
+                                                    null).then((value)async{
+                                                      Navigator.pop(context);
+                                                     await displayInfoBar(context, builder: (context,close)=>const InfoBar(title: Text("freeze added successfully")));
+                                                });
                                               }))
                                     ],
                                   );

@@ -1,6 +1,6 @@
 import express from "express";
 import excelRouter from "./routes/excel_routes";
-import database_router from "./database_management/routes";
+//import database_router from "./database_management/routes";
 import session from 'express-session';
 import IExcelDataModel from "./excel_management/excel_data_model";
 import IselectedTeams from "./excel_management/selected_team_model";
@@ -32,7 +32,7 @@ app.use(session({
 }))
 
 app.use('/',excelRouter)
-app.use('/',database_router)
+//app.use('/',database_router)
 
 
 app.listen(3000,()=>{

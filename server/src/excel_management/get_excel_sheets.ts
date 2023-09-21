@@ -5,7 +5,6 @@ import * as xlsx from 'xlsx';
 export default async function getExcelSheets(req:Request,res:Response){
 
     const fileName  = req.query.fileName
- 
         const filePath = path.join(__dirname,'/target_excel/',fileName.toString())
         if (filePath.length !==0){
              fs.readFile(filePath,function(err,file){

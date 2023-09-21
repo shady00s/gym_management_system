@@ -9,49 +9,63 @@ class GymLogsManager{
       if(int.tryParse(playerId) !=null){
         try{
           EnterPlayerToGymResult playerData = await db.enterPlayerToGym(int.parse(playerId) ,null ,teamId).getSingle();
+          if(playerData.mAXPlayersSubscriptionsendDate!.isAfter(DateTime.now()) &&  playerData.teamId == teamId ){
+            if( playerData.freezeBeginDate == null ){
+              await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now(), playerIndexId: playerData.playerIndexId));
 
+            } else{
+              // check if freeze begin date is today
+              if(playerData.freezeBeginDate!.day == DateTime.now().day &&  playerData.freezeBeginDate!.month == DateTime.now().month && playerData.freezeBeginDate!.year == DateTime.now().year ){
 
-          if( (DateTime.now().compareTo(playerData.freezeBeginDate!) ==1 && DateTime.now().compareTo(playerData.freezeBeginDate!) == -1 ) || DateTime(DateTime.now().year ,DateTime.now().month, DateTime.now().day).compareTo(DateTime(playerData.freezeBeginDate!.year,playerData.freezeBeginDate!.month,playerData.freezeBeginDate!.day)) == 0){
-            await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is in freeze"),));
+                await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is in freeze"),));
+                // check if datetime is after begin date of before end date (freeze duration) or end date is equal to today
+              }else if (DateTime.now().isAfter(playerData.freezeBeginDate!)  && (DateTime.now().isBefore(playerData.freezeEndDate!)|| playerData.freezeEndDate!.day == DateTime.now().day &&  playerData.freezeEndDate!.month == DateTime.now().month && playerData.freezeEndDate!.year == DateTime.now().year )){
+                await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is in freeze"),));
 
-          }
+              }else{
+                await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now(), playerIndexId: playerData.playerIndexId));
 
-        else  if(!playerData.mAXPlayersSubscriptionsendDate!.isBefore(DateTime.now()) && playerData.teamId == teamId){
-            await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerIndexId:playerData.playerIndexId,playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now()));
-
+              }
             }
+          }else if(playerData.teamId != teamId){
+            await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player is not belonging to this team"),));
 
-          else{
-            await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is already ended"),));
+          } else{
+            await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is ended"),));
 
           }
         }catch(err){
           await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("Wrong ID or name"),));
         }
-
-
-
-
-
       }
 
       else{
 
         try{
           EnterPlayerToGymResult playerData = await db.enterPlayerToGym(null, playerId,teamId).getSingle();
+          if(playerData.mAXPlayersSubscriptionsendDate!.isAfter(DateTime.now()) && teamId == playerData.teamId ){
+            if( playerData.freezeBeginDate == null ){
+              await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now(), playerIndexId: playerData.playerIndexId));
 
-          if( (DateTime.now().compareTo(playerData.freezeBeginDate!) ==1 && DateTime.now().compareTo(playerData.freezeBeginDate!) == -1 ) || DateTime(DateTime.now().year ,DateTime.now().month, DateTime.now().day).compareTo(DateTime(playerData.freezeBeginDate!.year,playerData.freezeBeginDate!.month,playerData.freezeBeginDate!.day)) == 0){
-            await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is in freeze"),));
+            } else{
+              // check if freeze begin date is today
+              if(playerData.freezeBeginDate!.day == DateTime.now().day &&  playerData.freezeBeginDate!.month == DateTime.now().month && playerData.freezeBeginDate!.year == DateTime.now().year ){
 
-          }
-          else if(!playerData.mAXPlayersSubscriptionsendDate!.isBefore(DateTime.now()) && playerData.teamId == teamId && (playerData.freezeBeginDate == null || (  !playerData.freezeBeginDate!.isAfter(DateTime.now()) && !playerData.freezeEndDate!.isBefore(DateTime.now())))){
-            await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now(), playerIndexId: playerData.playerIndexId));
+                await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is in freeze"),));
+                // check if datetime is after begin date of before end date (freeze duration) or end date is equal to today
+              }else if (DateTime.now().isAfter(playerData.freezeBeginDate!)  && (DateTime.now().isBefore(playerData.freezeEndDate!)|| playerData.freezeEndDate!.day == DateTime.now().day &&  playerData.freezeEndDate!.month == DateTime.now().month && playerData.freezeEndDate!.year == DateTime.now().year )){
+                await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is in freeze"),));
 
-          }
+              }else{
+                await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now(), playerIndexId: playerData.playerIndexId));
 
+              }
+            }
+          }else if(playerData.teamId != teamId){
+            await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player is not belonging to this team"),));
 
-          else{
-            await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is already ended"),));
+          } else{
+            await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is ended"),));
 
           }
         }catch(err){

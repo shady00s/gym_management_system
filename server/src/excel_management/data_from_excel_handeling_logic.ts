@@ -29,7 +29,6 @@ async function saveXlsxFileData(req: Request, res: Response) {
 
                     let fileJsonData: any[] = xlsx.utils.sheet_to_json(fileData.Sheets[selectedSheets[currentListLength].name])
                     for (let x = 0; x < fileJsonData.length; x++) {
-
                         let id = fileJsonData[x][selectedSheets[currentListLength].name]
                         let team;
                         if (id !== undefined && team === undefined) {
@@ -98,6 +97,7 @@ async function saveXlsxFileData(req: Request, res: Response) {
                 let processedPlayer = new Set();
                 let playerData = {};
                 const results = [];
+
                 for (const player of playersMap) {  
                     let playerObjId = player.playerIndexId;
 
@@ -155,7 +155,7 @@ async function saveXlsxFileData(req: Request, res: Response) {
                 req.session.selected_teams_list = selectedSheets;
 
                 res.redirect('/get_excel_data_offline')
-                //res.json(playersMap)
+                //res.json(results)
 
             } else {
                 res.json("no sheets added")
