@@ -1,5 +1,5 @@
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
-import '../../../manage_excel/model/sheets_model.dart';
+import '../../../view/manage_excel/model/sheets_model.dart';
 import '../generate_table.dart';
 
 class TeamsDatabaseManager{

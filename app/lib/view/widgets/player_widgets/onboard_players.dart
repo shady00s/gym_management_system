@@ -1,7 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/database_management/tables/generate_table.dart';
-import 'package:gym_management/main_screen/widgets/player_widgets/need_resbscribe_player_name_widget.dart';
-
+import 'package:gym_management/view/widgets/player_widgets/need_resbscribe_player_name_widget.dart';
 
 class OnBoardPlayers extends StatelessWidget {
   final String title;
@@ -19,7 +18,8 @@ class OnBoardPlayers extends StatelessWidget {
           child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: FutureBuilder<List<GetEndedSubscriptionByTeamResult>>(
-                  future: data as Future<List<GetEndedSubscriptionByTeamResult>>,
+                  future:
+                      data as Future<List<GetEndedSubscriptionByTeamResult>>,
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
@@ -48,10 +48,16 @@ class OnBoardPlayers extends StatelessWidget {
                                         itemCount: snapshot.data!.length,
                                         shrinkWrap: false,
                                         itemBuilder: (context, index) =>
-                   NeedToResubscribePlayerNameWidget(
-                       playerName: snapshot.data![index].playerName,
-                     playerId:snapshot.data![index].playerId,
-                     endDate:snapshot.data![index].endDate!, playerIndexId: snapshot.data![index].playerIndexId ,))))
+                                            NeedToResubscribePlayerNameWidget(
+                                              playerName: snapshot
+                                                  .data![index].playerName,
+                                              playerId: snapshot
+                                                  .data![index].playerId,
+                                              endDate: snapshot
+                                                  .data![index].endDate!,
+                                              playerIndexId: snapshot
+                                                  .data![index].playerIndexId,
+                                            ))))
                           ]);
                         } else {
                           return const Center(
@@ -64,7 +70,6 @@ class OnBoardPlayers extends StatelessWidget {
                           child: ProgressBar(),
                         );
                     }
-
                   })),
         ));
   }

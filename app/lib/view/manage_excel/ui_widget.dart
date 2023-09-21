@@ -3,11 +3,12 @@ import "package:flutter/material.dart" as material;
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:gym_management/database_management/tables/employees/employees_data_manager.dart";
 import "package:gym_management/database_management/tables/teams/teams_database_manager.dart";
-import "package:gym_management/manage_excel/cubit/state.dart";
-import "package:gym_management/manage_excel/steps/coaches_data.dart";
-import "package:gym_management/manage_excel/steps/finish_data.dart";
-import "package:gym_management/manage_excel/steps/import_excel_step.dart";
-import "package:gym_management/manage_excel/steps/set_sheets.dart";
+import "package:gym_management/view/manage_excel/cubit/state.dart";
+import "package:gym_management/view/manage_excel/steps/coaches_data.dart";
+import "package:gym_management/view/manage_excel/steps/finish_data.dart";
+import "package:gym_management/view/manage_excel/steps/import_excel_step.dart";
+import "package:gym_management/view/manage_excel/steps/set_sheets.dart";
+
 import 'dart:io' as io;
 import "cubit/cubit.dart";
 

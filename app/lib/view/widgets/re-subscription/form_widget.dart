@@ -1,8 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gym_management/main_screen/widgets/player_widgets/add_new_player.dart';
-import 'package:gym_management/main_screen/widgets/re-subscription/re_subscription_widget.dart';
-import 'package:gym_management/manage_excel/ui_widget.dart';
+import 'package:gym_management/view/widgets/player_widgets/add_new_player.dart';
+import 'package:gym_management/view/widgets/re-subscription/re_subscription_widget.dart';
+import 'package:gym_management/view/manage_excel/ui_widget.dart';
 import 'package:intl/intl.dart';
 import '../../../database_management/tables/generate_table.dart';
 import '../../../database_management/tables/players/player_database_manager.dart';
@@ -220,8 +220,8 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
               Consumer(builder: (context, ref, child) {
                 var val = ref.watch(subscriptionProvider);
                 return NumberFormBox(
-                  value: val!.subscriptionValue,
-                  initialValue: val.subscriptionValue.toString(),
+                  value: val?.subscriptionValue ?? 0,
+                  initialValue: val?.subscriptionValue.toString() ?? "0",
                 );
               }),
 

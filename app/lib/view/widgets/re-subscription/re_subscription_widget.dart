@@ -3,8 +3,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/database_management/tables/gym_player_logs/gym_log_manager.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
-import 'package:gym_management/main_screen/widgets/player_widgets/add_new_player.dart';
-import 'package:gym_management/main_screen/widgets/re-subscription/form_widget.dart';
+import 'package:gym_management/view/widgets/player_widgets/add_new_player.dart';
+import 'package:gym_management/view/widgets/re-subscription/form_widget.dart';
 import 'package:intl/intl.dart';
 import '../../../database_management/tables/generate_table.dart';
 

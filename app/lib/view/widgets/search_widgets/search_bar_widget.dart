@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gym_management/main_screen/widgets/search_widgets/search_result_widget.dart';
+import 'package:gym_management/view/widgets/search_widgets/search_result_widget.dart';
+
 class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({super.key});
 
@@ -8,12 +9,10 @@ class SearchBarWidget extends StatefulWidget {
   State<SearchBarWidget> createState() => _SearchBarWidgetState();
 }
 
-
-
 class _SearchBarWidgetState extends State<SearchBarWidget> {
-   final TextEditingController _controller = TextEditingController();
-    bool changed = false;
-    bool showHint = false;
+  final TextEditingController _controller = TextEditingController();
+  bool changed = false;
+  bool showHint = false;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -34,50 +33,62 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 });
               },
               onChanged: (val) {
-                val.isNotEmpty || val != "" ? setState(() {
-                  changed = true;
-                }) : setState(() {
-                  changed = false;
-                });
+                val.isNotEmpty || val != ""
+                    ? setState(() {
+                        changed = true;
+                      })
+                    : setState(() {
+                        changed = false;
+                      });
               },
               suffix: changed
-                  ? IconButton(onPressed: () {
-                setState(() {
-                  _controller.text = "";
-                  changed = false;
-                });
-              }, icon:  Icon(FluentIcons.cancel, color: Colors.grey[40],))
+                  ? IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _controller.text = "";
+                          changed = false;
+                        });
+                      },
+                      icon: Icon(
+                        FluentIcons.cancel,
+                        color: Colors.grey[40],
+                      ))
                   : null,
-              placeholder: "Search here with player name or id or phone number.",
+              placeholder:
+                  "Search here with player name or id or phone number.",
               controller: _controller,
-
             ),
           ),
-          Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
-            var changeName =  ref.read(searchInput.notifier);
+          Consumer(
+            builder: (BuildContext context, WidgetRef ref, Widget? child) {
+              var changeName = ref.read(searchInput.notifier);
 
-            return IconButton(onPressed: () async{
-              changeName.state = _controller.text;
+              return IconButton(
+                  onPressed: () async {
+                    changeName.state = _controller.text;
 
-
-              await showDialog(context: context, builder: (context)=> ContentDialog(
-
-                title:Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("Search"),
-                    IconButton(onPressed: (){
-                      Navigator.of(context).pop();
-                    },
-                      icon:const Icon(FluentIcons.cancel),
-                    ),
-                  ],
-                ) ,
-
-                content: const SearchResultWidget(),));
-            }, icon: const Icon(FluentIcons.search));
-          },)
-
+                    await showDialog(
+                        context: context,
+                        builder: (context) => ContentDialog(
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text("Search"),
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    icon: const Icon(FluentIcons.cancel),
+                                  ),
+                                ],
+                              ),
+                              content: const SearchResultWidget(),
+                            ));
+                  },
+                  icon: const Icon(FluentIcons.search));
+            },
+          )
         ],
       ),
     );

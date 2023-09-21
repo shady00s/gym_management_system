@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:gym_management/manage_excel/ui_widget.dart';
+import 'package:gym_management/view/manage_excel/ui_widget.dart';
 import 'package:intl/intl.dart';
 
 import '../../database_management/tables/generate_table.dart';
@@ -64,23 +64,46 @@ class FreezeWidget extends StatelessWidget {
                       ));
                     case ConnectionState.done:
                       if (snapshot.data != null) {
-
-                        if(snapshot.data!.freezeAvailable == 0 && snapshot.data!.freezeBeginDate != null){
-                          return  Expanded(
+                        if (snapshot.data!.freezeAvailable == 0 &&
+                            snapshot.data!.freezeBeginDate != null) {
+                          return Expanded(
                             child: Column(
-                              mainAxisAlignment:MainAxisAlignment.center,
-                              crossAxisAlignment:CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                              const  Card(
-                                  backgroundColor: Color.fromRGBO(0, 73, 73, 1.0),
-                                  child:  Text(
-                                      "This player has used his freeze")),
-                                const SizedBox(height: 12,),
-
-                              RichText(text: TextSpan(text: "Freeze beginning date: ",children:[TextSpan(text:  DateFormat.yMMMEd().format(snapshot.data!.freezeBeginDate!),style: TextStyle(fontWeight: FontWeight.bold)) ] )),
-                              const SizedBox(height: 12,),
-                              RichText(text: TextSpan(text: "Freeze end date: ",children:[TextSpan(text:  DateFormat.yMMMEd().format(snapshot.data!.freezeEndDate!),style: TextStyle(fontWeight: FontWeight.bold)) ] ))
-                            ],),
+                                const Card(
+                                    backgroundColor:
+                                        Color.fromRGBO(0, 73, 73, 1.0),
+                                    child: Text(
+                                        "This player has used his freeze")),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                RichText(
+                                    text: TextSpan(
+                                        text: "Freeze beginning date: ",
+                                        children: [
+                                      TextSpan(
+                                          text: DateFormat.yMMMEd().format(
+                                              snapshot.data!.freezeBeginDate!),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold))
+                                    ])),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                RichText(
+                                    text: TextSpan(
+                                        text: "Freeze end date: ",
+                                        children: [
+                                      TextSpan(
+                                          text: DateFormat.yMMMEd().format(
+                                              snapshot.data!.freezeEndDate!),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold))
+                                    ]))
+                              ],
+                            ),
                           );
                         }
                         if (snapshot.data!.freezeAvailable == 0) {
@@ -92,12 +115,10 @@ class FreezeWidget extends StatelessWidget {
                                           "This player subscription has no freeze."))));
                         }
 
-
                         return Expanded(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
-
                             children: [
                               // gym player invitation id
                               Padding(
@@ -146,7 +167,9 @@ class FreezeWidget extends StatelessWidget {
                                     setState(() {
                                       _endDateController =
                                           TextEditingController();
-                                      _endDate = DateTime.now().add(Duration(days: snapshot.data!.freezeAvailable));
+                                      _endDate = DateTime.now().add(Duration(
+                                          days:
+                                              snapshot.data!.freezeAvailable));
                                       _endDateController!.text =
                                           DateFormat.yMMMEd().format(
                                               DateTime.now().add(Duration(
@@ -160,7 +183,9 @@ class FreezeWidget extends StatelessWidget {
                                           DateFormat.yMMMEd()
                                               .format(customDate!);
                                       _beginningDate = customDate!;
-                                      _endDate = customDate!.add(Duration(days: snapshot.data!.freezeAvailable));
+                                      _endDate = customDate!.add(Duration(
+                                          days:
+                                              snapshot.data!.freezeAvailable));
                                       _endDateController!.text =
                                           DateFormat.yMMMEd().format(customDate!
                                               .add(Duration(
@@ -212,8 +237,21 @@ class FreezeWidget extends StatelessWidget {
                                                         mainAxisSize:
                                                             MainAxisSize.min,
                                                         children: [
-                                                          RichText(text: TextSpan(text: "NOTE: system cannot accept old date and freeze cannot exceed Date " ,children: [ TextSpan(text: DateFormat.yMMMEd().format(snapshot.data!.endDate) ,style: TextStyle(fontWeight: FontWeight.bold))])),
-
+                                                          RichText(
+                                                              text: TextSpan(
+                                                                  text:
+                                                                      "NOTE: system cannot accept old date and freeze cannot exceed Date ",
+                                                                  children: [
+                                                                TextSpan(
+                                                                    text: DateFormat
+                                                                            .yMMMEd()
+                                                                        .format(snapshot
+                                                                            .data!
+                                                                            .endDate),
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight.bold))
+                                                              ])),
                                                           const SizedBox(
                                                             height: 12,
                                                           ),
@@ -251,24 +289,52 @@ class FreezeWidget extends StatelessWidget {
                                                                       .red,
                                                                   fontSize: 19),
                                                             ),
-                                                          if(customDate!= null && customDate!.isAfter(snapshot.data!.endDate))
-                                                            RichText(text:TextSpan(text:"please select date not exceed " ,style: TextStyle(fontSize: 16, color: Colors.red),children: [
-                                                              TextSpan(text: DateFormat.yMMMEd().format(snapshot.data!.endDate) ,style: TextStyle(fontSize: 18,color: Colors.red,fontWeight: FontWeight.bold))
-                                                            ] ))
-
-
+                                                          if (customDate !=
+                                                                  null &&
+                                                              customDate!
+                                                                  .isAfter(
+                                                                      snapshot
+                                                                          .data!
+                                                                          .endDate))
+                                                            RichText(
+                                                                text: TextSpan(
+                                                                    text:
+                                                                        "please select date not exceed ",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            16,
+                                                                        color: Colors
+                                                                            .red),
+                                                                    children: [
+                                                                  TextSpan(
+                                                                      text: DateFormat.yMMMEd().format(snapshot
+                                                                          .data!
+                                                                          .endDate),
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              18,
+                                                                          color: Colors
+                                                                              .red,
+                                                                          fontWeight:
+                                                                              FontWeight.bold))
+                                                                ]))
                                                         ],
                                                       ),
                                                       actions: (customDate !=
-                                                                  null &&
-                                                              !customDate!
-                                                                  .difference(
-                                                                      DateTime
-                                                                          .now())
-                                                                  .inDays
-                                                                  .isNegative
-                                                          ) || (customDate!= null && customDate!.isAfter(snapshot.data!.endDate) )
-                                                       ? [
+                                                                      null &&
+                                                                  !customDate!
+                                                                      .difference(
+                                                                          DateTime
+                                                                              .now())
+                                                                      .inDays
+                                                                      .isNegative) ||
+                                                              (customDate !=
+                                                                      null &&
+                                                                  customDate!
+                                                                      .isAfter(snapshot
+                                                                          .data!
+                                                                          .endDate))
+                                                          ? [
                                                               FilledButton(
                                                                   onPressed:
                                                                       submitFunction,
@@ -312,21 +378,27 @@ class FreezeWidget extends StatelessWidget {
                                               ),
                                               onPressed: () async {
                                                 await loadingDialog(
-                                                    context,
-                                                    -1,
-                                                    PlayersDatabaseManager()
-                                                        .freezePlayerSubscription(
-                                                            snapshot
-                                                                .data!.subId!,
-                                                            _beginningDate,
-                                                            _endDate,
-                                                            snapshot.data!
-                                                                .freezeAvailable,
-                                                            snapshot
-                                                                .data!.endDate),
-                                                    null).then((value)async{
-                                                      Navigator.pop(context);
-                                                     await displayInfoBar(context, builder: (context,close)=>const InfoBar(title: Text("freeze added successfully")));
+                                                        context,
+                                                        -1,
+                                                        PlayersDatabaseManager()
+                                                            .freezePlayerSubscription(
+                                                                snapshot.data!
+                                                                    .subId!,
+                                                                _beginningDate,
+                                                                _endDate,
+                                                                snapshot.data!
+                                                                    .freezeAvailable,
+                                                                snapshot.data!
+                                                                    .endDate),
+                                                        null)
+                                                    .then((value) async {
+                                                  Navigator.pop(context);
+                                                  await displayInfoBar(context,
+                                                      builder: (context,
+                                                              close) =>
+                                                          const InfoBar(
+                                                              title: Text(
+                                                                  "freeze added successfully")));
                                                 });
                                               }))
                                     ],

@@ -1,14 +1,12 @@
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as m;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gym_management/main_screen/widgets/subscription_information/add_new_subscription_value_widget.dart';
+import 'package:gym_management/view/widgets/subscription_information/add_new_subscription_value_widget.dart';
 
 import '../../../database_management/tables/generate_table.dart';
 import '../../../database_management/tables/subscriptions/subscriptions_information_manager.dart';
 
 class SubscriptionCard extends StatefulWidget {
-
   final SubscriptionsInfoTableData data;
   const SubscriptionCard({super.key, required this.data});
 
@@ -21,34 +19,26 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
 
   final TextEditingController _subName = TextEditingController();
 
-  SubscriptionsInfoTableData? editSubData ;
+  SubscriptionsInfoTableData? editSubData;
   @override
   void initState() {
-
-      setState(() {
-        editSubData = widget.data;
-        _subName.text = editSubData!.subscriptionName;
-      });
-  setState(() {
-
-  });
+    setState(() {
+      editSubData = widget.data;
+      _subName.text = editSubData!.subscriptionName;
+    });
+    setState(() {});
 
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Consumer(
-
           builder: (BuildContext context, WidgetRef ref, Widget? child) {
-
             return Button(
                 onPressed: () async {
-
                   await showDialog(
                       context: context,
                       builder: (context) => ContentDialog(
@@ -74,21 +64,22 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                           return null;
                                         },
                                         onChanged: (val) {
-
                                           setState(() {
                                             editSubData = SubscriptionsInfoTableData(
                                                 id: widget.data.id,
                                                 subscriptionName: val,
                                                 subscriptionValue: editSubData!
                                                     .subscriptionValue,
-                                                subscriptionDuration: editSubData!
-                                                    .subscriptionDuration,
+                                                subscriptionDuration:
+                                                    editSubData!
+                                                        .subscriptionDuration,
                                                 subscriptionFreezeLimit:
-                                                editSubData!
-                                                    .subscriptionFreezeLimit,
+                                                    editSubData!
+                                                        .subscriptionFreezeLimit,
                                                 subscriptionInvitationLimit:
-                                                editSubData!
-                                                    .subscriptionInvitationLimit, teamId: 0);
+                                                    editSubData!
+                                                        .subscriptionInvitationLimit,
+                                                teamId: 0);
                                           });
                                         },
                                       )),
@@ -105,35 +96,39 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                         children: [
                                           Expanded(
                                               child: NumberFormBox(
-                                                initialValue: editSubData!.subscriptionDuration.toString(),
-                                                value:
-                                                editSubData!.subscriptionDuration,
-                                                onChanged: (val) {
-                                                  setState(() {
-                                                    editSubData = SubscriptionsInfoTableData(
-                                                        id: widget.data.id,
-                                                        subscriptionName: editSubData!
+                                            initialValue: editSubData!
+                                                .subscriptionDuration
+                                                .toString(),
+                                            value: editSubData!
+                                                .subscriptionDuration,
+                                            onChanged: (val) {
+                                              setState(() {
+                                                editSubData = SubscriptionsInfoTableData(
+                                                    id: widget.data.id,
+                                                    subscriptionName:
+                                                        editSubData!
                                                             .subscriptionName,
-                                                        subscriptionValue:
+                                                    subscriptionValue:
                                                         editSubData!
                                                             .subscriptionValue,
-                                                        subscriptionDuration: val!,
-                                                        subscriptionFreezeLimit:
+                                                    subscriptionDuration: val!,
+                                                    subscriptionFreezeLimit:
                                                         editSubData!
                                                             .subscriptionFreezeLimit,
-                                                        subscriptionInvitationLimit:
+                                                    subscriptionInvitationLimit:
                                                         editSubData!
-                                                            .subscriptionInvitationLimit, teamId: 0);
-                                                  });
-                                                },
-                                                validator: (val) {
-                                                  if (val == null) {
-                                                    return "Please add subscription duration";
-                                                  }
+                                                            .subscriptionInvitationLimit,
+                                                    teamId: 0);
+                                              });
+                                            },
+                                            validator: (val) {
+                                              if (val == null) {
+                                                return "Please add subscription duration";
+                                              }
 
-                                                  return null;
-                                                },
-                                              )),
+                                              return null;
+                                            },
+                                          )),
                                           const SizedBox(
                                             width: 20,
                                           ),
@@ -153,36 +148,39 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                         children: [
                                           Expanded(
                                               child: NumberFormBox(
-                                                initialValue: editSubData!.subscriptionValue.toString(),
-                                                value: editSubData!.subscriptionValue,
-                                                onChanged: (val) {
-                                                  setState(() {
-
-                                                    editSubData = SubscriptionsInfoTableData(
-                                                        id: widget.data.id,
-
-                                                        subscriptionName: editSubData!
+                                            initialValue: editSubData!
+                                                .subscriptionValue
+                                                .toString(),
+                                            value:
+                                                editSubData!.subscriptionValue,
+                                            onChanged: (val) {
+                                              setState(() {
+                                                editSubData = SubscriptionsInfoTableData(
+                                                    id: widget.data.id,
+                                                    subscriptionName:
+                                                        editSubData!
                                                             .subscriptionName,
-                                                        subscriptionValue: val!,
-                                                        subscriptionDuration:
+                                                    subscriptionValue: val!,
+                                                    subscriptionDuration:
                                                         editSubData!
                                                             .subscriptionDuration,
-                                                        subscriptionFreezeLimit:
+                                                    subscriptionFreezeLimit:
                                                         editSubData!
                                                             .subscriptionFreezeLimit,
-                                                        subscriptionInvitationLimit:
+                                                    subscriptionInvitationLimit:
                                                         editSubData!
-                                                            .subscriptionInvitationLimit, teamId: 0);
-                                                  });
-                                                },
-                                                validator: (val) {
-                                                  if (val == null) {
-                                                    return "Please add subscription value";
-                                                  }
+                                                            .subscriptionInvitationLimit,
+                                                    teamId: 0);
+                                              });
+                                            },
+                                            validator: (val) {
+                                              if (val == null) {
+                                                return "Please add subscription value";
+                                              }
 
-                                                  return null;
-                                                },
-                                              )),
+                                              return null;
+                                            },
+                                          )),
                                           const SizedBox(
                                             width: 20,
                                           ),
@@ -202,36 +200,40 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                         children: [
                                           Expanded(
                                               child: NumberFormBox(
-                                                initialValue:  editSubData!
-                                                    .subscriptionFreezeLimit.toString(),
-                                                value: editSubData!
-                                                    .subscriptionFreezeLimit,
-                                                onChanged: (val) {
-                                                  setState(() {
-                                                    editSubData = SubscriptionsInfoTableData(
-                                                        id: widget.data.id,
-                                                        subscriptionName: editSubData!
+                                            initialValue: editSubData!
+                                                .subscriptionFreezeLimit
+                                                .toString(),
+                                            value: editSubData!
+                                                .subscriptionFreezeLimit,
+                                            onChanged: (val) {
+                                              setState(() {
+                                                editSubData = SubscriptionsInfoTableData(
+                                                    id: widget.data.id,
+                                                    subscriptionName:
+                                                        editSubData!
                                                             .subscriptionName,
-                                                        subscriptionValue:
+                                                    subscriptionValue:
                                                         editSubData!
                                                             .subscriptionValue,
-                                                        subscriptionDuration:
+                                                    subscriptionDuration:
                                                         editSubData!
                                                             .subscriptionDuration,
-                                                        subscriptionFreezeLimit: val!,
-                                                        subscriptionInvitationLimit:
+                                                    subscriptionFreezeLimit:
+                                                        val!,
+                                                    subscriptionInvitationLimit:
                                                         editSubData!
-                                                            .subscriptionInvitationLimit, teamId: 0);
-                                                  });
-                                                },
-                                                validator: (val) {
-                                                  if (val == null) {
-                                                    return "Please add number invitations";
-                                                  }
+                                                            .subscriptionInvitationLimit,
+                                                    teamId: 0);
+                                              });
+                                            },
+                                            validator: (val) {
+                                              if (val == null) {
+                                                return "Please add number invitations";
+                                              }
 
-                                                  return null;
-                                                },
-                                              )),
+                                              return null;
+                                            },
+                                          )),
                                           const SizedBox(
                                             width: 20,
                                           ),
@@ -251,37 +253,39 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                         children: [
                                           Expanded(
                                               child: NumberFormBox(
-                                                initialValue:  editSubData!
-                                                    .subscriptionInvitationLimit.toString() ,
-                                                value: editSubData!
-                                                    .subscriptionInvitationLimit,
-                                                onChanged: (val) {
-                                                  setState(() {
-                                                    editSubData = SubscriptionsInfoTableData(
-                                                        id: widget.data.id,
-                                                        subscriptionName: editSubData!
-                                                            .subscriptionName,
-                                                        subscriptionValue:
+                                            initialValue: editSubData!
+                                                .subscriptionInvitationLimit
+                                                .toString(),
+                                            value: editSubData!
+                                                .subscriptionInvitationLimit,
+                                            onChanged: (val) {
+                                              setState(() {
+                                                editSubData = SubscriptionsInfoTableData(
+                                                    id: widget.data.id,
+                                                    subscriptionName: editSubData!
+                                                        .subscriptionName,
+                                                    subscriptionValue:
                                                         editSubData!
                                                             .subscriptionValue,
-                                                        subscriptionDuration:
+                                                    subscriptionDuration:
                                                         editSubData!
                                                             .subscriptionDuration,
-                                                        subscriptionFreezeLimit:
+                                                    subscriptionFreezeLimit:
                                                         editSubData!
                                                             .subscriptionFreezeLimit,
-                                                        subscriptionInvitationLimit:
-                                                        val!, teamId: 0);
-                                                  });
-                                                },
-                                                validator: (val) {
-                                                  if (val == null) {
-                                                    return "Please add number invitations";
-                                                  }
+                                                    subscriptionInvitationLimit:
+                                                        val!,
+                                                    teamId: 0);
+                                              });
+                                            },
+                                            validator: (val) {
+                                              if (val == null) {
+                                                return "Please add number invitations";
+                                              }
 
-                                                  return null;
-                                                },
-                                              )),
+                                              return null;
+                                            },
+                                          )),
                                           const SizedBox(
                                             width: 20,
                                           ),
@@ -293,9 +297,8 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                   ),
                                   Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
-
                                       Button(
                                           child: const Padding(
                                             padding: EdgeInsets.all(8.0),
@@ -306,26 +309,26 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                                                 .validate()) {
                                               await SubscriptionInformationManager()
                                                   .editSubscriptionData(
-                                                  widget.data.id!,
-                                                  editSubData!)
+                                                      widget.data.id!,
+                                                      editSubData!)
                                                   .then((val) async {
-                                                await Future.delayed(const Duration(seconds: 0),()  {
-                                                  ref.invalidate(allSubscriptionsProvider);
+                                                await Future.delayed(
+                                                    const Duration(seconds: 0),
+                                                    () {
+                                                  ref.invalidate(
+                                                      allSubscriptionsProvider);
                                                 }).then((value) => showSnackbar(
                                                     context,
-                                                   const InfoBar(
+                                                    const InfoBar(
                                                       content: Text(
-                                                          "subscription is saved to database."), title: Text("Succssess"),)));
-                                              }).then((value){
-
+                                                          "subscription is saved to database."),
+                                                      title: Text("Succssess"),
+                                                    )));
+                                              }).then((value) {
                                                 Navigator.pop(context);
                                               });
-
                                             }
                                           }),
-
-
-
                                       Button(
                                           child: const Padding(
                                             padding: EdgeInsets.all(8.0),
@@ -342,43 +345,68 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                           )));
                 },
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(widget.data.subscriptionName),
-                      IconButton(icon: const Icon(FluentIcons.delete), onPressed: () async{
-                       await showDialog(context: context, builder: (context)=>ContentDialog(title: const Text("Delete subscription information"),content: const Text("Are you sure you want to delete this subscripton information?"),
-
-                          actions: [
-                            Button(child:  const Text("Delete"), onPressed: ()async{
-                              await SubscriptionInformationManager().deleteSubscriptionData(widget.data.id!).then((value) async =>Future.delayed(const Duration(seconds: 0,),(){
-                                ref.invalidate(allSubscriptionsProvider);
-                                Navigator.pushReplacement(context, m.MaterialPageRoute (
-                                  builder: (BuildContext context) => const AddNewSubscriptionValueWidget(),
-                                ),);
-                              }) ).then((value){
-                                showSnackbar(context, const InfoBar(title: Text("Succssess"),content: Text("Subscription is successfully deleted"),));
-                                Navigator.pop(context);
-                              });
-
-
-
-                            }),
-                            FilledButton(child: const Text("Cancel"), onPressed: (){
-                              Navigator.pop(context);
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(widget.data.subscriptionName),
+                        IconButton(
+                            icon: const Icon(FluentIcons.delete),
+                            onPressed: () async {
+                              await showDialog(
+                                  context: context,
+                                  builder: (context) => ContentDialog(
+                                        title: const Text(
+                                            "Delete subscription information"),
+                                        content: const Text(
+                                            "Are you sure you want to delete this subscripton information?"),
+                                        actions: [
+                                          Button(
+                                              child: const Text("Delete"),
+                                              onPressed: () async {
+                                                await SubscriptionInformationManager()
+                                                    .deleteSubscriptionData(
+                                                        widget.data.id!)
+                                                    .then((value) async =>
+                                                        Future.delayed(
+                                                            const Duration(
+                                                              seconds: 0,
+                                                            ), () {
+                                                          ref.invalidate(
+                                                              allSubscriptionsProvider);
+                                                          Navigator
+                                                              .pushReplacement(
+                                                            context,
+                                                            m.MaterialPageRoute(
+                                                              builder: (BuildContext
+                                                                      context) =>
+                                                                  const AddNewSubscriptionValueWidget(),
+                                                            ),
+                                                          );
+                                                        }))
+                                                    .then((value) {
+                                                  showSnackbar(
+                                                      context,
+                                                      const InfoBar(
+                                                        title:
+                                                            Text("Succssess"),
+                                                        content: Text(
+                                                            "Subscription is successfully deleted"),
+                                                      ));
+                                                  Navigator.pop(context);
+                                                });
+                                              }),
+                                          FilledButton(
+                                              child: const Text("Cancel"),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              })
+                                        ],
+                                      ));
                             })
-                          ],
-
-                        ));
-
-
-                      })
-                    ],
-                  )
-                ));
+                      ],
+                    )));
           },
         ));
-
   }
 }

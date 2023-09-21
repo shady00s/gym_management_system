@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_management/database_management/tables/generate_table.dart';
 import 'package:gym_management/database_management/tables/teams/teams_database_manager.dart';
-import '../../view/widgets/combo_box_widget.dart';
+import '../../widgets/combo_box_widget.dart';
 import '../cubit/cubit.dart';
 import '../cubit/state.dart';
 import '../model/sheets_model.dart';

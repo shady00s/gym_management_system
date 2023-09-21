@@ -4,12 +4,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/database_management/tables/generate_table.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
-import 'package:gym_management/main_screen/widgets/take_new_image_widget.dart';
-import 'package:gym_management/manage_excel/ui_widget.dart';
+import 'package:gym_management/view/widgets/take_new_image_widget.dart';
+import 'package:gym_management/view/manage_excel/ui_widget.dart';
 import 'package:intl/intl.dart';
 
 import '../../../database_management/tables/subscriptions/subscriptions_information_manager.dart';
-
 
 class AddNewPlayerWidget extends StatefulWidget {
   const AddNewPlayerWidget({super.key});
@@ -20,9 +19,11 @@ class AddNewPlayerWidget extends StatefulWidget {
 
 var playerImageProvider = StateProvider<String?>((ref) => null);
 var billImageProvider = StateProvider<String?>((ref) => null);
-var subscriptionProvider = StateProvider<SubscriptionsInfoTableData?>((ref) => null);
-var getSubscriptionsProvider = FutureProvider<List<SubscriptionsInfoTableData>>((ref) => SubscriptionInformationManager()
-    .getAllSubscriptions(),);
+var subscriptionProvider =
+    StateProvider<SubscriptionsInfoTableData?>((ref) => null);
+var getSubscriptionsProvider = FutureProvider<List<SubscriptionsInfoTableData>>(
+  (ref) => SubscriptionInformationManager().getAllSubscriptions(),
+);
 
 class PlayerData {
   final int indexId;
@@ -32,29 +33,36 @@ class PlayerData {
   final String gender;
   final String imagePath;
   final int age;
-  final int  phoneNumber;
+  final int phoneNumber;
 
   PlayerData(
-      {required this.indexId, required this.firstName,required this.middleName,required this.lastName,required this.gender,required this.imagePath,required this.age,required this.phoneNumber});
-
+      {required this.indexId,
+      required this.firstName,
+      required this.middleName,
+      required this.lastName,
+      required this.gender,
+      required this.imagePath,
+      required this.age,
+      required this.phoneNumber});
 }
 
-class SubscriptionData{
+class SubscriptionData {
   final String imagePath;
   final String collectorId;
   final int billId;
 
-final DateTime customDate;
+  final DateTime customDate;
 
   SubscriptionData(
-      {required this.imagePath,required this.collectorId,required this.billId,required this.customDate});
-
-
+      {required this.imagePath,
+      required this.collectorId,
+      required this.billId,
+      required this.customDate});
 }
 
-
-Future createNewPlayer(PlayerData player,SubscriptionsInfoTableData? subInfoData,SubscriptionData subData) async{
-  int id =  await  PlayersDatabaseManager().createPlayerId();
+Future createNewPlayer(PlayerData player,
+    SubscriptionsInfoTableData? subInfoData, SubscriptionData subData) async {
+  int id = await PlayersDatabaseManager().createPlayerId();
 
   PlayersCompanion playerData = PlayersCompanion.insert(
       playerIndexId: player.indexId,
@@ -67,16 +75,24 @@ Future createNewPlayer(PlayerData player,SubscriptionsInfoTableData? subInfoData
       playerGender: player.gender,
       subscriptionId: player.indexId);
 
-  PlayersSubscriptionsCompanion subscription = PlayersSubscriptionsCompanion.insert(
-      billImagePath: d.Value(subData.imagePath),
-      teamId: subInfoData!.teamId, freezeAvailable: subInfoData.subscriptionFreezeLimit,
-      invitationAvailable: subInfoData.subscriptionInvitationLimit, subscriptionPayDate: DateTime.now(),
-      playerSubscriptionId: player.indexId, beginningDate: subData.customDate,
-      endDate: DateTime.now().add(Duration(days: subInfoData.subscriptionDuration)), billId: subData.billId, billValue: subInfoData.subscriptionValue, duration: subInfoData.subscriptionDuration,
-      billCollector: subData.collectorId, subscriptionInfoId: subInfoData.id!);
-   return await PlayersDatabaseManager().addNewPlayer(playerData,subscription);
+  PlayersSubscriptionsCompanion subscription =
+      PlayersSubscriptionsCompanion.insert(
+          billImagePath: d.Value(subData.imagePath),
+          teamId: subInfoData!.teamId,
+          freezeAvailable: subInfoData.subscriptionFreezeLimit,
+          invitationAvailable: subInfoData.subscriptionInvitationLimit,
+          subscriptionPayDate: DateTime.now(),
+          playerSubscriptionId: player.indexId,
+          beginningDate: subData.customDate,
+          endDate: DateTime.now()
+              .add(Duration(days: subInfoData.subscriptionDuration)),
+          billId: subData.billId,
+          billValue: subInfoData.subscriptionValue,
+          duration: subInfoData.subscriptionDuration,
+          billCollector: subData.collectorId,
+          subscriptionInfoId: subInfoData.id!);
+  return await PlayersDatabaseManager().addNewPlayer(playerData, subscription);
 }
-
 
 class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
   SubscriptionsInfoTableData? test;
@@ -98,7 +114,6 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
   submitFunction() {
     setState(() {
       _beginDateController.text = DateFormat.yMMMEd().format(customDate!);
-
     });
     Navigator.pop(context);
   }
@@ -123,7 +138,7 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
         height: MediaQuery.sizeOf(context).height * 0.96,
         width: MediaQuery.sizeOf(context).width * 0.8,
         child: AspectRatio(
-          aspectRatio:4/3,
+          aspectRatio: 4 / 3,
           child: Card(
             backgroundColor: Colors.black,
             child: Column(
@@ -131,41 +146,46 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                     Padding(
-                       padding: const EdgeInsets.all(8.0),
-                       child: Text("Add new player",style: TextStyle(color:Colors.yellow,fontSize:21,fontWeight:FontWeight.bold),),
-                     ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Add new player",
+                        style: TextStyle(
+                            color: Colors.yellow,
+                            fontSize: 21,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
                     Consumer(builder: (context, ref, child) {
                       var image1 = ref.watch(billImageProvider);
                       var image2 = ref.watch(playerImageProvider);
 
                       return IconButton(
                         onPressed: () async {
+                          await Future.delayed(Duration.zero, () async {
+                            if (image1 != null) {
+                              await File(image1)
+                                  .delete(recursive: true)
+                                  .then((value) {
+                                var imageState =
+                                    ref.read(billImageProvider.notifier);
 
-                        await  Future.delayed(Duration.zero,()async{
-                          if (image1 != null) {
-                            await File(image1)
-                                .delete(recursive: true)
-                                .then((value) {
-                              var imageState =
-                              ref.read(billImageProvider.notifier);
+                                imageState.state = null;
+                              });
+                            }
+                            if (image2 != null) {
+                              await File(image2)
+                                  .delete(recursive: true)
+                                  .then((value) {
+                                var imageState2 =
+                                    ref.read(playerImageProvider.notifier);
 
-                              imageState.state = null;
-                            });
-                          }  if (image2 != null) {
-                            await File(image2).delete(recursive: true)
-                                .then((value) {
-                              var imageState2 =
-                              ref.read(playerImageProvider.notifier);
-
-                              imageState2.state = null;
-                            });
-                          }
-                          }).then((_){
-                          Navigator.of(context).pop();
-                        });
-
-
+                                imageState2.state = null;
+                              });
+                            }
+                          }).then((_) {
+                            Navigator.of(context).pop();
+                          });
                         },
                         icon: const Icon(FluentIcons.cancel),
                       );
@@ -184,7 +204,7 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                             height: MediaQuery.sizeOf(context).height * 0.71,
                             width: 400,
                             child: AspectRatio(
-                              aspectRatio:3/2,
+                              aspectRatio: 3 / 2,
                               child: SingleChildScrollView(
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -309,11 +329,13 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                                                 child: Text(
                                                   "Gender",
                                                   style: TextStyle(
-                                                      fontWeight: FontWeight.w600,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                       fontSize: 19),
                                                 )),
                                             Padding(
-                                              padding: const EdgeInsets.all(8.0),
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
                                               child: ComboBox(
                                                   value: gender,
                                                   onChanged: (data) {
@@ -345,51 +367,60 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                                                 child: Text(
                                                   "Subscription",
                                                   style: TextStyle(
-                                                      fontWeight: FontWeight.w600,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                       fontSize: 19),
                                                 )),
                                             Consumer(
+                                                builder: (context, ref, child) {
+                                              var subscription = ref.read(
+                                                  subscriptionProvider
+                                                      .notifier);
+                                              var getSubscriptions = ref.watch(
+                                                  getSubscriptionsProvider);
 
-                                              builder: (context, ref,child) {
-                                                var subscription = ref.read(subscriptionProvider.notifier);
-                                                var getSubscriptions = ref.watch(getSubscriptionsProvider);
-
-
-                                              return   getSubscriptions.when(data: (snapshot){
-                                                   if (snapshot
-                                                       .isNotEmpty) {
-                                                     return ComboBox(
-                                                         value:test,
-                                                         placeholder:const Text(
-                                                             "Select subscription"),
-                                                         onChanged: (val) async{
-                                                           subscription.state = val;
-                                                           Future.delayed(Duration.zero,(){setState(() {
-                                                             test = val;
-                                                           });});
-                                                         },
-                                                         items: snapshot
-                                                             .map((e) =>
-                                                             ComboBoxItem(
-                                                                 value: e,
-                                                                 child: Text(
-                                                                     e.subscriptionName)))
-                                                             .toList());
-                                                   }
-                                                   return const Center(
-                                                     child: Padding(
-                                                       padding:
-                                                       EdgeInsets.all(8.0),
-                                                       child: Text(
-                                                           "No subscription found"),
-                                                     ),
-                                                   );
-                                                 }, error: (err,state)=>Text(err.toString()), loading: ()=> const Center(
-                                                   child: ProgressBar(),
-                                                 ));
-
-                                              }
-                                            ),
+                                              return getSubscriptions.when(
+                                                  data: (snapshot) {
+                                                    if (snapshot.isNotEmpty) {
+                                                      return ComboBox(
+                                                          value: test,
+                                                          placeholder: const Text(
+                                                              "Select subscription"),
+                                                          onChanged:
+                                                              (val) async {
+                                                            subscription.state =
+                                                                val;
+                                                            Future.delayed(
+                                                                Duration.zero,
+                                                                () {
+                                                              setState(() {
+                                                                test = val;
+                                                              });
+                                                            });
+                                                          },
+                                                          items: snapshot
+                                                              .map((e) =>
+                                                                  ComboBoxItem(
+                                                                      value: e,
+                                                                      child: Text(
+                                                                          e.subscriptionName)))
+                                                              .toList());
+                                                    }
+                                                    return const Center(
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.all(8.0),
+                                                        child: Text(
+                                                            "No subscription found"),
+                                                      ),
+                                                    );
+                                                  },
+                                                  error: (err, state) =>
+                                                      Text(err.toString()),
+                                                  loading: () => const Center(
+                                                        child: ProgressBar(),
+                                                      ));
+                                            }),
                                           ],
                                         ),
                                       ],
@@ -403,14 +434,14 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                         ),
                       ),
                     ),
-                   const SizedBox(
+                    const SizedBox(
                       width: 30,
                     ),
                     SizedBox(
                       height: MediaQuery.sizeOf(context).height * 0.77,
                       width: 450,
                       child: AspectRatio(
-                        aspectRatio: 3/4,
+                        aspectRatio: 3 / 4,
                         child: Card(
                           child: SingleChildScrollView(
                             child: Column(
@@ -419,7 +450,8 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                                 const Text(
                                   "Bill Info",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 20),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
                                 ),
                                 const SizedBox(
                                   height: 10,
@@ -454,12 +486,14 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                                                         icon: const Icon(
                                                             FluentIcons.cancel),
                                                         onPressed: () {
-                                                          Navigator.pop(context);
+                                                          Navigator.pop(
+                                                              context);
                                                         })
                                                   ],
                                                 ),
                                                 content: Column(
-                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     const Text(
                                                         "NOTE: system cannot accept old date"),
@@ -472,7 +506,8 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                                                               8.0),
                                                       child: DatePicker(
                                                         showYear: false,
-                                                        startDate: DateTime.now(),
+                                                        startDate:
+                                                            DateTime.now(),
                                                         selected: customDate,
                                                         onChanged: (val) {
                                                           setState(() {
@@ -536,16 +571,15 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                                 ),
                                 SizedBox(
                                     width: 170,
-                                    child:Consumer(
-
-                                      builder: (context, ref,child) {
-                                        var subData = ref.watch(subscriptionProvider);
-                                        return NumberFormBox(
-                                          value: subData?.subscriptionValue,
-                                          initialValue: subData.toString(),
-                                        );
-                                      }
-                                    )),
+                                    child: Consumer(
+                                        builder: (context, ref, child) {
+                                      var subData =
+                                          ref.watch(subscriptionProvider);
+                                      return NumberFormBox(
+                                        value: subData?.subscriptionValue,
+                                        initialValue: subData.toString(),
+                                      );
+                                    })),
                                 const SizedBox(
                                   height: 10,
                                 ),
@@ -580,7 +614,6 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                                 const SizedBox(
                                   height: 10,
                                 ),
-
                                 const Padding(
                                     padding: EdgeInsets.all(8),
                                     child: Text(
@@ -661,19 +694,38 @@ class _AddNewPlayerWidgetState extends State<AddNewPlayerWidget> {
                         ),
                         onPressed: () async {
                           if (key.currentState!.validate() &&
-                              imagePath != null && imagePath2 != null) {
+                              imagePath != null &&
+                              imagePath2 != null) {
                             int indexId = int.parse(
                                 phoneNumber.toString().substring(3, 11));
 
-                            PlayerData playerData = PlayerData(indexId: indexId, firstName: firstName.text, middleName: middleName.text, lastName: lastName.text, gender: gender, imagePath: imagePath, age: age, phoneNumber: phoneNumber);
-                            SubscriptionData subscriptionData = SubscriptionData(imagePath: imagePath2, collectorId: collectorId, billId: billId!, customDate: customDate!);
+                            PlayerData playerData = PlayerData(
+                                indexId: indexId,
+                                firstName: firstName.text,
+                                middleName: middleName.text,
+                                lastName: lastName.text,
+                                gender: gender,
+                                imagePath: imagePath,
+                                age: age,
+                                phoneNumber: phoneNumber);
+                            SubscriptionData subscriptionData =
+                                SubscriptionData(
+                                    imagePath: imagePath2,
+                                    collectorId: collectorId,
+                                    billId: billId!,
+                                    customDate: customDate!);
 
-                            await loadingDialog(context, -1,createNewPlayer(playerData,subInfoData,subscriptionData) , null).then((value){
+                            await loadingDialog(
+                                    context,
+                                    -1,
+                                    createNewPlayer(playerData, subInfoData,
+                                        subscriptionData),
+                                    null)
+                                .then((value) {
                               setImagePath.state = null;
                               setImagePath2.state = null;
                               Navigator.pop(context);
-                            } );
-
+                            });
                           }
                         });
                   }),
