@@ -236,22 +236,32 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                       const Divider(),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                        child: Column(
+                                          crossAxisAlignment:CrossAxisAlignment.start,
                                           children: [
                                             Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: Icon(FluentIcons.snowflake,color: Colors.grey[90],),
+                                                Row(
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Icon(FluentIcons.snowflake,color: Colors.grey[90],),
+                                                    ),
+                                                    const Text("Freeze left :"),
+                                                  ],
                                                 ),
-                                                const Text("Freeze left :"),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 9,),
-                                            Text(snapshot.data![index].freezeAvailable.toString())
-                                          ],),
+                                                const SizedBox(height: 9,),
+                                                Text(snapshot.data![index].freezeAvailable.toString())
+                                              ],),
+                                            if(snapshot.data![index].freezeBeginDate!= null)
+                                            RichText(text:TextSpan(text:" begin date:  ",children: [TextSpan(text:DateFormat.yMMMEd().format(snapshot.data![0].freezeBeginDate!)  )])),
+                                            if(snapshot.data![index].freezeEndDate!= null)
+
+                                              RichText(text:TextSpan(text:" end date:  ",children: [TextSpan(text:DateFormat.yMMMEd().format(snapshot.data![0].freezeEndDate!)  )])),
+                                          ],
+                                        ),
                                       ),
                                       const Divider(),
                                       Padding(
