@@ -127,7 +127,7 @@ class PlayersLogsWidget extends StatelessWidget {
                     )),
               ),
               getTeams.when(
-                  data: (data) => Padding(
+                  data: (data) =>  Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,7 +149,7 @@ class PlayersLogsWidget extends StatelessWidget {
                                 ]),
                           ],
                         ),
-                      ),
+                      ) ,
                   error: (err, state) => const Text("error"),
                   loading: () => const Center(
                         child: ProgressBar(),
@@ -157,25 +157,26 @@ class PlayersLogsWidget extends StatelessWidget {
             ]),
             SizedBox(
                 width: MediaQuery.sizeOf(context).width * 0.9,
-                height: MediaQuery.sizeOf(context).height * 0.7,
-                child: Wrap(
-                  children: getPlayers.when(
-                      data: (data) => data
-                          .map((e) => SizedBox(
-                              width: 330,
-                              child: PlayerNameWithImage(
-                                  playerName: e.playerName,
-                                  playerId: e.playerId,
-                                  imagePath: e.imagePath,
-                                  playerIndexId: e.playerIndexId)))
-                          .toList(),
-                      error: (err, state) => [const Text("error")],
-                      loading: () => [
-                            const Center(
-                              child: ProgressRing(),
-                            )
-                          ]),
-                ))
+                child: getPlayers.when(data: (data) => data.isNotEmpty? Wrap(children:data.map((e) => SizedBox(
+        width: 330,
+        child: PlayerNameWithImage(
+        playerName: e.playerName,
+        playerId: e.playerId,
+        imagePath: e.imagePath,
+        playerIndexId: e.playerIndexId)))
+            .toList(),)   :Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,children: [
+                  SizedBox(height: 59,),
+
+                  Icon(FluentIcons.profile_search,size: 51,color: Colors.grey[80],),
+                  SizedBox(height: 9,),
+                  Text("No players found on this day")
+                ],)   , error: (err, state) => const Text("error"), loading: ()=>const Center(
+        child: ProgressRing(),) )
+
+
+    )
           ],
         );
       }),

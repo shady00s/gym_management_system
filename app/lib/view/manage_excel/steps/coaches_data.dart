@@ -14,7 +14,7 @@ class EmploymentModeModel {
   EmploymentModeModel(this.title, this.value);
 }
 
-List<CustomBoxData> _list = [
+List<CustomBoxData> jobStateList = [
   CustomBoxData(title: "Freelance", id: "Freelance"),
   CustomBoxData(title: "Employee", id: "Employee"),
 ];
@@ -299,7 +299,7 @@ class _CoachFormState extends State<CoachForm> {
                       Expanded(
                           flex: 2,
                           child: ComboBoxWidget(
-                              items: _list,
+                              items: jobStateList,
                               filterTitle: "",
                               onChanged: (val) {
                                 setState(() {

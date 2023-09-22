@@ -12,6 +12,7 @@ import 'package:gym_management/view/widgets/price_list_widget.dart';
 import 'package:gym_management/view/widgets/search_widgets/search_widget.dart';
 
 import '../database_management/tables/generate_table.dart';
+import 'add_new_team_widget.dart';
 
 class HomeWidget extends StatefulWidget {
   const HomeWidget({super.key});
@@ -33,7 +34,9 @@ class _HomeWidgetState extends State<HomeWidget> {
               case ConnectionState.done:
                 if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                   return TabView(
-                      onNewPressed: () {},
+                      onNewPressed: () async{
+                 await showAddNewTeamWidget(context);
+                  },
                       currentIndex: currentIndex,
                       onChanged: (val) {
                         setState(() {
@@ -66,8 +69,7 @@ class _HomeWidgetState extends State<HomeWidget> {
 }
 
 var getPlayerTeamProvider = StateProvider((ref) => 0);
-var getPlayerLogsProvider = FutureProvider((ref) =>
-    GymLogsManager().getTodayPlayers(ref.watch(getPlayerTeamProvider)));
+var getPlayerLogsProvider = FutureProvider((ref) => GymLogsManager().getTodayPlayers(ref.watch(getPlayerTeamProvider)));
 
 class HomeTabWidget extends StatelessWidget {
   final int teamId;

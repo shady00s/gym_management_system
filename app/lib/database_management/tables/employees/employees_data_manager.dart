@@ -13,4 +13,9 @@ class EmployeesDatabaseManager{
     return await employees.get();
   }
 
+
+  Future insertEmployee(EmployeesTableCompanion employee) async{
+    await db.batch((batch) => batch.insert(EmployeesTable(db), employee));
+
+  }
 }

@@ -1,6 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:gym_management/database_management/tables/generate_table.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
+
+import '../../models/subscriptions_with_team_model.dart';
 class SubscriptionInformationManager extends PlayersDatabaseManager{
 
   SystemDatabase db = PlayersDatabaseManager.playersDatabase;
@@ -13,7 +15,19 @@ class SubscriptionInformationManager extends PlayersDatabaseManager{
     return subscriptions;
   }
 
-  Future<List<SubscriptionsInfoTableData>> getAllSubscriptionsOrdered()async{
+  Future<List<SubscriptionsWithTeamModel>> getAllSubscriptionsInformation()async{
+
+    List<TypedResult> data = await db.select(SubscriptionsInfoTable(db)).join([innerJoin(TeamsDataTable(db), TeamsDataTable(db).teamId.equalsExp(SubscriptionsInfoTable(db).teamId))]).get();
+
+    List<SubscriptionsWithTeamModel> result = [];
+    for (var element in data) {
+          result.add(SubscriptionsWithTeamModel(subName: element.readTable(SubscriptionsInfoTable(db)).subscriptionName, teamName: element.readTable(TeamsDataTable(db)).teamName, teamPrivate: element.readTable(TeamsDataTable(db)).teamPrivate, subInvitation: element.readTable(SubscriptionsInfoTable(db)).subscriptionInvitationLimit, subFreeze: element.readTable(SubscriptionsInfoTable(db)).subscriptionFreezeLimit, subValue: element.readTable(SubscriptionsInfoTable(db)).subscriptionValue, subDuration: element.readTable(SubscriptionsInfoTable(db)).subscriptionDuration));
+    }
+    return result;
+ }
+
+
+    Future<List<SubscriptionsInfoTableData>> getAllSubscriptionsOrdered()async{
     var subscriptions =   db.select(SubscriptionsInfoTable(db))..orderBy([
       (u)=>OrderingTerm(expression:  u.subscriptionValue,mode: OrderingMode.asc)
     ])..get();
