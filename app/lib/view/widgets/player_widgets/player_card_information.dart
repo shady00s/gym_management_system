@@ -40,9 +40,55 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                 backgroundColor: Color.fromRGBO(
                                     176, 175, 175, 0.7019607843137254),
                                 child: Icon(FluentIcons.contact ,size: 41,),
-                              ) : CircleAvatar(
-                                  radius: 45,
-                                  backgroundImage: FileImage(File(snapshot.data![0].imagePath))),
+                              ) : Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  CircleAvatar(
+                                      radius: 45,
+                                      backgroundImage: FileImage(File(snapshot.data![0].imagePath))),
+                                  Button(child: Text("show profile image"), onPressed: ()async{
+
+                                    await showGeneralDialog(context: context, pageBuilder: (context,animation,animation2)=>
+                                        Card(child: Center(child: Card(
+                                          backgroundColor: Colors.black,
+                                          child: SizedBox(width: 650,height: 430, child:  Column( children: [
+
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("Profile image",style: TextStyle(fontSize: 21,color: Colors.yellow,fontWeight: FontWeight.bold),),
+                                                IconButton(onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                  icon:const Icon(FluentIcons.cancel),
+
+
+                                                )
+                                              ],
+                                            ),
+                                            if(snapshot.data![0].imagePath != "no-image")
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Image( width:630, fit:BoxFit.contain, image: FileImage(File(snapshot.data![0].imagePath))),
+                                              ),
+
+                                            if(snapshot.data![0].imagePath == "no-image")
+                                              Column(
+
+                                                children: [
+                                                  Icon(FluentIcons.image_crosshair,size: 42,color: Colors.grey[80],),
+                                                  Text("No profile image found")
+                                                ],)
+
+
+
+                                          ],),),
+                                        ),),));
+
+
+                                  })
+                                ],
+                              ),
                               const  SizedBox(height: 22,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,11 +114,14 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                 ],
                               ),
                               const SizedBox(height: 14,),
-                              Row(
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   const  Text("First join date:"),
-                                  Text((DateFormat.yMMMEd().format(snapshot.data![0].playerFirstJoinDate) ).toString()),
+                                  Align(
+                                    alignment: AlignmentDirectional.bottomEnd,
+                                      child: Text((DateFormat.yMMMEd().format(snapshot.data![0].playerFirstJoinDate) ).toString())),
                                 ],
                               ),
 
@@ -159,6 +208,49 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                             const Padding(
                                               padding: EdgeInsets.all(8.0),
                                               child: Text("no discount code"),
+                                            ),
+
+                                             Padding(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: Button( child:Text("show bill image"),onPressed: () async{
+                                                await showGeneralDialog(context: context, pageBuilder: (context,animation,animation2)=>
+                                                   Card(child: Center(child: Card(
+                                                     backgroundColor: Colors.black,
+                                                     child: SizedBox(width: 650,height: 430, child:  Column( children: [
+
+                                                       Row(
+                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                         children: [
+                                                           Text("Bill image",style: TextStyle(fontSize: 21,color: Colors.yellow,fontWeight: FontWeight.bold),),
+                                                           IconButton(onPressed: () {
+                                                             Navigator.of(context).pop();
+                                                           },
+                                                             icon:const Icon(FluentIcons.cancel),
+
+
+                                                           )
+                                                         ],
+                                                       ),
+                                                       if(snapshot.data![index].billImagePath != "no-image")
+                                                         Padding(
+                                                           padding: const EdgeInsets.all(8.0),
+                                                           child: Image( width:630, fit:BoxFit.contain, image: FileImage(File(snapshot.data![index].billImagePath))),
+                                                         ),
+
+                                                       if(snapshot.data![index].billImagePath == "no-image")
+                                                         Column(
+
+                                                           children: [
+                                                           Icon(FluentIcons.image_crosshair,size: 42,color: Colors.grey[80],),
+                                                           Text("No bill image found")
+                                                         ],)
+
+
+
+                                                     ],),),
+                                                   ),),));
+
+                                              },),
                                             ),
                                           ],
                                         )

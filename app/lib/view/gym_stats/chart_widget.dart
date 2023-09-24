@@ -179,7 +179,7 @@ class ChartWidget extends StatefulWidget {
 }
 
 class _ChartWidgetState extends State<ChartWidget> {
-  double leftProfitPosition = -100;
+  double leftProfitPosition = -300;
   double topPosition = -100;
   int currentRevenue = 0;
   String currentMonth = "";
@@ -205,7 +205,7 @@ class _ChartWidgetState extends State<ChartWidget> {
         },
         child: SizedBox(
           height: 330,
-          width: 550,
+          width: 470,
           child: Center(
             child: Consumer(builder: (context, ref, child) {
               var futureData = ref.watch(chartProfitProvider);
@@ -268,7 +268,7 @@ class _ChartWidgetState extends State<ChartWidget> {
                                     BoxConstraints constraints) {
                                   return SizedBox(
                                       height: 290,
-                                      width: 380,
+                                      width: 365,
                                       child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
@@ -303,13 +303,22 @@ class _ChartWidgetState extends State<ChartWidget> {
                                                             e.revenueValue;
                                                         currentMonth =
                                                             e.monthName;
+                                                        if(idx <  (snapshot.chart.length / 2)){
+                                                          leftProfitPosition = position
+                                                              .dx -
+                                                              (MediaQuery.sizeOf(
+                                                                  context)
+                                                                  .width *
+                                                                  0.64);
+                                                        } else{
+                                                          leftProfitPosition = position
+                                                              .dx -
+                                                              (MediaQuery.sizeOf(
+                                                                  context)
+                                                                  .width *
+                                                                  0.69);
+                                                        }
 
-                                                        leftProfitPosition = position
-                                                                .dx -
-                                                            (MediaQuery.sizeOf(
-                                                                        context)
-                                                                    .width *
-                                                                0.64);
                                                       });
                                                     },
                                                     child: LayoutBuilder(
@@ -395,7 +404,6 @@ class _ChartWidgetState extends State<ChartWidget> {
                     return const SizedBox();
                   },
                   error: (err, state) {
-                    print(state);
                     return Text(err.toString());
                   },
                   loading: () => const Center(

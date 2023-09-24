@@ -120,15 +120,18 @@ class ReSubscriptionWidget extends StatelessWidget {
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
                                                   const Text("Phone number:"),
-                                                  Text((snapshot.data![0].playerPhoneNumber != -3?snapshot.data![0].playerPhoneNumber:"unrecorded").toString()),
+                                                  Text((snapshot.data![0].playerPhoneNumber != -1?snapshot.data![0].playerPhoneNumber:"unrecorded").toString()),
                                                 ],
                                               ),
                                               const SizedBox(height: 14,),
-                                              Row(
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
                                                   const  Text("First join date:"),
-                                                  Text((DateFormat.yMMMMEEEEd().format(snapshot.data![0].playerFirstJoinDate) ).toString()),
+                                                  Align(
+                                                      alignment:AlignmentDirectional.centerEnd,
+                                                      child: Text((DateFormat.yMMMMEEEEd().format(snapshot.data![0].playerFirstJoinDate) ).toString())),
                                                 ],
                                               ),
 

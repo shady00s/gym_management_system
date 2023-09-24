@@ -1,8 +1,8 @@
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/database_management/tables/generate_table.dart';
+import 'package:gym_management/view/manage_excel/ui_widget.dart';
+import 'package:gym_management/view/screen.dart';
 import 'package:gym_management/view/widgets/combo_box_widget.dart';
-
 import '../database_management/tables/employees/employees_data_manager.dart';
 import '../database_management/tables/teams/teams_database_manager.dart';
 import 'manage_excel/steps/coaches_data.dart';
@@ -11,30 +11,35 @@ Future setEmployeesAndTeamsToDB(EmployeesTableCompanion employees,TeamsDataTable
   // create employees companion
 
     // insert employees data
+  try{
     await EmployeesDatabaseManager().insertEmployee(employees).then((_) async {
+      int teamCaptainId = 0;
+      int teamId = 0;
       // add captain id to each player
-      await  EmployeesDatabaseManager().getEmployeesData().then((value){
+      await  EmployeesDatabaseManager().getEmployeesData().then((value) async{
+        await TeamsDatabaseManager().getAllTeams().then((value) {
+          teamId = value.last.teamId +1;
+        });
+
         for(var employeesDB in value){
 
-            if(employeesDB.employeeName == employees.employeeName.value){
-
-                  teams.teamCaptainId =employeesDB.employeeId;
-
-
-            }
-
+          if(employeesDB.employeeName == employees.employeeName.value){
+            teamCaptainId =employeesDB.employeeId;
+          }
         }
-
       });
+      // create team companion
+      TeamsDataTableCompanion newTeam = TeamsDataTableCompanion.insert(teamId: teamId, teamName: teams.teamName.value, teamCaptainId: teamCaptainId);
+      await TeamsDatabaseManager().insertTeamToDB(newTeam);
     });
+    return 200;
+  }catch(e){
+    print(e);
+    return 400;
+  }
 
-  // create team companion
-  await   Future.delayed(Duration.zero,(){
-    state.generateTeamsCompanion();
-  }).then((value) async{
 
-    await TeamsDatabaseManager().insertTeamsToDB(state.teamsListCompanion);
-  });
+
 
 }
 
@@ -287,9 +292,26 @@ class _AddNewTeamFormState extends State<AddNewTeamForm> {
               FilledButton(child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text("Add team"),
-              ), onPressed: (){
-                if(formKey.currentState!.validate()){
-                  
+              ), onPressed: () async {
+                if(formKey.currentState!.validate()) {
+                  TeamsDataTableCompanion teams =TeamsDataTableCompanion.insert(teamId: -1, teamName: _teamName.text, teamCaptainId: -1);
+                  EmployeesTableCompanion employees = EmployeesTableCompanion.insert(employeeName: _coachName.text, employeePhoneNumber: int.parse(_coachPhoneNumber.text) , employeeSpecialization: "trainer", employeePosition: _coachEmploymentStatus, employeeAddress: _coachAddress.text);
+
+                  await loadingDialog(context, -1,  setEmployeesAndTeamsToDB( employees, teams), null).then((value) {
+
+                    Navigator.pop(context);
+                    displayInfoBar(context, builder: (context,close) {
+
+                      return  const InfoBar(
+                          title: Text("Team added successfully"));
+                    });
+
+                    WidgetsBinding.instance.addPostFrameCallback((_){
+                      Navigator.pushReplacement(context, FluentPageRoute(builder: (BuildContext context) { return const MainScreen(); }));
+                    });
+                  }
+
+                      );
                 }
               })
             ],
