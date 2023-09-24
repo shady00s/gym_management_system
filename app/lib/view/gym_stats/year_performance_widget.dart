@@ -4,6 +4,14 @@ import 'package:gym_management/view/widgets/combo_box_widget.dart';
 
 import 'chart_widget.dart';
 
+class MonthReviewModel{
+  late int totalRevenue;
+  late Map<String,dynamic> bestMonth;
+  late Map<String,dynamic> leastMonth;
+  MonthReviewModel({required this.totalRevenue,required this.bestMonth,required this.leastMonth});
+}
+var monthReviewProvider = StateProvider<MonthReviewModel>((ref) => MonthReviewModel(totalRevenue: 0, bestMonth: {"monthName":"","revenue":0}, leastMonth: {"monthName":"","revenue":0}));
+
 List<CustomBoxData> yearList = [
   CustomBoxData(title: DateTime.now().year.toString(), id: DateTime.now().year),
   CustomBoxData(
@@ -56,13 +64,19 @@ class YearPerformanceWidget extends StatelessWidget {
               }),
             ],
           ),
-          const Center(
+           Center(
             child: Card(
               child: Column(
                 children: [
-                  Text(
-                    "2020202",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+                Consumer(
+
+                    builder: (context, ref,child) {
+                      var totalRev = ref.watch(monthReviewProvider);
+                      return Text(
+                        totalRev.totalRevenue.toString(),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+                      );
+                    }
                   ),
                   SizedBox(
                     height: 20,
@@ -76,73 +90,62 @@ class YearPerformanceWidget extends StatelessWidget {
             "Year profit summary",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
+
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
                   height: 300,
                   width: 640,
-                  child: Wrap(
+                  child: Consumer(
+                      builder: (context, ref,child) {
+                        var totalRev = ref.watch(monthReviewProvider);
+                        return  Wrap(
+
                     children: [
                       // best profit month
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SizedBox(
-                          height: 120,
+                          height: 90,
                           width: 300,
                           child: Card(
-                              child: ListTile(
-                                  leading: Icon(
-                                    FluentIcons.medal_solid,
-                                    color: Colors.yellow,
-                                  ),
-                                  title: const Text("March",
-                                      style: TextStyle(fontSize: 19)),
-                                  subtitle: const Text(
-                                    "Best profit",
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  trailing: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      RichText(
-                                        text: const TextSpan(
-                                            text: "Profit: ",
-                                            children: [
-                                              TextSpan(text: '23000')
-                                            ]),
+                              child:ListTile(
+                                      leading: Icon(
+                                        FluentIcons.medal_solid,
+                                        color: Colors.yellow,
                                       ),
-                                      const SizedBox(
-                                        height: 8,
+                                      title:  Text(totalRev.bestMonth['monthName'],
+                                          style: TextStyle(fontSize: 19,fontWeight: FontWeight.bold)),
+                                      subtitle: const Text(
+                                        "Best profit",
+                                        style: TextStyle(fontSize: 14),
                                       ),
-                                      RichText(
-                                        text: const TextSpan(
-                                            text: "Loss: ",
-                                            children: [
-                                              TextSpan(text: '13000')
-                                            ]),
-                                      ),
-                                      const SizedBox(
-                                        height: 12,
-                                      ),
-                                      const Divider(),
-                                      RichText(
-                                        text: const TextSpan(
-                                            text: "Revenue: ",
-                                            children: [
-                                              TextSpan(text: '13000')
-                                            ]),
-                                      ),
-                                    ],
-                                  ))),
+                                      trailing: SizedBox(
+                                        width:90,
+                                        child: Column(
+
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Revenue: "),
+                                            SizedBox(height: 9,),
+                                            Align(alignment: AlignmentDirectional.centerEnd,child: Text( totalRev.bestMonth['revenue'].toString(),style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.green.light),),)
+
+
+                                          ],
+                                        ),
+                                      ))
+
+                              ),
                         ),
                       ),
                       // worst profit month
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SizedBox(
-                            height: 120,
+                            height: 90,
                             width: 300,
                             child: Card(
                                 child: ListTile(
@@ -150,45 +153,25 @@ class YearPerformanceWidget extends StatelessWidget {
                                       FluentIcons.arrow_tall_down_left,
                                       color: Colors.orange,
                                     ),
-                                    title: const Text("May",
-                                        style: TextStyle(fontSize: 19)),
+                                    title:  Text( totalRev.leastMonth['monthName'],
+                                        style: TextStyle(fontSize: 19,fontWeight: FontWeight.bold)),
                                     subtitle: const Text(
-                                      "least profit",
+                                      "lowest profit",
                                       style: TextStyle(fontSize: 14),
                                     ),
-                                    trailing: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        RichText(
-                                          text: const TextSpan(
-                                              text: "Profit: ",
-                                              children: [
-                                                TextSpan(text: '23000')
-                                              ]),
-                                        ),
-                                        const SizedBox(
-                                          height: 8,
-                                        ),
-                                        RichText(
-                                          text: const TextSpan(
-                                              text: "Loss: ",
-                                              children: [
-                                                TextSpan(text: '13000')
-                                              ]),
-                                        ),
-                                        const SizedBox(
-                                          height: 12,
-                                        ),
-                                        const Divider(),
-                                        RichText(
-                                          text: const TextSpan(
-                                              text: "Revenue: ",
-                                              children: [
-                                                TextSpan(text: '13000')
-                                              ]),
-                                        ),
-                                      ],
+                                    trailing: SizedBox(
+                                      width:90,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text("Revenue:"),
+                                          SizedBox(height: 9,),
+
+                                          Align(alignment: AlignmentDirectional.centerEnd,child:Text(totalRev.leastMonth['revenue'].toString(),style:TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.red.light),) ,)
+
+                                        ],
+                                      ),
                                     )))),
                       ),
                       //most expensive month
@@ -290,7 +273,8 @@ class YearPerformanceWidget extends StatelessWidget {
                                     )))),
                       ),
                     ],
-                  )),
+                  );})
+                    ),
               const ChartWidget()
             ],
           )

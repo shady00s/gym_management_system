@@ -11,30 +11,30 @@ Future setEmployeesAndTeamsToDB(EmployeesTableCompanion employees,TeamsDataTable
   // create employees companion
 
     // insert employees data
-    await EmployeesDatabaseManager().insertEmployee(employees).then((_) async {
-      // add captain id to each player
-      await  EmployeesDatabaseManager().getEmployeesData().then((value){
-        for(var employeesDB in value){
-
-            if(employeesDB.employeeName == employees.employeeName.value){
-
-                  teams.teamCaptainId =employeesDB.employeeId;
-
-
-            }
-
-        }
-
-      });
-    });
-
-  // create team companion
-  await   Future.delayed(Duration.zero,(){
-    state.generateTeamsCompanion();
-  }).then((value) async{
-
-    await TeamsDatabaseManager().insertTeamsToDB(state.teamsListCompanion);
-  });
+  //   await EmployeesDatabaseManager().insertEmployee(employees).then((_) async {
+  //     // add captain id to each player
+  //     await  EmployeesDatabaseManager().getEmployeesData().then((value){
+  //       for(var employeesDB in value){
+  //
+  //           if(employeesDB.employeeName == employees.employeeName.value){
+  //
+  //                 teams.teamCaptainId =employeesDB.employeeId;
+  //
+  //
+  //           }
+  //
+  //       }
+  //
+  //     });
+  //   });
+  //
+  // // create team companion
+  // await   Future.delayed(Duration.zero,(){
+  //   state.generateTeamsCompanion();
+  // }).then((value) async{
+  //
+  //   await TeamsDatabaseManager().insertTeamsToDB(state.teamsListCompanion);
+  // });
 
 }
 

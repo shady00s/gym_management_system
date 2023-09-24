@@ -1,15 +1,34 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/database_management/tables/generate_table.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
+import 'package:gym_management/view/widgets/re-subscription/re_subscription_widget.dart';
+
+import '../../../view/manage_excel/ui_widget.dart';
+
+
 
 class GymLogsManager{
   SystemDatabase db = PlayersDatabaseManager.playersDatabase;
 
-    Future enterPlayer(String playerId,int teamId,context)async{
-      if(int.tryParse(playerId) !=null){
+  Future<int> _addPlayerToLogs(playerData)async{
+    try{
+      await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now(), playerIndexId: playerData.playerIndexId));
+
+      return 200;
+    }catch(e){
+      print(e);
+      return 400;
+    }
+  }
+
+
+    Future enterPlayer(String playerID,int teamId,context)async{
+
+        dynamic playerId = int.tryParse(playerID);
+      if(playerId !=null){
         try{
-          EnterPlayerToGymResult playerData = await db.enterPlayerToGym(int.parse(playerId) ,null ,teamId).getSingle();
-          if(playerData.mAXPlayersSubscriptionsendDate!.isAfter(DateTime.now()) &&  playerData.teamId == teamId ){
+          EnterPlayerToGymResult playerData = await db.enterPlayerToGym(playerId, null,teamId).getSingle();
+          if(playerData.mAXPlayersSubscriptionsendDate!.isAfter(DateTime.now()) && teamId == playerData.teamId ){
             if( playerData.freezeBeginDate == null ){
               await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now(), playerIndexId: playerData.playerIndexId));
 
@@ -27,16 +46,61 @@ class GymLogsManager{
 
               }
             }
-          }else if(playerData.teamId != teamId){
+          }
+          else if(playerData.teamId != teamId){
             await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player is not belonging to this team"),));
 
-          } else{
-            await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is ended"),));
-
           }
+          else if( DateTime.now().difference(playerData.mAXPlayersSubscriptionsendDate!).inDays <= 2){
+            await showDialog(context: context, builder: (context)=> ContentDialog(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Subscription status"),
+                    IconButton(icon: const Icon(FluentIcons.cancel), onPressed: (){Navigator.pop(context); })
+                  ],),
+                content: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text("This player subscription is ended, but he/she can enter"),
+                  ],
+                ),
+                actions:[
+                  Button(child: const Text("Cancel"), onPressed: (){Navigator.pop(context);}),
+
+                  FilledButton(child: const Text("Enter to gym"), onPressed: ()async{
+                  await loadingDialog(context,-1,_addPlayerToLogs(playerData),null ).then((value) => Navigator.pop(context));
+                })]
+
+            ));
+          }else{
+            await showDialog(context: context, builder: (context)=> ContentDialog(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Subscription status"),
+                    IconButton(icon: const Icon(FluentIcons.cancel), onPressed: (){Navigator.pop(context); })
+                  ],),
+                content: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text("This player subscription is ended, but he/she cannot enter"),
+                  ],
+                ),
+                actions:[
+                  Button(child: const Text("Cancel"), onPressed: (){Navigator.pop(context);}),
+                  FilledButton(child: const Text("Go to Re-subscribe"), onPressed: ()async{
+                  showReSubscriptionWidget(context, playerData.playerIndexId);
+                })]
+
+            ),
+            );
+                }
         }catch(err){
+          print(err);
           await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("Wrong ID or name"),));
         }
+
       }
 
       else{
@@ -61,14 +125,53 @@ class GymLogsManager{
 
               }
             }
-          }else if(playerData.teamId != teamId){
+          }
+          else if(playerData.teamId != teamId){
             await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player is not belonging to this team"),));
 
-          } else{
-            await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("This player subscription is ended"),));
+          }
+          else if( DateTime.now().difference(playerData.mAXPlayersSubscriptionsendDate!).inDays <= 2){
+            await showDialog(context: context, builder: (context)=> ContentDialog(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Subscription status"),
+                    IconButton(icon: const Icon(FluentIcons.cancel), onPressed: (){Navigator.pop(context); })
+                  ],),
+                content: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text("This player subscription is ended, but he/she can enter"),
+                  ],
+                ),
+                actions:[FilledButton(child: const Text("Enter to gym"), onPressed: ()async{
+                  await loadingDialog(context,-1,_addPlayerToLogs(playerData),null );
+                })]
 
+            ));
+          }else{
+            await showDialog(context: context, builder: (context)=> ContentDialog(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Subscription status"),
+                    IconButton(icon: const Icon(FluentIcons.cancel), onPressed: (){Navigator.pop(context); })
+                  ],),
+                content: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text("This player subscription is ended, but he/she cannot enter"),
+                  ],
+                ),
+                actions:[FilledButton(child: const Text("Go to Re-subscribe"), onPressed: ()async{
+                  showReSubscriptionWidget(context, playerData.playerIndexId);
+                })]
+
+            ),
+            );
           }
         }catch(err){
+          print(err);
           await showDialog(context: context, builder: (context)=>const ContentDialog(content: Text("Wrong ID or name"),));
         }
 

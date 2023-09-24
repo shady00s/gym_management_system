@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/view/gym_stats/year_performance_widget.dart';
+import 'package:intl/intl.dart';
 import 'dart:math';
 import '../../database_management/tables/gym_status_manager.dart';
 
@@ -17,6 +18,19 @@ List<String> months = [
   'Oct',
   'Nov',
   'Dec'
+];List<String> longMonths = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  "August",
+  "September",
+  'October',
+  'November',
+  'December'
 ];
 
 class CalenderChartModel {
@@ -209,10 +223,36 @@ class _ChartWidgetState extends State<ChartWidget> {
           child: Center(
             child: Consumer(builder: (context, ref, child) {
               var futureData = ref.watch(chartProfitProvider);
-
+              var setTotalRevenue = ref.read(monthReviewProvider.notifier);
               return futureData.when(
                   data: (snapshot) {
                     if (snapshot.chart.isNotEmpty) {
+                      Future.delayed(Duration.zero,(){
+                        int total = 0;
+                        int bestMonth = 0;
+                        int bestMonthNameIndex = 0;
+                        int leastMonthNameIndex = 0;
+                        int leastMonth = 999999999999;
+
+                        for(int index = 0; index < snapshot.chart.length;index++){
+                          int current = snapshot.chart[index].revenueValue;
+
+                          total += snapshot.chart[index].revenueValue;
+                          if(current > bestMonth){
+                            bestMonthNameIndex = index;
+                            bestMonth = current;
+                          }
+                          if(current < leastMonth ){
+                            if(index +1 <= DateTime.now().month) {
+                              leastMonthNameIndex = index;
+                              leastMonth = current;
+                            }
+                          }
+
+                        }
+                        setTotalRevenue.state = MonthReviewModel(totalRevenue: total, bestMonth: {"monthName":longMonths[bestMonthNameIndex],"revenue":bestMonth}, leastMonth:  {"monthName":longMonths[leastMonthNameIndex],"revenue":leastMonth});
+                      });
+
                       return Stack(
                         children: [
                           Positioned(
@@ -395,7 +435,6 @@ class _ChartWidgetState extends State<ChartWidget> {
                     return const SizedBox();
                   },
                   error: (err, state) {
-                    print(state);
                     return Text(err.toString());
                   },
                   loading: () => const Center(
