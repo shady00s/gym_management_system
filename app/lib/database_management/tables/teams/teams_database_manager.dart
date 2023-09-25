@@ -14,6 +14,10 @@ class TeamsDatabaseManager{
   Future insertTeamsToDB(List<TeamsDataTableCompanion> list) async{
       await db.batch((batch) => batch.insertAll(TeamsDataTable(db), list) );
   }
+
+  Future insertTeamToDB(TeamsDataTableCompanion list) async{
+    await db.batch((batch) => batch.insert(TeamsDataTable(db), list) );
+  }
   Future<List<TeamsDataTableData>>   checkIfTeamsExists(List<SheetsModel> list)async{
 
      List<String> nameList = list.map((e)=>e.name).toList();
