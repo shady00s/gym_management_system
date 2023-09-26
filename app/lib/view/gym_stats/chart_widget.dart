@@ -19,6 +19,32 @@ List<String> months = [
   'Dec'
 ];
 
+List<String> longMonths = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  "August",
+  "September",
+  'October',
+  'November',
+  'December'
+];
+
+class BestAndWorstMonthModel {
+  late String bestMonthName;
+  late String worstMonthName;
+  late int bestMonthRevenue;
+  late int worstMonthRevenue;
+
+  BestAndWorstMonthModel({required this.worstMonthRevenue,required this.bestMonthName,required this.bestMonthRevenue, required this.worstMonthName});
+}
+
+var bestAndWorstMonthProvider = StateProvider<BestAndWorstMonthModel>((ref) => BestAndWorstMonthModel(worstMonthRevenue: 0, bestMonthName: '', bestMonthRevenue: 0, worstMonthName: ''));
+var totalRevenueProvider  = StateProvider((ref) => 0);
 class CalenderChartModel {
   final String monthName;
   final double height;
@@ -129,41 +155,43 @@ var chartProfitProvider =
 Future<CalenderModel> getProfit(int year) async {
   List<int> profit = [];
   await GymStatusManager()
-      .getBestMonthInProfit(DateTime(year, 1, 1), DateTime(year, 1, 31))
+      .getMonthlyProfit(DateTime(year, 1, 1), DateTime(year, 1, 31))
       .then((value) => profit.insert(0, value ?? 0));
   await GymStatusManager()
-      .getBestMonthInProfit(DateTime(year, 2, 1), DateTime(year, 2, 29))
+      .getMonthlyProfit(DateTime(year, 2, 1), DateTime(year, 2, 29))
       .then((value) => profit.insert(1, value ?? 0));
   await GymStatusManager()
-      .getBestMonthInProfit(DateTime(year, 3, 1), DateTime(year, 3, 31))
+      .getMonthlyProfit(DateTime(year, 3, 1), DateTime(year, 3, 31))
       .then((value) => profit.insert(2, value ?? 0));
   await GymStatusManager()
-      .getBestMonthInProfit(DateTime(year, 4, 1), DateTime(year, 4, 30))
+      .getMonthlyProfit(DateTime(year, 4, 1), DateTime(year, 4, 30))
       .then((value) => profit.insert(3, value ?? 0));
   await GymStatusManager()
-      .getBestMonthInProfit(DateTime(year, 5, 1), DateTime(year, 5, 31))
+      .getMonthlyProfit(DateTime(year, 5, 1), DateTime(year, 5, 31))
       .then((value) => profit.insert(4, value ?? 0));
   await GymStatusManager()
-      .getBestMonthInProfit(DateTime(year, 6, 1), DateTime(year, 6, 30))
+      .getMonthlyProfit(DateTime(year, 6, 1), DateTime(year, 6, 30))
       .then((value) => profit.insert(5, value ?? 0));
   await GymStatusManager()
-      .getBestMonthInProfit(DateTime(year, 7, 1), DateTime(year, 7, 31))
+      .getMonthlyProfit(DateTime(year, 7, 1), DateTime(year, 7, 31))
       .then((value) => profit.insert(6, value ?? 0));
   await GymStatusManager()
-      .getBestMonthInProfit(DateTime(year, 8, 1), DateTime(year, 8, 31))
+      .getMonthlyProfit(DateTime(year, 8, 1), DateTime(year, 8, 31))
       .then((value) => profit.insert(7, value ?? 0));
   await GymStatusManager()
-      .getBestMonthInProfit(DateTime(year, 9, 1), DateTime(year, 9, 30))
+      .getMonthlyProfit(DateTime(year, 9, 1), DateTime(year, 9, 30))
       .then((value) => profit.insert(8, value ?? 0));
   await GymStatusManager()
-      .getBestMonthInProfit(DateTime(year, 10, 1), DateTime(year, 10, 31))
+      .getMonthlyProfit(DateTime(year, 10, 1), DateTime(year, 10, 31))
       .then((value) => profit.insert(9, value ?? 0));
   await GymStatusManager()
-      .getBestMonthInProfit(DateTime(year, 11, 1), DateTime(year, 11, 30))
+      .getMonthlyProfit(DateTime(year, 11, 1), DateTime(year, 11, 30))
       .then((value) => profit.insert(10, value ?? 0));
   await GymStatusManager()
-      .getBestMonthInProfit(DateTime(year, 12, 1), DateTime(year, 12, 31))
+      .getMonthlyProfit(DateTime(year, 12, 1), DateTime(year, 12, 31))
       .then((value) {
+
+
     return profit.insert(11, value ?? 0);
   });
 
@@ -208,11 +236,43 @@ class _ChartWidgetState extends State<ChartWidget> {
           width: 470,
           child: Center(
             child: Consumer(builder: (context, ref, child) {
+              var setBestAndWorstMonthProvider = ref.read(bestAndWorstMonthProvider.notifier);
               var futureData = ref.watch(chartProfitProvider);
+              var setTotalRevenue = ref.read(totalRevenueProvider.notifier);
 
+              getLowestAndBiggestRevenues(List<CalenderChartModel> list){
+                int biggestRevenue = 0;
+                int lowestRevenue = 9999999999999999;
+                int biggestMonthIndex = 0;
+                int lowestMonthIndex = 0;
+                int total = 0;
+                for(int idx = 0; idx< list.length;idx++){
+                  total += list[idx].revenueValue;
+                  int current = list[idx].revenueValue;
+                  if (current > biggestRevenue){
+                    biggestMonthIndex = idx;
+                    biggestRevenue = current;
+                  }if (current < lowestRevenue && idx < DateTime.now().month){
+                    lowestMonthIndex = idx;
+                    lowestRevenue = current;
+                  }
+                }
+
+
+                Future.delayed(Duration.zero,()async{
+                  setTotalRevenue.state = total;
+                  setBestAndWorstMonthProvider.state = BestAndWorstMonthModel(worstMonthName: longMonths[lowestMonthIndex], worstMonthRevenue: lowestRevenue, bestMonthName: longMonths[biggestMonthIndex], bestMonthRevenue: biggestRevenue);
+                });
+              }
               return futureData.when(
                   data: (snapshot) {
                     if (snapshot.chart.isNotEmpty) {
+
+                      Future.delayed(Duration.zero,(){
+                        getLowestAndBiggestRevenues(snapshot.chart);
+                      });
+
+
                       return Stack(
                         children: [
                           Positioned(

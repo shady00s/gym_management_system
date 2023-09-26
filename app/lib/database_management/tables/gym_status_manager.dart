@@ -4,30 +4,28 @@ import 'package:gym_management/database_management/tables/players/player_databas
 
 class GymStatusManager{
   SystemDatabase db = PlayersDatabaseManager.playersDatabase;
-  
-  Future getYearProfit(DateTime begValue,DateTime endVal)async{
-    List<QueryRow> data = await db.customSelect('''
-      SELECT SUM(PlayersSubscriptions.billValue)  FROM PlayersSubscriptions
-      WHERE PlayersSubscriptions.subscription_pay_date BETWEEN ?1 AND ?2
-  
-    ''',readsFrom: {PlayersSubscriptions(db)},variables: [Variable.withDateTime(begValue),Variable.withDateTime(endVal)]).get();
 
-   for(QueryRow element in data){
-     print(element.data);
-   }
-  }
-
-  Future getMonthlyProfit(DateTime year, int month)async{
-
-  }
-
-
-  Future<int?> getBestMonthInProfit(DateTime begValue,DateTime endVal)async{
+  Future<int?> getMonthlyProfit(DateTime begValue,DateTime endVal)async{
     var data = await db.customSelect('''
        SELECT SUM(PlayersSubscriptions.billValue)  FROM PlayersSubscriptions
        WHERE PlayersSubscriptions.subscription_pay_date BETWEEN ?1 AND ?2 
   
     ''',readsFrom: {PlayersSubscriptions(db)},variables: [Variable.withDateTime(begValue),Variable.withDateTime(endVal)]).getSingle();
     return data.readNullable<int>("SUM(PlayersSubscriptions.billValue)");
+  }
+
+
+
+  Future<QueryRow> getBestAndWorstTeamsInfo (int year,int teamId) async{
+
+
+    var data = await db.customSelect('''
+        SELECT  TeamsDataTable.team_name, SUM(PlayersSubscriptions.billValue), COUNT(Players.player_name) FROM TeamsDataTable
+        LEFT JOIN  PlayersSubscriptions ON  TeamsDataTable.team_id = PlayersSubscriptions.team_id 
+        LEFT JOIN Players ON PlayersSubscriptions.player_subscription_id = Players.player_index_id
+        WHERE PlayersSubscriptions.subscription_pay_date BETWEEN ?1 AND ?2 AND TeamsDataTable.team_id = ?3;
+    ''',variables: ([Variable<DateTime>(DateTime(year,1,1)),Variable<DateTime>(DateTime(year,12,31)),Variable(teamId) ])).getSingle();
+      return data;
+
   }
 }
