@@ -90,7 +90,7 @@ class PlayerNameWithImage extends StatelessWidget {
                                 ))))));
           },
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 4),
             child: FlyoutTarget(
                 controller: menuController,
                 child: Row(
@@ -103,10 +103,7 @@ class PlayerNameWithImage extends StatelessWidget {
                       width: 9,
                     ),
                     imagePath != "no image"
-                        ? Image(
-                            image: FileImage(File(imagePath)),
-                            width: 80,
-                          )
+                        ? CircleAvatar(foregroundImage: FileImage(File(imagePath)),radius:18,)
                         : const CircleAvatar(
                             radius: 21,
                             backgroundColor: Color.fromRGBO(

@@ -8,7 +8,7 @@ import 'create_new_subscription_widget.dart';
 
 final allSubscriptionsProvider =
     FutureProvider.autoDispose<List<SubscriptionsInfoTableData>>(
-        (ref) => SubscriptionInformationManager().getAllSubscriptions());
+        (ref) => SubscriptionInformationManager().getAllSubscriptionsWithInvitations());
 
 class AddNewSubscriptionValueWidget extends StatelessWidget {
   const AddNewSubscriptionValueWidget({super.key});

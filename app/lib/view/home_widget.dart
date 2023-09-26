@@ -83,10 +83,11 @@ class HomeTabWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-              flex: 3,
+              flex: 4,
               child: Column(
                 children: [
                   EnterPlayersManually(teamId: teamId),
+                  // players log widget
                   Expanded(child: Consumer(
                     builder:
                         (BuildContext context, WidgetRef ref, Widget? child) {
@@ -120,9 +121,9 @@ class HomeTabWidget extends StatelessWidget {
                     },
                   ))
                 ],
-              )), //OnBoardPlayers(title: "Active players for today:")),
+              )),
           Expanded(
-            flex: 5,
+            flex: 6,
             child: Column(
               children: [
                 Expanded(
@@ -166,7 +167,7 @@ class HomeTabWidget extends StatelessWidget {
             ),
           ),
           Expanded(
-              flex: 3,
+              flex:4,
               child: OnBoardPlayers(
                 title: "Players need to subscribe:",
                 data: PlayersDatabaseManager()

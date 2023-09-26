@@ -280,7 +280,6 @@ class ExcelSubscriptionsModel {
   });
 
   factory ExcelSubscriptionsModel.fromJson(Map<String, dynamic> json) {
-print({"tt":json['team'], "R":json['playerSubscriptionId']});
 
     return ExcelSubscriptionsModel(
       subscriptionCollectionDate:json['subscriptionCollectionDate'],

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:gym_management/database_management/tables/generate_table.dart';
+import 'package:gym_management/database_management/tables/gym_player_logs/gym_log_manager.dart';
 import '../../models/backup_data_models.dart';
 
 class PlayersDatabaseManager {
@@ -70,9 +71,20 @@ class PlayersDatabaseManager {
   // }
 
   Future dropPlayersAndSubscriptionsTable()async{
-    await playersDatabase.delete(PlayersAndTeamsTable(playersDatabase)).go();
-    await playersDatabase.delete(Players(playersDatabase)).go();
-    await playersDatabase.delete(PlayersSubscriptions(playersDatabase)).go();
+    try{
+      playersDatabase.transaction(() async{
+        await playersDatabase.delete(PlayersAndTeamsTable(playersDatabase)).go();
+        await playersDatabase.delete(Players(playersDatabase)).go();
+        await playersDatabase.delete(PlayersLogsTable(playersDatabase)).go();
+        await playersDatabase.delete(PlayersSubscriptions(playersDatabase)).go();
+
+      });
+     return 200;
+    }catch(e){
+      print(e);
+      return 400;
+    }
+
   }
 
   Future<List<GetAllNamesResult>> getPlayersData() async {
@@ -155,38 +167,46 @@ class PlayersDatabaseManager {
    }
 
 Future insertPlayersFromExcelOffline(List<ExcelPlayers> playersData)async{
+    try{
+      Iterable <PlayersCompanion> playersCompanion = playersData.map((playerData) => PlayersCompanion.insert(playerIndexId: playerData.playerIndexId, playerId: playerData.player_id, playerName: playerData.player_name, playerPhoneNumber: -1, imagePath: "no image", playerAge: -1, playerFirstJoinDate: DateTime.parse(playerData.subscriptions![0].beginning_date), playerGender: "un recorded", subscriptionId: playerData.playerIndexId));
 
-    Iterable <PlayersCompanion> playersCompanion = playersData.map((playerData) => PlayersCompanion.insert(playerIndexId: playerData.playerIndexId, playerId: playerData.player_id, playerName: playerData.player_name, playerPhoneNumber: -1, imagePath: "no image", playerAge: -1, playerFirstJoinDate: DateTime.parse(playerData.subscriptions![0].beginning_date), playerGender: "un recorded", subscriptionId: playerData.playerIndexId));
-
-    //get teams data
-    List<PlayersAndTeamsTableCompanion> playersTeamCompanion = [];
-    for(var player in playersData){
-      if(player.team.runtimeType != int){
-        for (var team in player.team){
-          playersTeamCompanion.add(PlayersAndTeamsTableCompanion.insert(teamId: team, teamPlayerId: player.playerIndexId));
+      //get teams data
+      List<PlayersAndTeamsTableCompanion> playersTeamCompanion = [];
+      for(var player in playersData){
+        if(player.team.runtimeType != int){
+          for (var team in player.team){
+            playersTeamCompanion.add(PlayersAndTeamsTableCompanion.insert(teamId: team, teamPlayerId: player.playerIndexId));
+          }
+        }else{
+          playersTeamCompanion.add(PlayersAndTeamsTableCompanion.insert(teamId: player.team, teamPlayerId: player.playerIndexId));
         }
-      }else{
-        playersTeamCompanion.add(PlayersAndTeamsTableCompanion.insert(teamId: player.team, teamPlayerId: player.playerIndexId));
+
       }
 
-    }
-
-    List<PlayersSubscriptionsCompanion>  playersSubCompanion= [];
-    for(var player in playersData){
-      for( var subData in player.subscriptions!){
-        playersSubCompanion.add(
-            PlayersSubscriptionsCompanion.insert( playerSubscriptionId: subData.id, beginningDate: DateTime.parse(subData.beginning_date), endDate: DateTime.parse(subData.end_date), billId: subData.billid, billValue: subData.billValue, duration: subData.duration, billCollector: "unknown", teamId: subData.team, subscriptionPayDate: DateTime.parse(subData.subscriptionCollectionDate), freezeAvailable: 0, invitationAvailable: 0, subscriptionInfoId: -1 )
-        );
+      List<PlayersSubscriptionsCompanion>  playersSubCompanion= [];
+      for(var player in playersData){
+        for( var subData in player.subscriptions!){
+          playersSubCompanion.add(
+              PlayersSubscriptionsCompanion.insert( playerSubscriptionId: subData.id, beginningDate: DateTime.parse(subData.beginning_date), endDate: DateTime.parse(subData.end_date), billId: subData.billid, billValue: subData.billValue, duration: subData.duration, billCollector: "unknown", teamId: subData.team, subscriptionPayDate: DateTime.parse(subData.subscriptionCollectionDate), freezeAvailable: 0, invitationAvailable: 0, subscriptionInfoId: -1 )
+          );
+        }
       }
-    }
 
 
       await playersDatabase.batch((batch) => batch.insertAll(Players(playersDatabase), playersCompanion)).then((value) async{
-          await playersDatabase.batch((batch) => batch.insertAll(PlayersSubscriptions(playersDatabase), playersSubCompanion)).then((value) async{
+        await playersDatabase.batch((batch) => batch.insertAll(PlayersSubscriptions(playersDatabase), playersSubCompanion)).then((value) async{
           await playersDatabase.batch((batch) => batch.insertAll(PlayersAndTeamsTable(playersDatabase), playersTeamCompanion));
 
         });
-    });
+      });
+
+      return 200;
+
+    }catch(e){
+
+      print(e);
+      return 400;
+    }
 
 
 
@@ -248,5 +268,60 @@ Future reSubscribePlayer(PlayersSubscriptionsCompanion data)async{
      }catch(e){
        return 400;
      }
+   }
+   Future<Player?> searchForInvitation(int phoneNumber)async{
+    try{
+      PlayersSubscriptions playersSub = PlayersSubscriptions(playersDatabase);
+      var player = playersDatabase.select(Players(playersDatabase))..join([
+        innerJoin(playersSub,playersSub.playerSubscriptionId.equalsExp(Players(playersDatabase).playerIndexId))
+      ])..where((tbl) =>tbl.playerPhoneNumber.equals(phoneNumber))..getSingle();
+
+      Player result  = await player.getSingle();
+
+      return result;
+    }catch(e){
+      print(e);
+      return null;
+    }
+
+   }
+
+
+   Future<int> addNewPlayerFromInvitation(PlayersCompanion player,int teamId,invitationDonorId,context)async{
+
+  try{
+    var invitation=  playersDatabase.select(SubscriptionsInfoTable(playersDatabase))..where((tbl) => tbl.teamId.equals(teamId)  )..where((tbl) => tbl.subscriptionValue.equals(0))..where((tbl) => tbl.subscriptionValue.equals(0));
+    var invitationData = await invitation.getSingle();
+
+    var playerSubscription= playersDatabase.select(PlayersSubscriptions(playersDatabase))..where((tbl) => tbl.teamId.equals(teamId))..where((tbl) => tbl.playerSubscriptionId.equals(invitationDonorId))..orderBy([(clauses)=>OrderingTerm(expression: clauses.endDate,mode: OrderingMode.desc)])..limit(1)..getSingle();
+    var playerSubscriptionsDetails = await playerSubscription.getSingle();
+
+
+    playersDatabase.transaction(() async{
+      await playersDatabase.into(Players(playersDatabase)).insert(player);
+      await playersDatabase.into(PlayersSubscriptions(playersDatabase)).insert(PlayersSubscriptionsCompanion.insert(teamId: teamId,
+          freezeAvailable: invitationData.subscriptionFreezeLimit, invitationAvailable: invitationData.subscriptionInvitationLimit,
+          subscriptionPayDate: DateTime.now(), playerSubscriptionId: player.playerIndexId.value, beginningDate: DateTime.now(),
+          endDate: DateTime.now(), billId: 0, billValue: 0, duration: 999999, billCollector: "unknown", subscriptionInfoId: invitationData.id!));
+      await playersDatabase.into(PlayersAndTeamsTable(playersDatabase)).insert(PlayersAndTeamsTableCompanion.insert(teamId: teamId, teamPlayerId: player.playerIndexId.value));
+
+      await GymLogsManager().enterPlayer(player.playerId.value.toString(), teamId, context,true);
+
+      var playerInvitationUpdate =   playersDatabase.update(PlayersSubscriptions(playersDatabase))..where((tbl) => tbl.subId.equals(playerSubscriptionsDetails.subId!));
+      await playerInvitationUpdate.write(PlayersSubscriptionsCompanion(invitationAvailable: Value(playerSubscriptionsDetails.invitationAvailable -1)));
+    });
+
+    return 200;
+  }catch(e){
+    print(e);
+    return 400;
+  }
+
+
+   }
+
+
+   Future checkForInvitationValidation(int guestPlayerId) async{
+    
    }
 }

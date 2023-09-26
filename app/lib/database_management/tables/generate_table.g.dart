@@ -3259,7 +3259,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
   Selectable<GetRemainingInvitationResult> getRemainingInvitation(
       int playerIndexId) {
     return customSelect(
-        'SELECT PlayersSubscriptions.invitation_available, MAX(PlayersSubscriptions.beginning_date) AS _c0 FROM PlayersSubscriptions WHERE PlayersSubscriptions.player_subscription_id = ?1',
+        'SELECT PlayersSubscriptions.invitation_available, MAX(PlayersSubscriptions.beginning_date) AS _c0, PlayersSubscriptions.team_id FROM PlayersSubscriptions WHERE PlayersSubscriptions.player_subscription_id = ?1',
         variables: [
           Variable<int>(playerIndexId)
         ],
@@ -3269,6 +3269,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
           invitationAvailable: row.read<int>('invitation_available'),
           mAXPlayersSubscriptionsbeginningDate:
               row.readNullable<DateTime>('_c0'),
+          teamId: row.read<int>('team_id'),
         ));
   }
 
@@ -3462,9 +3463,11 @@ class EnterPlayerToGymResult {
 class GetRemainingInvitationResult {
   final int invitationAvailable;
   final DateTime? mAXPlayersSubscriptionsbeginningDate;
+  final int teamId;
   GetRemainingInvitationResult({
     required this.invitationAvailable,
     this.mAXPlayersSubscriptionsbeginningDate,
+    required this.teamId,
   });
 }
 

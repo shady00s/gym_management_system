@@ -5,10 +5,16 @@ import 'package:gym_management/database_management/tables/players/player_databas
 class GymLogsManager{
   SystemDatabase db = PlayersDatabaseManager.playersDatabase;
 
-    Future enterPlayer(String playerId,int teamId,context)async{
+    Future enterPlayer(String playerId,int teamId,context,isInvitation)async{
       if(int.tryParse(playerId) !=null){
         try{
           EnterPlayerToGymResult playerData = await db.enterPlayerToGym(int.parse(playerId) ,null ,teamId).getSingle();
+
+
+          if(isInvitation){
+            await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now(), playerIndexId: playerData.playerIndexId));
+              return;
+          }
           if(playerData.mAXPlayersSubscriptionsendDate!.isAfter(DateTime.now()) &&  playerData.teamId == teamId ){
             if( playerData.freezeBeginDate == null ){
               await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now(), playerIndexId: playerData.playerIndexId));
@@ -43,6 +49,10 @@ class GymLogsManager{
 
         try{
           EnterPlayerToGymResult playerData = await db.enterPlayerToGym(null, playerId,teamId).getSingle();
+          if(isInvitation){
+            await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now(), playerIndexId: playerData.playerIndexId));
+            return;
+          }
           if(playerData.mAXPlayersSubscriptionsendDate!.isAfter(DateTime.now()) && teamId == playerData.teamId ){
             if( playerData.freezeBeginDate == null ){
               await db.into(PlayersLogsTable(db)).insert(PlayersLogsTableCompanion.insert(playerId: playerData.playerId, teamId: playerData.teamId!, playerEntranceDate: DateTime.now(), playerIndexId: playerData.playerIndexId));

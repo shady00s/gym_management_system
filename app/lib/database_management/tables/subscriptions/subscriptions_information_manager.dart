@@ -11,7 +11,16 @@ class SubscriptionInformationManager extends PlayersDatabaseManager{
   }
 
  Future<List<SubscriptionsInfoTableData>> getAllSubscriptions()async{
-    List<SubscriptionsInfoTableData> subscriptions =  await db.select(SubscriptionsInfoTable(db)).get();
+     var subData =  db.select(SubscriptionsInfoTable(db))..where((tbl) => tbl.subscriptionValue.isNotValue(0))..get();
+
+      List<SubscriptionsInfoTableData> subscriptions =await subData.get();
+    return subscriptions;
+  }
+
+  Future<List<SubscriptionsInfoTableData>> getAllSubscriptionsWithInvitations()async{
+
+
+    List<SubscriptionsInfoTableData> subscriptions =await  db.select(SubscriptionsInfoTable(db)).get();
     return subscriptions;
   }
 
