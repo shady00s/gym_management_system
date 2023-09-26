@@ -167,11 +167,11 @@ class PlayersLogsWidget extends StatelessWidget {
             .toList(),)   :Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,children: [
-                  SizedBox(height: 59,),
+                  const SizedBox(height: 59,),
 
                   Icon(FluentIcons.profile_search,size: 51,color: Colors.grey[80],),
-                  SizedBox(height: 9,),
-                  Text("No players found on this day")
+                  const SizedBox(height: 9,),
+                  const Text("No players found on this day")
                 ],)   , error: (err, state) => const Text("error"), loading: ()=>const Center(
         child: ProgressRing(),) )
 

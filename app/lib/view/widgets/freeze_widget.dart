@@ -86,7 +86,7 @@ class FreezeWidget extends StatelessWidget {
                                       TextSpan(
                                           text: DateFormat.yMMMEd().format(
                                               snapshot.data!.freezeBeginDate!),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold))
                                     ])),
                                 const SizedBox(
@@ -99,7 +99,7 @@ class FreezeWidget extends StatelessWidget {
                                       TextSpan(
                                           text: DateFormat.yMMMEd().format(
                                               snapshot.data!.freezeEndDate!),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold))
                                     ]))
                               ],
@@ -248,7 +248,7 @@ class FreezeWidget extends StatelessWidget {
                                                                         .format(snapshot
                                                                             .data!
                                                                             .endDate),
-                                                                    style: TextStyle(
+                                                                    style: const TextStyle(
                                                                         fontWeight:
                                                                             FontWeight.bold))
                                                               ])),

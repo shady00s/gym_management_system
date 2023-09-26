@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/database_management/tables/generate_table.dart';
 import 'package:gym_management/database_management/tables/gym_player_logs/gym_log_manager.dart';
 import '../../models/backup_data_models.dart';
@@ -321,7 +322,68 @@ Future reSubscribePlayer(PlayersSubscriptionsCompanion data)async{
    }
 
 
-   Future checkForInvitationValidation(int guestPlayerId) async{
-    
-   }
+   Future checkForInvitationValidation(int guestPlayerId,int donorPlayerId,int teamId,context) async{
+    await showDialog(context: context, builder: (context) {
+      Future.delayed(Duration.zero,() async{
+        try{
+          CheckForInvitationValidationResult getGuestData  = await playersDatabase.checkForInvitationValidation(guestPlayerId).getSingle();
+          if(getGuestData.mAXPlayersSubscriptionsendDate!.difference(DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,00,00,00)).isNegative&& DateTime.now().isAfter(getGuestData.mAXPlayersSubscriptionsendDate!)){
+            var invitation=  playersDatabase.select(SubscriptionsInfoTable(playersDatabase))..where((tbl) => tbl.teamId.equals(teamId)  )..where((tbl) => tbl.subscriptionValue.equals(0));
+            var invitationData = await invitation.getSingle();
+            var playerSubscription= playersDatabase.select(PlayersSubscriptions(playersDatabase))..where((tbl) => tbl.teamId.equals(teamId))..where((tbl) => tbl.playerSubscriptionId.equals(donorPlayerId))..orderBy([(clauses)=>OrderingTerm(expression: clauses.endDate,mode: OrderingMode.desc)])..limit(1)..getSingle();
+            var playerSubscriptionsDetails = await playerSubscription.getSingle();
+            try{
+              playersDatabase.transaction(() async{
+                await playersDatabase.into(PlayersSubscriptions(playersDatabase)).insert(PlayersSubscriptionsCompanion.insert(teamId: teamId,
+                    freezeAvailable: invitationData.subscriptionFreezeLimit, invitationAvailable: invitationData.subscriptionInvitationLimit,
+                    subscriptionPayDate: DateTime.now(), playerSubscriptionId: guestPlayerId, beginningDate: DateTime.now(),
+                    endDate: DateTime.now(), billId: 0, billValue: 0, duration: 999999, billCollector: "unknown", subscriptionInfoId: invitationData.id!)).then((value)async => await GymLogsManager().enterPlayer(getGuestData.playerId.toString(), teamId, context,true));
+
+                var playerInvitationUpdate =   playersDatabase.update(PlayersSubscriptions(playersDatabase))..where((tbl) => tbl.subId.equals(playerSubscriptionsDetails.subId!));
+                await playerInvitationUpdate.write(PlayersSubscriptionsCompanion(invitationAvailable: Value(playerSubscriptionsDetails.invitationAvailable -1)));
+              }).then((value)async{
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.pop(context);
+                });
+
+                  await displayInfoBar(context, builder: (context,close)=>InfoBar(title: Text("Successfully added")));});
+
+            }catch(e){
+                print(e);
+              WidgetsBinding.instance.addPostFrameCallback((_) async{
+                await showDialog(context: context, builder:(context)=> ContentDialog(content: Text("Error occured"),)).then((value) => Navigator.pop(context));
+
+
+              });
+
+            }
+
+          }
+
+          else {
+            WidgetsBinding.instance.addPostFrameCallback((_) async {
+              await showDialog(context: context, builder: (context) =>
+              const ContentDialog(content: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                    "This player subscription is already subscribed you cannot invite him/her"),
+              )),).then((value) => Navigator.pop(context));
+
+
+            });
+          }
+        }catch(e){
+          print(e);
+        }
+      });
+      return const ContentDialog(
+            content: ProgressBar(),
+          );
+        });
+
+
+
+
+
+  }
 }

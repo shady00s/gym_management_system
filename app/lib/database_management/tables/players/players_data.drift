@@ -104,3 +104,6 @@ getRemainingInvitation(REQUIRED :playerIndexId AS INT): SELECT PlayersSubscripti
 getRemainingFreeze(REQUIRED :playerIndexId AS INT): SELECT PlayersSubscriptions.freeze_available,PlayersSubscriptions.freeze_begin_date, PlayersSubscriptions.freeze_end_date, MAX(PlayersSubscriptions.beginning_date),PlayersSubscriptions.end_date, PlayersSubscriptions.sub_id  FROM PlayersSubscriptions
                                                     WHERE PlayersSubscriptions.player_subscription_id = :playerIndexId;
 
+checkForInvitationValidation(REQUIRED :playerIndexId AS INT): SELECT Players.player_index_id ,Players.player_id, MAX(PlayersSubscriptions.end_date) from Players
+                                INNER JOIN PlayersSubscriptions ON PlayersSubscriptions.player_subscription_id = :playerIndexId
+                                WHERE Players.player_index_id = :playerIndexId;

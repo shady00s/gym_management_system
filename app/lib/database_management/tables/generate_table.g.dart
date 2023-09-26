@@ -3292,6 +3292,23 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
         ));
   }
 
+  Selectable<CheckForInvitationValidationResult> checkForInvitationValidation(
+      int playerIndexId) {
+    return customSelect(
+        'SELECT Players.player_index_id, Players.player_id, MAX(PlayersSubscriptions.end_date) AS _c0 FROM Players INNER JOIN PlayersSubscriptions ON PlayersSubscriptions.player_subscription_id = ?1 WHERE Players.player_index_id = ?1',
+        variables: [
+          Variable<int>(playerIndexId)
+        ],
+        readsFrom: {
+          players,
+          playersSubscriptions,
+        }).map((QueryRow row) => CheckForInvitationValidationResult(
+          playerIndexId: row.read<int>('player_index_id'),
+          playerId: row.read<int>('player_id'),
+          mAXPlayersSubscriptionsendDate: row.readNullable<DateTime>('_c0'),
+        ));
+  }
+
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3485,5 +3502,16 @@ class GetRemainingFreezeResult {
     this.mAXPlayersSubscriptionsbeginningDate,
     required this.endDate,
     this.subId,
+  });
+}
+
+class CheckForInvitationValidationResult {
+  final int playerIndexId;
+  final int playerId;
+  final DateTime? mAXPlayersSubscriptionsendDate;
+  CheckForInvitationValidationResult({
+    required this.playerIndexId,
+    required this.playerId,
+    this.mAXPlayersSubscriptionsendDate,
   });
 }

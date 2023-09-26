@@ -46,7 +46,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                   CircleAvatar(
                                       radius: 45,
                                       backgroundImage: FileImage(File(snapshot.data![0].imagePath))),
-                                  Button(child: Text("show profile image"), onPressed: ()async{
+                                  Button(child: const Text("show profile image"), onPressed: ()async{
 
                                     await showGeneralDialog(context: context, pageBuilder: (context,animation,animation2)=>
                                         Card(child: Center(child: Card(
@@ -77,7 +77,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
 
                                                 children: [
                                                   Icon(FluentIcons.image_crosshair,size: 42,color: Colors.grey[80],),
-                                                  Text("No profile image found")
+                                                  const Text("No profile image found")
                                                 ],)
 
 
@@ -211,8 +211,8 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                             ),
 
                                              Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: Button( child:Text("show bill image"),onPressed: () async{
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Button( child:const Text("show bill image"),onPressed: () async{
                                                 await showGeneralDialog(context: context, pageBuilder: (context,animation,animation2)=>
                                                    Card(child: Center(child: Card(
                                                      backgroundColor: Colors.black,
@@ -242,7 +242,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
 
                                                            children: [
                                                            Icon(FluentIcons.image_crosshair,size: 42,color: Colors.grey[80],),
-                                                           Text("No bill image found")
+                                                           const Text("No bill image found")
                                                          ],)
 
 

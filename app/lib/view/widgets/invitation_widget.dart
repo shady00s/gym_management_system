@@ -183,12 +183,12 @@ class InvitationWidget extends StatelessWidget {
                                                           );
                                                         });
                                                   }),
-                                              if (foundedPlayer != null)
+                                              if (foundedPlayer != null && foundedPlayer?.playerIndexId != playerIndexId)
                                                 Column(
                                                   children: [
-                                                    SizedBox(height: 30,),
-                                                    Text("Found player in database",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
-                                                    SizedBox(height: 20,),
+                                                    const SizedBox(height: 30,),
+                                                    const Text("Found player in database",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
+                                                    const SizedBox(height: 20,),
                                                     PlayerNameWithImage(
                                                         playerName: foundedPlayer!
                                                             .playerName,
@@ -201,14 +201,25 @@ class InvitationWidget extends StatelessWidget {
                                                                 .playerIndexId),
                                                     FilledButton(
                                                         style:ButtonStyle(backgroundColor: ButtonState.all(Colors.yellow.darker) ),
-                                                        child: Padding(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 3),
+                                                        child: const Padding(
+                                                      padding: EdgeInsets.symmetric(horizontal: 12.0,vertical: 3),
                                                       child: Text("Invite"),
                                                     ), onPressed: () async{
-
+                                                          PlayersDatabaseManager().checkForInvitationValidation(foundedPlayer!.playerIndexId,playerIndexId,snapshot.data!.teamId,context);
                                                     })
                                                   ],
-                                                )
+                                                ),
+
+                                              if( foundedPlayer?.playerIndexId == playerIndexId)
+                                                Column(
+                                                  mainAxisAlignment:MainAxisAlignment.center,
+                                                  children: [
+                                                    SizedBox(height: 20,),
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: Text("You cannot invite your self",style:TextStyle(fontWeight: FontWeight.bold,fontSize: 18)),
+                                                  )
+                                                ],)
                                             ],
                                           )
                                         : AddNewPlayerWithInvitation(teamId:snapshot.data!.teamId,donorId: playerIndexId,);

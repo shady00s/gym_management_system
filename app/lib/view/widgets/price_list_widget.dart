@@ -73,7 +73,7 @@ class PriceListWidget extends StatelessWidget {
                                                       FontWeight
                                                           .bold),
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 35,
                                             ),
                                             Column(
@@ -87,12 +87,12 @@ class PriceListWidget extends StatelessWidget {
                                                       color: Colors
                                                           .grey[80]),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 9,
                                                 ),
                                                 Row(
                                                   children: [
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 140,
                                                     ),
                                                     Text(
@@ -108,7 +108,7 @@ class PriceListWidget extends StatelessWidget {
                                                 )
                                               ],
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 35,
                                             ),
                                             Column(
@@ -122,12 +122,12 @@ class PriceListWidget extends StatelessWidget {
                                                       color: Colors
                                                           .grey[80]),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 9,
                                                 ),
                                                 Row(
                                                   children: [
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 140,
                                                     ),
                                                     Text(
@@ -145,7 +145,7 @@ class PriceListWidget extends StatelessWidget {
                                                 )
                                               ],
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 19,
                                             ),
                                             Column(
@@ -159,12 +159,12 @@ class PriceListWidget extends StatelessWidget {
                                                       color: Colors
                                                           .grey[80]),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 9,
                                                 ),
                                                 Row(
                                                   children: [
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 140,
                                                     ),
                                                     Text(
@@ -180,7 +180,7 @@ class PriceListWidget extends StatelessWidget {
                                                 )
                                               ],
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 19,
                                             ),
                                             Column(
@@ -194,12 +194,12 @@ class PriceListWidget extends StatelessWidget {
                                                       color: Colors
                                                           .grey[80]),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 9,
                                                 ),
                                                 Row(
                                                   children: [
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 140,
                                                     ),
                                                     Text(
@@ -215,7 +215,7 @@ class PriceListWidget extends StatelessWidget {
                                                 )
                                               ],
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 19,
                                             ),
                                             Column(
@@ -229,12 +229,12 @@ class PriceListWidget extends StatelessWidget {
                                                       color: Colors
                                                           .grey[80]),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 9,
                                                 ),
                                                 Row(
                                                   children: [
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 140,
                                                     ),
                                                     Text(
@@ -250,7 +250,7 @@ class PriceListWidget extends StatelessWidget {
                                                 )
                                               ],
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 19,
                                             ),
                                             Column(
@@ -264,12 +264,12 @@ class PriceListWidget extends StatelessWidget {
                                                       color: Colors
                                                           .grey[80]),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 9,
                                                 ),
                                                 Row(
                                                   children: [
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 140,
                                                     ),
                                                     Text(
@@ -294,12 +294,12 @@ class PriceListWidget extends StatelessWidget {
 
             );
                 }
-                return SizedBox();
+                return const SizedBox();
               case ConnectionState.none:
-                return Text("Error occured");
+                return const Text("Error occured");
               case ConnectionState.active:
               case ConnectionState.waiting:
-                return Expanded(child: Center(child: ProgressRing(),));
+                return const Expanded(child: Center(child: ProgressRing(),));
           }
 
         },)
