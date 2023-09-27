@@ -12,15 +12,13 @@ Future setEmployeesAndTeamsToDB(EmployeesTableCompanion employees,TeamsDataTable
 
     // insert employees data
   try{
+    int teamId = int.parse(employees.employeePhoneNumber.value.toString().substring(3,11));
+
     await EmployeesDatabaseManager().insertEmployee(employees).then((_) async {
       int teamCaptainId = 0;
-      int teamId = 0;
+      print(teamId);
       // add captain id to each player
       await  EmployeesDatabaseManager().getEmployeesData().then((value) async{
-        await TeamsDatabaseManager().getAllTeams().then((value) {
-          teamId = value.last.teamId +1;
-        });
-
         for(var employeesDB in value){
 
           if(employeesDB.employeeName == employees.employeeName.value){
@@ -84,11 +82,11 @@ class _AddNewTeamFormState extends State<AddNewTeamForm> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController _coachName = TextEditingController();
   final TextEditingController _teamName = TextEditingController();
-  final TextEditingController _coachPhoneNumber = TextEditingController();
+   int _coachPhoneNumber = 20;
   final TextEditingController _coachAddress = TextEditingController();
   int _coachSalary = 0;
   int _coachPrivate = 0;
-  String _coachEmploymentStatus = "";
+  String _coachEmploymentStatus = "Freelance";
   @override
   void initState() {
 
@@ -167,12 +165,16 @@ class _AddNewTeamFormState extends State<AddNewTeamForm> {
                         )),
                     Expanded(
                         flex: 3,
-                        child: TextFormBox(
-                          controller: _coachPhoneNumber,
-                          keyboardType: TextInputType.number,
+                        child: NumberFormBox(
+                        value: _coachPhoneNumber,
+                          onChanged: (val){
+                          setState(() {
+                            _coachPhoneNumber = val!;
+                          });
+                          },
                           validator: (val) {
-                            if (int.tryParse(val!) == null ||
-                                val.length != 11) {
+                            if (
+                                val!.length <12) {
                               return "please add valid coach phone number";
                             }
                             return null;
@@ -288,14 +290,14 @@ class _AddNewTeamFormState extends State<AddNewTeamForm> {
                   ],
                 ),
               ),
-              SizedBox(height: 12,),
-              FilledButton(child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              const SizedBox(height: 12,),
+              FilledButton(child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text("Add team"),
               ), onPressed: () async {
                 if(formKey.currentState!.validate()) {
                   TeamsDataTableCompanion teams =TeamsDataTableCompanion.insert(teamId: -1, teamName: _teamName.text, teamCaptainId: -1);
-                  EmployeesTableCompanion employees = EmployeesTableCompanion.insert(employeeName: _coachName.text, employeePhoneNumber: int.parse(_coachPhoneNumber.text) , employeeSpecialization: "trainer", employeePosition: _coachEmploymentStatus, employeeAddress: _coachAddress.text);
+                  EmployeesTableCompanion employees = EmployeesTableCompanion.insert(employeeName: _coachName.text, employeePhoneNumber: _coachPhoneNumber , employeeSpecialization: "trainer", employeePosition: _coachEmploymentStatus, employeeAddress: _coachAddress.text);
 
                   await loadingDialog(context, -1,  setEmployeesAndTeamsToDB( employees, teams), null).then((value) {
 

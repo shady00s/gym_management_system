@@ -169,7 +169,7 @@ class PlayersDatabaseManager {
 
 Future insertPlayersFromExcelOffline(List<ExcelPlayers> playersData)async{
     try{
-      Iterable <PlayersCompanion> playersCompanion = playersData.map((playerData) => PlayersCompanion.insert(playerIndexId: playerData.playerIndexId, playerId: playerData.player_id, playerName: playerData.player_name, playerPhoneNumber: -1, imagePath: "no image", playerAge: -1, playerFirstJoinDate: DateTime.parse(playerData.subscriptions![0].beginning_date), playerGender: "un recorded", subscriptionId: playerData.playerIndexId));
+      Iterable <PlayersCompanion> playersCompanion = playersData.map((playerData) => PlayersCompanion.insert(playerIndexId: playerData.playerIndexId, playerId: playerData.playerId, playerName: playerData.playerName, playerPhoneNumber: -1, imagePath: "no image", playerAge: -1, playerFirstJoinDate: DateTime.parse(playerData.subscriptions![0].beginningDate), playerGender: "un recorded", subscriptionId: playerData.playerIndexId));
 
       //get teams data
       List<PlayersAndTeamsTableCompanion> playersTeamCompanion = [];
@@ -188,7 +188,7 @@ Future insertPlayersFromExcelOffline(List<ExcelPlayers> playersData)async{
       for(var player in playersData){
         for( var subData in player.subscriptions!){
           playersSubCompanion.add(
-              PlayersSubscriptionsCompanion.insert( playerSubscriptionId: subData.id, beginningDate: DateTime.parse(subData.beginning_date), endDate: DateTime.parse(subData.end_date), billId: subData.billid, billValue: subData.billValue, duration: subData.duration, billCollector: "unknown", teamId: subData.team, subscriptionPayDate: DateTime.parse(subData.subscriptionCollectionDate), freezeAvailable: 0, invitationAvailable: 0, subscriptionInfoId: -1 )
+              PlayersSubscriptionsCompanion.insert( playerSubscriptionId: subData.id, beginningDate: DateTime.parse(subData.beginningDate), endDate: DateTime.parse(subData.endDate), billId: subData.billid, billValue: subData.billValue, duration: subData.duration, billCollector: "unknown", teamId: subData.team, subscriptionPayDate: DateTime.parse(subData.subscriptionCollectionDate), freezeAvailable: 0, invitationAvailable: 0, subscriptionInfoId: -1 )
           );
         }
       }
@@ -346,12 +346,12 @@ Future reSubscribePlayer(PlayersSubscriptionsCompanion data)async{
                   Navigator.pop(context);
                 });
 
-                  await displayInfoBar(context, builder: (context,close)=>InfoBar(title: Text("Successfully added")));});
+                  await displayInfoBar(context, builder: (context,close)=>const InfoBar(title: Text("Successfully added")));});
 
             }catch(e){
                 print(e);
               WidgetsBinding.instance.addPostFrameCallback((_) async{
-                await showDialog(context: context, builder:(context)=> ContentDialog(content: Text("Error occured"),)).then((value) => Navigator.pop(context));
+                await showDialog(context: context, builder:(context)=> const ContentDialog(content: Text("Error occured"),)).then((value) => Navigator.pop(context));
 
 
               });

@@ -88,11 +88,19 @@ class SetCoachesWidget extends StatelessWidget {
                     width: MediaQuery.sizeOf(context).width * 0.95,
                     height: MediaQuery.sizeOf(context).height * 0.52,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Icon(FluentIcons.teamwork,size: 51,color:Colors.grey[80]),
+                        const SizedBox(height: 21,),
                         const Text(
-                            "All teams already found, you can change the data in teams manager"),
+                            "All your selected teams data already found, you can change the data in teams manager"),
+                        const SizedBox(height: 21,),
+
                         Button(
-                            child: const Text("Continue to finish data"),
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text("Continue to finish data step"),
+                            ),
                             onPressed: () {
                               int index =
                                   ExcelFileCubit.get(context).currentIndex;
@@ -248,7 +256,7 @@ class _CoachFormState extends State<CoachForm> {
                             keyboardType: TextInputType.number,
                             validator: (val) {
                               if (int.tryParse(val!) == null ||
-                                  val.length != 11) {
+                                  val.length != 12) {
                                 return "please add valid coach phone number";
                               }
                               return null;
@@ -277,7 +285,7 @@ class _CoachFormState extends State<CoachForm> {
                             controller: _coachAddress,
                             validator: (val) {
                               if (val!.isEmpty || val == "") {
-                                return "please add coach name";
+                                return "please add coach address";
                               }
                               return null;
                             },

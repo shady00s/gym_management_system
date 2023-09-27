@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS PlayersLogsTable(
 CREATE INDEX login_time_inx on PlayersLogsTable(player_entrance_date);
 
 getTodayLogs(REQUIRED :dateTime AS DATETIME, REQUIRED :endDateTime AS DATETIME, REQUIRED :teamId AS INT):
-                SELECT DISTINCT Players.player_name, Players.player_id, Players.player_index_id,Players.image_path, PlayersLogsTable.player_entrance_date FROM Players
+                SELECT DISTINCT Players.player_name,PlayersLogsTable.player_entrance_date, Players.player_id, Players.player_index_id,Players.image_path, PlayersLogsTable.player_entrance_date FROM Players
                 INNER JOIN  PlayersLogsTable ON PlayersLogsTable.player_index_id = Players.player_index_id
                 WHERE PlayersLogsTable.player_entrance_date >= :dateTime AND PlayersLogsTable.player_entrance_date < :endDateTime
                 AND PlayersLogsTable.team_id = :teamId;

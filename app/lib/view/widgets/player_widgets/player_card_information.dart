@@ -121,7 +121,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                   const  Text("First join date:"),
                                   Align(
                                     alignment: AlignmentDirectional.bottomEnd,
-                                      child: Text((DateFormat.yMMMEd().format(snapshot.data![0].playerFirstJoinDate) ).toString())),
+                                      child: Text( DateFormat.yMMMEd().format(snapshot.data!.last.beginningDate) != 'Mon, Jan 1, 1990'? DateFormat.yMMMEd().format(snapshot.data!.last.beginningDate) .toString():"Unrecorded" )),
                                 ],
                               ),
 
@@ -277,7 +277,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                             const SizedBox(height: 9,),
                                             Padding(
                                               padding: const EdgeInsets.symmetric(horizontal:12.0),
-                                              child: Text((DateFormat.yMMMEd().format(snapshot.data![index].beginningDate))),
+                                              child: Text( DateFormat.yMMMEd().format(snapshot.data![index].beginningDate) != 'Mon, Jan 1, 1990'? (DateFormat.yMMMEd().format(snapshot.data![index].beginningDate)):"Unrecorded"),
                                             )
                                           ],),
                                       ),
@@ -301,7 +301,7 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                             const SizedBox(height: 9,),
                                             Padding(
                                               padding: const EdgeInsets.symmetric(horizontal:12.0),
-                                              child: Text(DateFormat.yMMMEd().format(snapshot.data![index].endDate)),
+                                              child: Text( DateFormat.yMMMEd().format(snapshot.data![index].endDate) != 'Mon, Jan 1, 1990'? DateFormat.yMMMEd().format(snapshot.data![index].endDate) : "Un recorded"),
                                             )
                                           ],),
                                       ),

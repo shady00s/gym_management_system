@@ -9,6 +9,7 @@ void main() async {
 
   WindowOptions windowOptions = const WindowOptions(
     size: Size(1230, 760),
+    title: "Gym system",
     center: true,
     minimumSize:Size(1000,760) ,
     maximumSize:Size(1230,760) ,
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FluentApp(
+
         title: "Gym management system",
         themeMode: ThemeMode.dark,
         color: Colors.blue,

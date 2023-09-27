@@ -17,6 +17,13 @@ import '../../../../database_management/models/employees_model.dart';
 import '../../../database_management/models/teams_model.dart';
 import '../model/sheets_model.dart';
 
+
+class TeamsNumbersInfo{
+  final int playersNumber;
+  final String teamName;
+
+  TeamsNumbersInfo({required this.playersNumber,required this.teamName});
+}
 class ExcelFileCubit extends Cubit<ImportExcelState> {
   ExcelFileCubit() : super(InitialState());
 
@@ -96,6 +103,33 @@ class ExcelFileCubit extends Cubit<ImportExcelState> {
 
   List<ExcelPlayers> excelPlayersList = [];
   PlatformFile? excelFile;
+
+  List<TeamsNumbersInfo>getNumberOfPlayersInEachTeam(){
+    var teams = {};
+
+    for (var element in excelPlayersList) {
+      for (var sheets in selectedList) {
+
+        if(element.team.runtimeType != int){
+
+          for(var team in element.team){
+            if(team == sheets.id) {
+              teams[sheets.name] != null ? teams[sheets.name] +=1 :teams[sheets.name] = 1;
+            }
+          }
+
+      }else{
+          if(element.team == sheets.id){
+            teams[sheets.name] != null? teams[sheets.name] +=  1 : teams[sheets.name]= 1;
+
+          }
+      }
+      }
+
+    }
+    return teams.entries.map<TeamsNumbersInfo>((e) => TeamsNumbersInfo(playersNumber: e.value, teamName: e.key)).toList();
+
+  }
   incrementNumber(int index) {
     currentIndex = index;
     emit(ChangeIndexState());
@@ -194,6 +228,7 @@ class ExcelFileCubit extends Cubit<ImportExcelState> {
             responseCode = processedResponse.statusCode!;
             excelPlayersList =
                 parseExcelPlayersList(processedData['resultData']);
+            getNumberOfPlayersInEachTeam();
             emit(SuccessfulUploadingList());
           } else {
             print("Error getting processed data");

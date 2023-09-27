@@ -234,7 +234,7 @@ class _CreateNewSubscriptionWidgetState
                                     value: subData.subscriptionInvitationLimit,
                                     onChanged: (val) {
                                       setState(() {
-                                        _subName.text = "";
+
                                         subData = SubscriptionsInfoTableData(
                                             subscriptionName:
                                                 subData.subscriptionName,
@@ -273,7 +273,7 @@ class _CreateNewSubscriptionWidgetState
                                 data: (data) => Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("Select team"),
+                                    const Text("Select team"),
                                     ComboBox(
 
                                         placeholder: const Text("Select team"),
@@ -330,6 +330,7 @@ class _CreateNewSubscriptionWidgetState
                                       .insertSubscriptionInformation(subData)
                                       .then((val) async {
                                     setState(() {
+                                      _subName.text = "";
                                       subData =
                                           const SubscriptionsInfoTableData(
                                               subscriptionName: "",

@@ -16,8 +16,18 @@ class SetSheetColsAndRows extends StatelessWidget {
             List<SheetsModel> listOfSheets =
                 ExcelFileCubit.get(context).listOfSheets;
             if (listOfSheets.isNotEmpty) {
-              return Column(children: [
-                const Text("Select sheets"),
+              return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+
+                  children: [
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text("Select teams",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
+                ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child:  Text("Select teams you need from imported excel file",style: TextStyle(color: Colors.grey[90]),),
+                    ),
                 TreeView(
                     selectionMode: TreeViewSelectionMode.multiple,
                     onSelectionChanged: (selectedItems) async {

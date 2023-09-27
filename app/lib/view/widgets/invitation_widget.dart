@@ -211,12 +211,12 @@ class InvitationWidget extends StatelessWidget {
                                                 ),
 
                                               if( foundedPlayer?.playerIndexId == playerIndexId)
-                                                Column(
+                                                const Column(
                                                   mainAxisAlignment:MainAxisAlignment.center,
                                                   children: [
                                                     SizedBox(height: 20,),
                                                   Padding(
-                                                    padding: const EdgeInsets.all(8.0),
+                                                    padding: EdgeInsets.all(8.0),
                                                     child: Text("You cannot invite your self",style:TextStyle(fontWeight: FontWeight.bold,fontSize: 18)),
                                                   )
                                                 ],)
@@ -382,7 +382,7 @@ class _AddNewPlayerWithInvitationState
                         });
                       },
                       validator: (val) {
-                        if (val == null || phoneNumber.toString().length < 12) {
+                        if (phoneNumber.toString().length < 12) {
                           return "please add phone number";
                         } else {
                           return null;

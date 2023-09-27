@@ -11,8 +11,8 @@ class PlayerProfileData {
 
 class SubscriptionsModel {
   final int id;
-  final String beginning_date;
-  final String end_date;
+  final String beginningDate;
+  final String endDate;
   final int billid;
   final int billValue;
   final int duration;
@@ -22,8 +22,8 @@ class SubscriptionsModel {
       {
         required this.team,
         required this.id,
-        required this.beginning_date,
-        required this.end_date,
+        required this.beginningDate,
+        required this.endDate,
         required this.billid,
         required this.billValue,
         required this.duration,
@@ -32,8 +32,8 @@ class SubscriptionsModel {
   factory SubscriptionsModel.fromJson(Map<String, dynamic> json) {
     return SubscriptionsModel(
         id: json["player_subscription_id"],
-        beginning_date: json["beginning_date"],
-        end_date: json["end_date"],
+        beginningDate: json["beginning_date"],
+        endDate: json["end_date"],
         billid: json["billid"],
         billValue: json['billvalue'],
         duration: json["duration"],
@@ -45,37 +45,37 @@ class SubscriptionsModel {
 }
 
 class PlayerFromBackupDB {
-  final int player_id;
-  final String player_name;
-  final int player_phone_number;
-  final String image_path;
-  final int player_age;
-  final String player_first_join_date;
-  final String player_gender;
-  final int subscription_id;
+  final int playerId;
+  final String playerName;
+  final int playerPhoneNumber;
+  final String imagePath;
+  final int playerAge;
+  final String playerFirstJoinDate;
+  final String playerGender;
+  final int subscriptionId;
   final int playerIndexId;
 
   PlayerFromBackupDB(
-      {required this.player_id,
-        required this.player_name,
-        required this.player_phone_number,
-        required this.image_path,
-        required this.player_age,
-        required this.player_first_join_date,
-        required this.player_gender,
-        required this.subscription_id,
+      {required this.playerId,
+        required this.playerName,
+        required this.playerPhoneNumber,
+        required this.imagePath,
+        required this.playerAge,
+        required this.playerFirstJoinDate,
+        required this.playerGender,
+        required this.subscriptionId,
         required this.playerIndexId});
 
   factory PlayerFromBackupDB.fromJson(Map<String, dynamic> json) {
     return PlayerFromBackupDB(
-        player_id: json['player_id'],
-        player_name: json['player_name'],
-        player_phone_number: json['player_phone_number'],
-        image_path: json['image_path'],
-        player_age: json['player_age'],
-        player_first_join_date: json['player_first_join_date'],
-        player_gender: json['player_gender'],
-        subscription_id: json['subscription_id'], playerIndexId: json['player_index_id']);
+        playerId: json['player_id'],
+        playerName: json['player_name'],
+        playerPhoneNumber: json['player_phone_number'],
+        imagePath: json['image_path'],
+        playerAge: json['player_age'],
+        playerFirstJoinDate: json['player_first_join_date'],
+        playerGender: json['player_gender'],
+        subscriptionId: json['subscription_id'], playerIndexId: json['player_index_id']);
   }
 }
 
@@ -209,26 +209,26 @@ class DataFromDB {
 
 
 class ExcelPlayers{
-  final int player_id;
-  final String player_name;
-  final int? player_phone_number;
-  final String? image_path;
-  final int? player_age;
+  final int playerId;
+  final String playerName;
+  final int? playerPhoneNumber;
+  final String? imagePath;
+  final int? playerAge;
   final dynamic team;
-  final String? player_first_join_date;
-  final String? player_gender;
+  final String? playerFirstJoinDate;
+  final String? playerGender;
   final int playerIndexId;
   final List<ExcelSubscriptionsModel>? subscriptions;
 
   ExcelPlayers( 
-      {required this.player_id,
-        required this.player_name,
-        required this.player_phone_number,
-        required this.image_path,
-        required this.player_age,
-        required this.player_first_join_date,
+      {required this.playerId,
+        required this.playerName,
+        required this.playerPhoneNumber,
+        required this.imagePath,
+        required this.playerAge,
+        required this.playerFirstJoinDate,
         required this.team,
-        required this.player_gender,
+        required this.playerGender,
         required this.playerIndexId,
         required this.subscriptions});
 
@@ -246,13 +246,13 @@ class ExcelPlayers{
     } ).toList() ;
     return ExcelPlayers(
         team: team,
-        player_id: json['id'],
-        player_name: json['name'],
-        player_phone_number: json['playerPhoneNumber'],
-        image_path: json['imagePath'],
-        player_age: json['playerAge'],
-        player_first_join_date: json['playerFirstJoinDate'],
-        player_gender: json['playerGender'],
+        playerId: json['id'],
+        playerName: json['name'],
+        playerPhoneNumber: json['playerPhoneNumber'],
+        imagePath: json['imagePath'],
+        playerAge: json['playerAge'],
+        playerFirstJoinDate: json['playerFirstJoinDate'],
+        playerGender: json['playerGender'],
         playerIndexId: json['playerIndexId'],
         
         subscriptions: subscriptions);
@@ -260,8 +260,8 @@ class ExcelPlayers{
 }
 class ExcelSubscriptionsModel {
   final int id;
-  final String beginning_date;
-  final String end_date;
+  final String beginningDate;
+  final String endDate;
   final int billid;
   final int billValue;
   final int duration;
@@ -272,8 +272,8 @@ class ExcelSubscriptionsModel {
     required this.subscriptionCollectionDate,
     required this.team,
     required this.id,
-    required this.beginning_date,
-    required this.end_date,
+    required this.beginningDate,
+    required this.endDate,
     required this.billid,
     required this.billValue,
     required this.duration,
@@ -284,8 +284,8 @@ class ExcelSubscriptionsModel {
     return ExcelSubscriptionsModel(
       subscriptionCollectionDate:json['subscriptionCollectionDate'],
         id: json["playerSubscriptionId"],
-        beginning_date: json["beginDate"],
-        end_date: json["finishDate"],
+        beginningDate: json["beginDate"],
+        endDate: json["finishDate"],
         billid: json["billId"],
         billValue: json['subscriptionValue'],
         duration: json["subscriptionDuration"],

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/database_management/tables/gym_player_logs/gym_log_manager.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 import 'package:gym_management/database_management/tables/teams/teams_database_manager.dart';
+import 'package:gym_management/view/manage_excel/ui_widget.dart';
+import 'package:gym_management/view/screen.dart';
 import 'package:gym_management/view/widgets/cards_with_icons.dart';
 import 'package:gym_management/view/widgets/enter_players_manually.dart';
 import 'package:gym_management/view/widgets/player_widgets/add_new_player.dart';
@@ -20,15 +22,24 @@ class HomeWidget extends StatefulWidget {
   @override
   State<HomeWidget> createState() => _HomeWidgetState();
 }
-
+Future<List<TeamsDataTableData>> getAllData() async {
+  return TeamsDatabaseManager().getAllTeams();
+}
 class _HomeWidgetState extends State<HomeWidget> {
+  late Future<List<TeamsDataTableData>> fetchData;
   int currentIndex = 0;
+
+  @override
+  void initState() {
+    fetchData = getAllData();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Card(
       backgroundColor: const Color.fromRGBO(12, 12, 12, 0.85),
       child: FutureBuilder<List<TeamsDataTableData>>(
-          future: TeamsDatabaseManager().getAllTeams(),
+          future: fetchData,
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.done:
@@ -52,8 +63,59 @@ class _HomeWidgetState extends State<HomeWidget> {
                               )))
                           .toList());
                 } else {
-                  return const Center(
-                    child: Text("No Teams Found"),
+                  return  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(FluentIcons.teamwork,size: 41,color: Colors.grey[80],),
+                      const SizedBox(height: 21,),
+                      const Text("No Teams Found",style: TextStyle(fontSize: 19),),
+                      const SizedBox(height: 10,),
+
+                      Text("please choose to import data from excel or create new team instead",style: TextStyle(color: Colors.grey[80]),),
+                      const SizedBox(height: 10,),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Consumer(
+
+                              builder: (context, ref,child) {
+                                var setCurrentIndex = ref.read(navigationProvider.notifier);
+
+                                return Button(child: const Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Icon(FluentIcons.excel_document),
+                                    ),
+
+                                    Text("Import data from excel file"),
+                                  ],
+                                ), onPressed: (){
+                                  setCurrentIndex.state = 4;
+                                  });
+                              }
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Button(child: const Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(FluentIcons.people_add),
+                                ),
+
+                                Text("Create new team"),
+                              ],
+                            ), onPressed: () async{await showAddNewTeamWidget(context);}),
+                          ),
+                        ],
+                      )
+                    ],
                   );
                 }
               case ConnectionState.waiting:

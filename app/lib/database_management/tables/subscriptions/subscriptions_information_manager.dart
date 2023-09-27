@@ -30,7 +30,9 @@ class SubscriptionInformationManager extends PlayersDatabaseManager{
 
     List<SubscriptionsWithTeamModel> result = [];
     for (var element in data) {
-          result.add(SubscriptionsWithTeamModel(subName: element.readTable(SubscriptionsInfoTable(db)).subscriptionName, teamName: element.readTable(TeamsDataTable(db)).teamName, teamPrivate: element.readTable(TeamsDataTable(db)).teamPrivate, subInvitation: element.readTable(SubscriptionsInfoTable(db)).subscriptionInvitationLimit, subFreeze: element.readTable(SubscriptionsInfoTable(db)).subscriptionFreezeLimit, subValue: element.readTable(SubscriptionsInfoTable(db)).subscriptionValue, subDuration: element.readTable(SubscriptionsInfoTable(db)).subscriptionDuration));
+      if(element.readTable(SubscriptionsInfoTable(db)).subscriptionValue != 0) {
+        result.add(SubscriptionsWithTeamModel(subName: element.readTable(SubscriptionsInfoTable(db)).subscriptionName, teamName: element.readTable(TeamsDataTable(db)).teamName, teamPrivate: element.readTable(TeamsDataTable(db)).teamPrivate, subInvitation: element.readTable(SubscriptionsInfoTable(db)).subscriptionInvitationLimit, subFreeze: element.readTable(SubscriptionsInfoTable(db)).subscriptionFreezeLimit, subValue: element.readTable(SubscriptionsInfoTable(db)).subscriptionValue, subDuration: element.readTable(SubscriptionsInfoTable(db)).subscriptionDuration));
+      }
     }
     return result;
  }

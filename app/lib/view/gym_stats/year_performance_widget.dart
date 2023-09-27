@@ -108,14 +108,14 @@ class YearPerformanceWidget extends StatelessWidget {
                       var getTotalRev = ref.watch(totalRevenueProvider);
                       return Text(
                         getTotalRev.toString(),
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
                       );
                     }
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
-                  Text("Total revenue"),
+                  const Text("Total revenue"),
                 ],
               ),
             ),
@@ -151,8 +151,8 @@ class YearPerformanceWidget extends StatelessWidget {
                                         color: Colors.yellow,
                                       ),
                                       title:  Text(getMonthsData.bestMonthName,
-                                          style: TextStyle(fontSize: 19,fontWeight: FontWeight.bold)),
-                                      subtitle:  Text(
+                                          style: const TextStyle(fontSize: 19,fontWeight: FontWeight.bold)),
+                                      subtitle:  const Text(
                                         "Best month",
                                         style: TextStyle(fontSize: 14),
                                       ),
@@ -163,8 +163,8 @@ class YearPerformanceWidget extends StatelessWidget {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text("Revenue:"),
-                                            Align(alignment: AlignmentDirectional.centerEnd,child: Text(getMonthsData.bestMonthRevenue.toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),)
+                                            const Text("Revenue:"),
+                                            Align(alignment: AlignmentDirectional.centerEnd,child: Text(getMonthsData.bestMonthRevenue.toString(),style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),)
                                           ],
                                         ),
                                       ))),
@@ -183,7 +183,7 @@ class YearPerformanceWidget extends StatelessWidget {
                                           color: Colors.orange,
                                         ),
                                         title:  Text(getMonthsData.worstMonthName,
-                                            style: TextStyle(fontSize: 19,fontWeight: FontWeight.bold)),
+                                            style: const TextStyle(fontSize: 19,fontWeight: FontWeight.bold)),
                                         subtitle: const Text(
                                           "least profit",
                                           style: TextStyle(fontSize: 14),
@@ -195,8 +195,8 @@ class YearPerformanceWidget extends StatelessWidget {
                                             crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                             children: [
-                                              Text("Revenue:"),
-                                              Align(alignment: AlignmentDirectional.centerEnd,child: Text(getMonthsData.worstMonthRevenue.toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),)
+                                              const Text("Revenue:"),
+                                              Align(alignment: AlignmentDirectional.centerEnd,child: Text(getMonthsData.worstMonthRevenue.toString(),style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),)
                                             ],
                                           ),
                                         )
@@ -215,7 +215,7 @@ class YearPerformanceWidget extends StatelessWidget {
                                           color: Colors.yellow,
                                         ),
                                         title:  Text(teamsData.bestTeamName,
-                                            style: TextStyle(fontSize: 19,fontWeight: FontWeight.bold)),
+                                            style: const TextStyle(fontSize: 19,fontWeight: FontWeight.bold)),
                                         subtitle: const Text("Best team"),
                                         trailing: SizedBox(
                                           width:100,
@@ -225,17 +225,17 @@ class YearPerformanceWidget extends StatelessWidget {
                                                 CrossAxisAlignment.start,
                                             children: [
 
-                                              Text("Revenue: "),
+                                              const Text("Revenue: "),
                                               Align(alignment: AlignmentDirectional.centerEnd,child: Text(teamsData.bestTeamRevenue.toString(),
-                                                  style: TextStyle(fontSize: 19,fontWeight: FontWeight.bold))),
+                                                  style: const TextStyle(fontSize: 19,fontWeight: FontWeight.bold))),
 
                                               const SizedBox(
                                                 height: 8,
                                               ),
 
-                                              Text("Players: "),
+                                              const Text("Players: "),
                                               Align(alignment: AlignmentDirectional.centerEnd,child: Text(teamsData.bestTeamTotalPlayer.toString(),
-                      style: TextStyle(fontSize: 19,fontWeight: FontWeight.bold))),
+                      style: const TextStyle(fontSize: 19,fontWeight: FontWeight.bold))),
 
 
 
@@ -255,7 +255,7 @@ class YearPerformanceWidget extends StatelessWidget {
                                           FluentIcons.accept,
                                           color: Colors.green,
                                         ),
-                                        title:  Text(teamsData.worstTeamName,style: TextStyle(fontWeight: FontWeight.bold),),
+                                        title:  Text(teamsData.worstTeamName,style: const TextStyle(fontWeight: FontWeight.bold),),
                                         subtitle: const Text("least Team"),
                                         trailing: SizedBox(
                                           width:100,
@@ -264,15 +264,15 @@ class YearPerformanceWidget extends StatelessWidget {
                                                 CrossAxisAlignment.start,
                                             children: [
 
-                                              Text("Revenue: "),
-                                              Align(alignment: AlignmentDirectional.centerEnd,child: Text(teamsData.worstTeamRevenue.toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),)
+                                              const Text("Revenue: "),
+                                              Align(alignment: AlignmentDirectional.centerEnd,child: Text(teamsData.worstTeamRevenue.toString(),style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),)
                                               ,
                                               const SizedBox(
                                                 height: 8,
                                               ),
 
-                                              Text("Players: "),
-                                              Align(alignment: AlignmentDirectional.centerEnd,child: Text(teamsData.worstTeamTotalPlayer.toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),)
+                                              const Text("Players: "),
+                                              Align(alignment: AlignmentDirectional.centerEnd,child: Text(teamsData.worstTeamTotalPlayer.toString(),style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),)
                                               ,
 
 

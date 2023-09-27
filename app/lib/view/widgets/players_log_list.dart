@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/database_management/tables/gym_player_logs/gym_log_manager.dart';
 import 'package:gym_management/database_management/tables/teams/teams_database_manager.dart';
 import 'package:gym_management/view/widgets/player_widgets/player_name_with_image_widget.dart';
+import 'package:intl/intl.dart';
 
 import '../../database_management/tables/generate_table.dart';
 
@@ -155,28 +156,50 @@ class PlayersLogsWidget extends StatelessWidget {
                         child: ProgressBar(),
                       ))
             ]),
-            SizedBox(
-                width: MediaQuery.sizeOf(context).width * 0.9,
-                child: getPlayers.when(data: (data) => data.isNotEmpty? Wrap(children:data.map((e) => SizedBox(
-        width: 330,
-        child: PlayerNameWithImage(
-        playerName: e.playerName,
-        playerId: e.playerId,
-        imagePath: e.imagePath,
-        playerIndexId: e.playerIndexId)))
-            .toList(),)   :Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,children: [
-                  const SizedBox(height: 59,),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                  width: MediaQuery.sizeOf(context).width * 0.9,
+                  child: getPlayers.when(data: (data) => data.isNotEmpty? Wrap(children:data.map((e) => Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Card(
+                      child: SizedBox(
+                        width: 330,
+                        child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PlayerNameWithImage(
+                playerName: e.playerName,
+                playerId: e.playerId,
+                imagePath: e.imagePath,
+                playerIndexId: e.playerIndexId),
+                Row(children: [
+                    const Padding(
+                      padding:  EdgeInsets.all(8.0),
+                      child: Icon(FluentIcons.timer),
+                    ),
+                    Text(DateFormat.Hms().format(e.playerEntranceDate) )
 
-                  Icon(FluentIcons.profile_search,size: 51,color: Colors.grey[80],),
-                  const SizedBox(height: 9,),
-                  const Text("No players found on this day")
-                ],)   , error: (err, state) => const Text("error"), loading: ()=>const Center(
+                ],)
+              ],
+          ),
+                      ),
+                    ),
+                  ))
+              .toList(),)   :Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,children: [
+                    const SizedBox(height: 59,),
+
+                    Icon(FluentIcons.profile_search,size: 51,color: Colors.grey[80],),
+                    const SizedBox(height: 9,),
+                    const Text("No players found on this day")
+                  ],)   , error: (err, state) => const Text("error"), loading: ()=>const Center(
         child: ProgressRing(),) )
 
 
-    )
+    ),
+            )
           ],
         );
       }),

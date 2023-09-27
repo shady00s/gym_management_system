@@ -23,7 +23,6 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
   DateTime? _beginningDate;
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   double billValue = 0;
-  SubscriptionsInfoTableData? subValue;
   bool isNoImage = false;
   int? billId;
   String collectorId = "";
@@ -301,6 +300,9 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
 
               Consumer(builder: (context, ref, child) {
                 String? imagePath = ref.watch(billImageProvider);
+                var setImagePath = ref.read(billImageProvider.notifier);
+                var getSubscription = ref.watch(subscriptionProvider);
+
                 return FilledButton(
                     child: const Text("Re-subscribe"),
                     onPressed: () async {
@@ -315,21 +317,21 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
                         });
                         PlayersSubscriptionsCompanion data =
                             PlayersSubscriptionsCompanion.insert(
-                                teamId: subValue!.teamId,
+                                teamId: getSubscription!.teamId,
                                 subscriptionPayDate: DateTime.now(),
                                 playerSubscriptionId: widget.playerIndexId,
                                 beginningDate: _beginningDate!,
                                 endDate: _beginningDate!.add(Duration(
-                                    days: subValue!.subscriptionDuration)),
+                                    days: getSubscription.subscriptionDuration)),
                                 billId: billId!,
-                                billValue: subValue!.subscriptionValue,
-                                duration: subValue!.subscriptionDuration,
+                                billValue: getSubscription.subscriptionValue,
+                                duration: getSubscription.subscriptionDuration,
                                 billCollector: collectorId,
                                 freezeAvailable:
-                                    subValue!.subscriptionFreezeLimit,
+                                    getSubscription.subscriptionFreezeLimit,
                                 invitationAvailable:
-                                    subValue!.subscriptionInvitationLimit,
-                                subscriptionInfoId: subValue!.id!);
+                                    getSubscription.subscriptionInvitationLimit,
+                                subscriptionInfoId: getSubscription.id!);
                         await loadingDialog(
                                 context,
                                 -1,
@@ -337,6 +339,9 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
                                     .reSubscribePlayer(data),
                                 null)
                             .then((value) async {
+                              Future.delayed(Duration.zero,(){
+                                setImagePath.state = null;
+                              });
                           Navigator.pop(context);
                           await displayInfoBar(context,
                               builder: (context, closr) => const InfoBar(

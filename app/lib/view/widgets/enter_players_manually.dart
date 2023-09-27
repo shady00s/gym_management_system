@@ -49,7 +49,11 @@ class _EnterPlayersManuallyState extends State<EnterPlayersManually> {
                     child: Button(child: const Text("Enter"), onPressed: ()async {
                       if(_globalKey.currentState!.validate()){
 
-                        GymLogsManager().enterPlayer(_nameController.text.toString(), widget.teamId,context,false).then((value) =>  ref.invalidate(getPlayerLogsProvider));
+                        GymLogsManager().enterPlayer(_nameController.text.toString(), widget.teamId,context,false).then((value) =>  ref.invalidate(getPlayerLogsProvider)).then((value) {
+                          setState(() {
+                            _nameController.text ='';
+                          });
+                        });
                       }
                     }),
                   ),

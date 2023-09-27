@@ -7,7 +7,7 @@ class GymStatusManager{
 
   Future<int?> getMonthlyProfit(DateTime begValue,DateTime endVal)async{
     var data = await db.customSelect('''
-       SELECT SUM(PlayersSubscriptions.billValue)  FROM PlayersSubscriptions
+       SELECT DISTINCT SUM(PlayersSubscriptions.billValue)  FROM PlayersSubscriptions
        WHERE PlayersSubscriptions.subscription_pay_date BETWEEN ?1 AND ?2 
   
     ''',readsFrom: {PlayersSubscriptions(db)},variables: [Variable.withDateTime(begValue),Variable.withDateTime(endVal)]).getSingle();

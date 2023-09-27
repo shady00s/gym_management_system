@@ -90,9 +90,10 @@ filterEndedSubPlayers(REQUIRED :beginDate AS DATETIME OR NUll,REQUIRED :endDate 
 
 enterPlayerToGym(REQUIRED :teamId AS INT,REQUIRED :playerId AS INT, :playerName AS TEXT):
                                             SELECT DISTINCT  Players.player_id, Players.player_index_id, Players.player_name, PlayersSubscriptions.freeze_begin_date, PlayersSubscriptions.freeze_end_date, PlayersSubscriptions.player_subscription_id, MAX(PlayersSubscriptions.end_date), PlayersAndTeamsTable.team_player_id, PlayersAndTeamsTable.team_id
-                                                FROM Players
+                                               ,SubscriptionsInfoTable.subscription_name FROM Players
                                             LEFT JOIN PlayersSubscriptions ON Players.player_index_id = PlayersSubscriptions.player_subscription_id
                                             LEFT JOIN PlayersAndTeamsTable ON Players.player_index_id = PlayersAndTeamsTable.team_player_id
+                                            LEFT JOIN SubscriptionsInfoTable ON PlayersSubscriptions.team_id = :teamId
                                             WHERE (Players.player_id = COALESCE(:playerId, Players.player_id) OR :playerId IS NULL)
                                             AND (Players.player_name = COALESCE(:playerName, Players.player_name) OR :playerName IS NULL)
                                             AND PlayersAndTeamsTable.team_id = :teamId;
