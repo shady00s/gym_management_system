@@ -39,11 +39,8 @@ As for the client's requests, here are the features that are in the system:
   •	Get all the players that logged to the gym at specific date.
 
 ## Screenshots 
-![Screenshot 2023-09-28 020607](https://github.com/shady00s/gym_management_system/assets/64488184/75ca75ea-0956-4227-9d6c-abc1c7291867)
-![Screenshot 2023-09-28 020843](https://github.com/shady00s/gym_management_system/assets/64488184/ae9f7dd5-fbaf-40bb-acc1-3ef240cdfe56)
-![Screenshot 2023-09-28 020822](https://github.com/shady00s/gym_management_system/assets/64488184/cf02d86e-9f02-49e4-8262-c88786375350)
-![Screenshot 2023-09-28 020743](https://github.com/shady00s/gym_management_system/assets/64488184/e2579aaa-af95-42ca-870e-8fc71ae7b8a9)
-![Screenshot 2023-09-28 020659](https://github.com/shady00s/gym_management_system/assets/64488184/bd99b6cc-918d-4380-8c87-0f8c9fc17132)
-
-
-
+![Screenshot 2023-09-28 020607](https://github.com/shady00s/gym_management_system/assets/64488184/0404af12-b9a5-4d20-91ba-92031997cfb7)
+![Screenshot 2023-09-28 020843](https://github.com/shady00s/gym_management_system/assets/64488184/7dd54c53-5973-4fea-aa45-5a2f62d8b7fe)
+![Screenshot 2023-09-28 020822](https://github.com/shady00s/gym_management_system/assets/64488184/8b49e16c-3806-46ed-9bc8-0a48523517cf)
+![Screenshot 2023-09-28 020743](https://github.com/shady00s/gym_management_system/assets/64488184/bd0872a1-c789-4d33-8488-4db8eac899d8)
+![Screenshot 2023-09-28 020659](https://github.com/shady00s/gym_management_system/assets/64488184/1b577f93-8d5d-42e5-83c7-0491d2d656e7)
