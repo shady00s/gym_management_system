@@ -55,15 +55,15 @@ As for the client's requests, here are the features that are in the system:
 ## -	Logging system
 
   -	The logging system provides multiple ways to enter the Gym. 
-      1-	By ID card (QR code)
-      2-	By searching with phone number
-      3-	Searching by ID
-      4-	Searching by Name
+      -	By ID card (QR code)
+      -	By searching with phone number
+      -	Searching by ID
+      -	Searching by Name
       
   -	The system provides the receptionist with status of player after logging.
-      1-	If the player's subscription ended before two days, then give alert and enter the gym or subscribe. 
-      2-	If player subscription is ended after two days, then give alert to re-subscribe with no entrance until re-subscription.
-      3-	Prevent players from logging to the gym if subscription is frozen.
+      -	If the player's subscription ended before two days, then give alert and enter the gym or subscribe. 
+      -	If player subscription is ended after two days, then give alert to re-subscribe with no entrance until re-subscription.
+      -	Prevent players from logging to the gym if subscription is frozen.
 
       
 ## -	Gym status screen
@@ -74,9 +74,9 @@ As for the client's requests, here are the features that are in the system:
 ## -	Player status screen
 
   -	Screen that is responsible for monitoring the number of:
-      1-	new players 
-      2-	active players (players who have valid subscriptions).
-      3-	ended subscription players.
+      -	new players 
+      -	active players (players who have valid subscriptions).
+      -	ended subscription players.
   With the ability to filter by (subscription value, duration, player gender and team).
 
   
