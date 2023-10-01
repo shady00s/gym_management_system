@@ -302,7 +302,7 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
                 String? imagePath = ref.watch(billImageProvider);
                 var setImagePath = ref.read(billImageProvider.notifier);
                 var getSubscription = ref.watch(subscriptionProvider);
-
+                var remainingData = ref.watch(remainingPlayerDataProvider);
                 return FilledButton(
                     child: const Text("Re-subscribe"),
                     onPressed: () async {
@@ -315,6 +315,7 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
                         setState(() {
                           isNoImage = false;
                         });
+
                         PlayersSubscriptionsCompanion data =
                             PlayersSubscriptionsCompanion.insert(
                                 teamId: getSubscription!.teamId,
@@ -336,7 +337,7 @@ class _ReSubscriptionFormWidgetState extends State<ReSubscriptionFormWidget> {
                                 context,
                                 -1,
                                 PlayersDatabaseManager()
-                                    .reSubscribePlayer(data),
+                                    .reSubscribePlayer(data,remainingData),
                                 null)
                             .then((value) async {
                               Future.delayed(Duration.zero,(){

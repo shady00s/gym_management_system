@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/database_management/tables/generate_table.dart';
 import 'package:gym_management/database_management/tables/gym_player_logs/gym_log_manager.dart';
+import 'package:gym_management/view/widgets/re-subscription/re_subscription_widget.dart';
 import '../../models/backup_data_models.dart';
 
 class PlayersDatabaseManager {
@@ -214,10 +215,21 @@ Future insertPlayersFromExcelOffline(List<ExcelPlayers> playersData)async{
 }
 
 
-Future reSubscribePlayer(PlayersSubscriptionsCompanion data)async{
+Future reSubscribePlayer(PlayersSubscriptionsCompanion data, RemainingData? remainingData)async{
     try{
-      await playersDatabase.into(PlayersSubscriptions(playersDatabase)).insert(data);
-      return 200;
+
+      if(remainingData != null){
+        await playersDatabase.transaction(() async{
+          await playersDatabase.into(PlayersSubscriptions(playersDatabase)).insert(data);
+          await playersDatabase.update(Players(playersDatabase)).write(PlayersCompanion(playerPhoneNumber: Value(remainingData.playerPhoneNumber),playerGender: Value(remainingData.playerGender?? 'un recorded'), imagePath: Value(remainingData.playerImagePath)));
+
+        });
+        return 200;
+      }else{
+        await playersDatabase.into(PlayersSubscriptions(playersDatabase)).insert(data);
+        return 200;
+      }
+
     }catch(e){
       print( e.toString());
       return 600;

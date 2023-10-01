@@ -3178,7 +3178,7 @@ abstract class _$SystemDatabase extends GeneratedDatabase {
   Selectable<GetEndedSubscriptionByTeamResult> getEndedSubscriptionByTeam(
       int teamId, DateTime secondDateTime, DateTime beginDateTime) {
     return customSelect(
-        'SELECT DISTINCT Players.player_index_id, Players.player_id, Players.player_name, Players.image_path, PlayersSubscriptions.end_date FROM Players LEFT JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_id = ?1 LEFT JOIN PlayersSubscriptions ON PlayersSubscriptions.player_subscription_id = Players.player_index_id WHERE PlayersSubscriptions.team_id = ?1 AND(PlayersSubscriptions.beginning_date <= ?2 OR PlayersSubscriptions.beginning_date != ?2)AND(PlayersSubscriptions.end_date BETWEEN ?3 AND ?2)AND PlayersSubscriptions.duration != 11 ORDER BY PlayersSubscriptions.end_date DESC',
+        'SELECT DISTINCT Players.player_index_id, Players.player_id, Players.player_name, Players.image_path, PlayersSubscriptions.end_date FROM Players LEFT JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_id = ?1 LEFT JOIN PlayersSubscriptions ON PlayersSubscriptions.player_subscription_id = Players.player_index_id WHERE PlayersSubscriptions.team_id = ?1 AND(PlayersSubscriptions.end_date < ?2)AND(PlayersSubscriptions.end_date BETWEEN ?3 AND ?2)AND PlayersSubscriptions.duration != 11 ORDER BY PlayersSubscriptions.end_date DESC',
         variables: [
           Variable<int>(teamId),
           Variable<DateTime>(secondDateTime),

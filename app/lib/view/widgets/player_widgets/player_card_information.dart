@@ -106,6 +106,15 @@ class PlayerCardInformationWidget extends StatelessWidget {
                                 ],
                               ),
                               const SizedBox(height: 14,),
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text("Gender:"),
+                                  Text((snapshot.data![0].playerGender).toString()),
+                                ],
+                              ),
+                              const SizedBox(height: 14,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [

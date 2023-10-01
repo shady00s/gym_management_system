@@ -67,7 +67,7 @@ getEndedSubscriptionByTeam (REQUIRED :beginDateTime AS DATETIME, REQUIRED :secon
                                                       LEFT JOIN PlayersAndTeamsTable ON PlayersAndTeamsTable.team_id = :team_id
                                                       LEFT JOIN PlayersSubscriptions ON PlayersSubscriptions.player_subscription_id = Players.player_index_id
                                                       WHERE PlayersSubscriptions.team_id = :team_id
-                                                      AND (PlayersSubscriptions.beginning_date <= :secondDateTime OR PlayersSubscriptions.beginning_date != :secondDateTime)
+                                                      AND (PlayersSubscriptions.end_date < :secondDateTime)
                                                       AND (PlayersSubscriptions.end_date BETWEEN :beginDateTime AND :secondDateTime)
                                                       AND PlayersSubscriptions.duration != 11
                                                       ORDER BY PlayersSubscriptions.end_date DESC;

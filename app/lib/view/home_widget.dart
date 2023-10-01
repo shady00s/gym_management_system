@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/database_management/tables/gym_player_logs/gym_log_manager.dart';
 import 'package:gym_management/database_management/tables/players/player_database_manager.dart';
 import 'package:gym_management/database_management/tables/teams/teams_database_manager.dart';
-import 'package:gym_management/view/manage_excel/ui_widget.dart';
 import 'package:gym_management/view/screen.dart';
 import 'package:gym_management/view/widgets/cards_with_icons.dart';
 import 'package:gym_management/view/widgets/enter_players_manually.dart';
@@ -14,7 +13,7 @@ import 'package:gym_management/view/widgets/price_list_widget.dart';
 import 'package:gym_management/view/widgets/search_widgets/search_widget.dart';
 
 import '../database_management/tables/generate_table.dart';
-import 'add_new_team_widget.dart';
+import 'widgets/add_new_team_widget.dart';
 
 class HomeWidget extends StatefulWidget {
   const HomeWidget({super.key});

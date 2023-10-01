@@ -135,7 +135,7 @@ class _CoachFormState extends State<CoachForm> {
   final TextEditingController _coachName = TextEditingController();
   final TextEditingController _teamName = TextEditingController();
   final TextEditingController _coachId = TextEditingController();
-  final TextEditingController _coachPhoneNumber = TextEditingController();
+  final int _coachPhoneNumber = 20;
   final TextEditingController _coachAddress = TextEditingController();
   int _coachSalary = 0;
   int _coachPrivate = 0;
@@ -144,7 +144,6 @@ class _CoachFormState extends State<CoachForm> {
   void initState() {
     _teamName.text = widget.teamName;
     _coachId.text = widget.coachId.toString();
-    _coachPhoneNumber.text = "20";
     ExcelFileCubit.get(context)
         .employeesList[widget.index]
         .employeeSpecialization = "Trainer";
@@ -251,12 +250,11 @@ class _CoachFormState extends State<CoachForm> {
                           )),
                       Expanded(
                           flex: 3,
-                          child: TextFormBox(
-                            controller: _coachPhoneNumber,
-                            keyboardType: TextInputType.number,
+                          child: NumberFormBox(
+                            mode: SpinButtonPlacementMode.none,
+                            value: _coachPhoneNumber,
                             validator: (val) {
-                              if (int.tryParse(val!) == null ||
-                                  val.length != 12) {
+                              if(val.toString().length != 12) {
                                 return "please add valid coach phone number";
                               }
                               return null;
@@ -264,7 +262,7 @@ class _CoachFormState extends State<CoachForm> {
                             onChanged: (val) {
                               ExcelFileCubit.get(context)
                                   .employeesList[widget.index]
-                                  .employeePhoneNumber = int.parse(val);
+                                  .employeePhoneNumber = val!;
                             },
                           )),
                     ],
