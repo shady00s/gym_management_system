@@ -3,22 +3,24 @@ import 'package:gym_management/database_management/tables/generate_table.dart';
 import 'package:gym_management/view/manage_excel/ui_widget.dart';
 import 'package:gym_management/view/screen.dart';
 import 'package:gym_management/view/widgets/combo_box_widget.dart';
-import '../database_management/tables/employees/employees_data_manager.dart';
-import '../database_management/tables/teams/teams_database_manager.dart';
-import 'manage_excel/steps/coaches_data.dart';
+import '../../database_management/tables/employees/employees_data_manager.dart';
+import '../../database_management/tables/teams/teams_database_manager.dart';
+import '../manage_excel/steps/coaches_data.dart';
 
 Future setEmployeesAndTeamsToDB(EmployeesTableCompanion employees,TeamsDataTableCompanion teams) async{
   // create employees companion
 
     // insert employees data
   try{
-    int teamId = int.parse(employees.employeePhoneNumber.value.toString().substring(3,11));
-
     await EmployeesDatabaseManager().insertEmployee(employees).then((_) async {
       int teamCaptainId = 0;
-      print(teamId);
+      int teamId = 0;
       // add captain id to each player
       await  EmployeesDatabaseManager().getEmployeesData().then((value) async{
+        await TeamsDatabaseManager().getAllTeams().then((value) {
+          teamId = value.last.teamId +1;
+        });
+
         for(var employeesDB in value){
 
           if(employeesDB.employeeName == employees.employeeName.value){
@@ -82,11 +84,11 @@ class _AddNewTeamFormState extends State<AddNewTeamForm> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController _coachName = TextEditingController();
   final TextEditingController _teamName = TextEditingController();
-   int _coachPhoneNumber = 20;
+  final TextEditingController _coachPhoneNumber = TextEditingController();
   final TextEditingController _coachAddress = TextEditingController();
   int _coachSalary = 0;
   int _coachPrivate = 0;
-  String _coachEmploymentStatus = "Freelance";
+  String _coachEmploymentStatus = "";
   @override
   void initState() {
 
@@ -165,16 +167,12 @@ class _AddNewTeamFormState extends State<AddNewTeamForm> {
                         )),
                     Expanded(
                         flex: 3,
-                        child: NumberFormBox(
-                        value: _coachPhoneNumber,
-                          onChanged: (val){
-                          setState(() {
-                            _coachPhoneNumber = val!;
-                          });
-                          },
+                        child: TextFormBox(
+                          controller: _coachPhoneNumber,
+                          keyboardType: TextInputType.number,
                           validator: (val) {
-                            if (
-                                val!.length <12) {
+                            if (int.tryParse(val!) == null ||
+                                val.length != 11) {
                               return "please add valid coach phone number";
                             }
                             return null;
@@ -290,14 +288,14 @@ class _AddNewTeamFormState extends State<AddNewTeamForm> {
                   ],
                 ),
               ),
-              const SizedBox(height: 12,),
-              FilledButton(child: const Padding(
-                padding: EdgeInsets.all(8.0),
+              SizedBox(height: 12,),
+              FilledButton(child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Text("Add team"),
               ), onPressed: () async {
                 if(formKey.currentState!.validate()) {
                   TeamsDataTableCompanion teams =TeamsDataTableCompanion.insert(teamId: -1, teamName: _teamName.text, teamCaptainId: -1);
-                  EmployeesTableCompanion employees = EmployeesTableCompanion.insert(employeeName: _coachName.text, employeePhoneNumber: _coachPhoneNumber , employeeSpecialization: "trainer", employeePosition: _coachEmploymentStatus, employeeAddress: _coachAddress.text);
+                  EmployeesTableCompanion employees = EmployeesTableCompanion.insert(employeeName: _coachName.text, employeePhoneNumber: int.parse(_coachPhoneNumber.text) , employeeSpecialization: "trainer", employeePosition: _coachEmploymentStatus, employeeAddress: _coachAddress.text);
 
                   await loadingDialog(context, -1,  setEmployeesAndTeamsToDB( employees, teams), null).then((value) {
 
