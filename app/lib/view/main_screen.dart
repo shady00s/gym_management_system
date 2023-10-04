@@ -46,6 +46,8 @@ class _MainScreenState extends State<MainScreen> {
                    PaneItemSeparator(),
                    PaneItem(icon: const Icon(FluentIcons.office_logo),title: const Text("Get excel data"), body:const ImportExcelScreen()),
                    PaneItemSeparator(),
+                   PaneItem(icon: const Icon(FluentIcons.home),title: const Text("Employees manager"), body: const HomeWidget()),
+                   PaneItemSeparator(),
 
                    PaneItem(icon: const Icon(FluentIcons.people_repeat),title: const Text("Players logs"), body:const PlayersLogsWidget()),
 
