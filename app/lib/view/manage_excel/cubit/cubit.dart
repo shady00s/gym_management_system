@@ -76,7 +76,7 @@ class ExcelFileCubit extends Cubit<ImportExcelState> {
           employeeSpecialization: element.employeeSpecialization,
           employeePosition: element.employeePosition,
           employeeSalary: Value(element.employeeSalary),
-          employeeAddress: element.employeeAddress));
+          employeeAddress: element.employeeAddress, employeeImage: const Value('no image'), employeeNationalId: 0, employeeNationalIdImage: 'no-image'));
     }
   }
 
@@ -184,7 +184,7 @@ class ExcelFileCubit extends Cubit<ImportExcelState> {
             responseStatus = processedResponse.statusCode!;
             emit(SuccessfulUploading());
           } else {
-            print("Error getting processed data");
+            debugPrint("Error getting processed data");
           }
         });
       }
@@ -231,7 +231,7 @@ class ExcelFileCubit extends Cubit<ImportExcelState> {
             getNumberOfPlayersInEachTeam();
             emit(SuccessfulUploadingList());
           } else {
-            print("Error getting processed data");
+            debugPrint("Error getting processed data");
             responseCode = processedResponse.statusCode!;
           }
         });

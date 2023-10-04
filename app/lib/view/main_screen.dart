@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gym_management/view/gym_stats/main_screen.dart';
+import 'package:gym_management/view/widgets/employees_widget/employees_manager_widget.dart';
 import 'package:gym_management/view/widgets/players_log_list.dart';
 import 'package:gym_management/view/widgets/subscription_information/add_new_subscription_value_widget.dart';
 import 'package:gym_management/view/home_widget.dart';
@@ -46,7 +47,7 @@ class _MainScreenState extends State<MainScreen> {
                    PaneItemSeparator(),
                    PaneItem(icon: const Icon(FluentIcons.office_logo),title: const Text("Get excel data"), body:const ImportExcelScreen()),
                    PaneItemSeparator(),
-                   PaneItem(icon: const Icon(FluentIcons.home),title: const Text("Employees manager"), body: const HomeWidget()),
+                   PaneItem(icon: const Icon(FluentIcons.home),title: const Text("Employees manager"), body: const EmployeesManagerWidget()),
                    PaneItemSeparator(),
 
                    PaneItem(icon: const Icon(FluentIcons.people_repeat),title: const Text("Players logs"), body:const PlayersLogsWidget()),

@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/database_management/tables/generate_table.dart';
@@ -8,7 +7,7 @@ import '../../models/backup_data_models.dart';
 
 class PlayersDatabaseManager {
    static  SystemDatabase playersDatabase = SystemDatabase();
-  final Dio _dio = Dio();
+  //final Dio _dio = Dio();
 
   // Future getDataFromBackup() async {
   //   await _dio
@@ -64,12 +63,12 @@ class PlayersDatabaseManager {
   //
   //
   //
-  //     print("backup compelete");
+  //     debugPrint("backup compelete");
   //   }).catchError((err) {
-  //     print(err);
+  //     debugPrint(err);
   //   });
   //
-  //   print("no backup ");
+  //   debugPrint("no backup ");
   // }
 
   Future dropPlayersAndSubscriptionsTable()async{
@@ -83,7 +82,7 @@ class PlayersDatabaseManager {
       });
      return 200;
     }catch(e){
-      print(e);
+      debugPrint(e as String?);
       return 400;
     }
 
@@ -206,7 +205,7 @@ Future insertPlayersFromExcelOffline(List<ExcelPlayers> playersData)async{
 
     }catch(e){
 
-      print(e);
+      debugPrint(e as String?);
       return 400;
     }
 
@@ -221,8 +220,8 @@ Future reSubscribePlayer(PlayersSubscriptionsCompanion data, RemainingData? rema
       if(remainingData != null){
         await playersDatabase.transaction(() async{
           await playersDatabase.into(PlayersSubscriptions(playersDatabase)).insert(data);
-          await playersDatabase.update(Players(playersDatabase)).write(PlayersCompanion(playerPhoneNumber: Value(remainingData.playerPhoneNumber),playerGender: Value(remainingData.playerGender?? 'un recorded'), imagePath: Value(remainingData.playerImagePath)));
-
+          var player = playersDatabase.update(Players(playersDatabase))..where((tbl) => tbl.playerIndexId.equals(data.playerSubscriptionId.value));
+            await player.write(PlayersCompanion(playerPhoneNumber: Value(remainingData.playerPhoneNumber),playerGender: Value(remainingData.playerGender?? 'un recorded'), imagePath: Value(remainingData.playerImagePath)));
         });
         return 200;
       }else{
@@ -231,7 +230,7 @@ Future reSubscribePlayer(PlayersSubscriptionsCompanion data, RemainingData? rema
       }
 
     }catch(e){
-      print( e.toString());
+      debugPrint( e.toString());
       return 600;
     }
    }
@@ -260,7 +259,7 @@ Future reSubscribePlayer(PlayersSubscriptionsCompanion data, RemainingData? rema
       }
 
     }catch(e){
-      print(e);
+      debugPrint(e as String?);
       return 400;
     }
 
@@ -293,7 +292,7 @@ Future reSubscribePlayer(PlayersSubscriptionsCompanion data, RemainingData? rema
 
       return result;
     }catch(e){
-      print(e);
+      debugPrint(e as String?);
       return null;
     }
 
@@ -326,7 +325,7 @@ Future reSubscribePlayer(PlayersSubscriptionsCompanion data, RemainingData? rema
 
     return 200;
   }catch(e){
-    print(e);
+    debugPrint(e as String?);
     return 400;
   }
 
@@ -361,7 +360,7 @@ Future reSubscribePlayer(PlayersSubscriptionsCompanion data, RemainingData? rema
                   await displayInfoBar(context, builder: (context,close)=>const InfoBar(title: Text("Successfully added")));});
 
             }catch(e){
-                print(e);
+                debugPrint(e as String?);
               WidgetsBinding.instance.addPostFrameCallback((_) async{
                 await showDialog(context: context, builder:(context)=> const ContentDialog(content: Text("Error occured"),)).then((value) => Navigator.pop(context));
 
@@ -385,7 +384,7 @@ Future reSubscribePlayer(PlayersSubscriptionsCompanion data, RemainingData? rema
             });
           }
         }catch(e){
-          print(e);
+          debugPrint(e as String?);
         }
       });
       return const ContentDialog(

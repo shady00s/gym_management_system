@@ -1,3 +1,5 @@
+ import './employees.drift';
+
  CREATE TABLE IF NOT EXISTS EmployeesTable(
                 employee_id INT NOT NULL PRIMARY KEY,
                 employee_name TEXT NOT NULL,
@@ -5,5 +7,32 @@
                 employee_specialization TEXT NOT NULL,
                 employee_position TEXT NOT NULL,
                 employee_salary FLOAT NOT NULL DEFAULT 0.0,
-                employee_address TEXT NOT NULL
+                employee_address TEXT NOT NULL,
+                employee_email TEXT NOT NULL DEFAULT 'no email',
+                employee_password TEXT NOT NULL DEFAULT 'no password',
+                employee_image TEXT NOT NULL DEFAULT 'no-image',
+                employee_national_id INT NOT NULL,
+                employee_national_id_image TEXT NOT NULL
  );
+
+ CREATE TABLE IF NOT EXISTS EmployeesLogs(
+    id INT NOT NULL PRIMARY KEY,
+    employee_id INT NOT NULL,
+    log_start_date DATETIME NOT NULL,
+    log_end_date DATETIME NOT NULL,
+    FOREIGN KEY(employee_id) REFERENCES EmployeesTable(employee_id)
+
+ );
+
+
+ CREATE TABLE IF NOT EXISTS EmployeesPermissions(
+        id INT NOT NULL PRIMARY KEY,
+        employee_id INT NOT NULL,
+        permission TEXT NOT NULL,
+         FOREIGN KEY(employee_id) REFERENCES EmployeesTable(employee_id)
+ );
+
+
+ getEmployee(REQUIRED :id AS INT ): SELECT EmployeesPermissions.*, EmployeesTable.* FROM EmployeesPermissions
+                                           INNER JOIN EmployeesTable ON EmployeesPermissions.employee_id = EmployeesTable.employee_id
+                                           WHERE EmployeesPermissions.employee_id = :id;

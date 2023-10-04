@@ -92,7 +92,7 @@ class YearPerformanceWidget extends StatelessWidget {
                     filterTitle: "",
                     onChanged: (val) {
                       year.state = val.id;
-                      print(val.id);
+                      debugPrint(val.id);
                     },
                     allButton: false);
               }),

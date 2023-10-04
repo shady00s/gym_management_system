@@ -9,7 +9,7 @@ import "package:gym_management/view/manage_excel/steps/finish_data.dart";
 import "package:gym_management/view/manage_excel/steps/import_excel_step.dart";
 import "package:gym_management/view/manage_excel/steps/set_sheets.dart";
 
-import 'dart:io' as io;
+
 import "cubit/cubit.dart";
 
 
@@ -18,12 +18,12 @@ Future<int> uploadFileToServerAndStartServer(context) async{
     await ExcelFileCubit.get(context).sendFileToServer();
 
     // await io.Process.run("assets/my-server.exe",['start'] ).then((value) async {
-    //   print(value.stdout);
-    //   print(value.stderr);
+    //   debugPrint(value.stdout);
+    //   debugPrint(value.stderr);
     // });
     return 200;
   }catch(e){
-    print(e);
+    debugPrint(e.toString());
     return 400;
   }
 

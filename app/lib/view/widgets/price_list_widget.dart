@@ -131,9 +131,7 @@ class PriceListWidget extends StatelessWidget {
                                                       width: 140,
                                                     ),
                                                     Text(
-                                                      e.subDuration
-                                                              .toString() +
-                                                          " days",
+                                                      "${e.subDuration} days",
                                                       style: const TextStyle(
                                                           fontSize:
                                                               18,

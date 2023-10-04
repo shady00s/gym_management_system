@@ -8,8 +8,8 @@ class GymLogsManager{
 
     Future enterPlayer(String playerID,int teamId,context,isInvitation)async{
      int? playerId = int.tryParse(playerID);
-     print(playerId);
-     print(playerID);
+     debugPrint(playerId as String?);
+     debugPrint(playerID);
       if( playerId !=null){
         try{
           EnterPlayerToGymResult playerData = await db.enterPlayerToGym(teamId,playerId ,null ).getSingle();
@@ -84,7 +84,7 @@ class GymLogsManager{
 
           }
         }catch(err){
-          print(err);
+          debugPrint(err as String?);
           await showDialog(context: context, builder: (context)=> ContentDialog(content: const Text("Wrong ID or name"),
 
             actions: [Button(child: const Text("Close"), onPressed: (){Navigator.pop(context);})],
@@ -164,7 +164,7 @@ class GymLogsManager{
 
           }
         }catch(err){
-          print(err);
+          debugPrint(err as String?);
           await showDialog(context: context, builder: (context)=> ContentDialog(content: const Text("Wrong ID or name"),
             actions: [Button(child: const Text("Close"), onPressed: (){Navigator.pop(context);})],
           ));

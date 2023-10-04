@@ -185,7 +185,7 @@ class _ImportExcelStepState extends State<ImportExcelStep> {
                                           name: fileDetails.name,
                                           size: 0));
                                 }).catchError((err) {
-                                  print(err);
+                                  debugPrint(err);
                                 });
                               })
                         ],

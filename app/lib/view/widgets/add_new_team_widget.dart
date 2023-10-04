@@ -1,7 +1,8 @@
+import 'package:drift/drift.dart' as d;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gym_management/database_management/tables/generate_table.dart';
 import 'package:gym_management/view/manage_excel/ui_widget.dart';
-import 'package:gym_management/view/screen.dart';
+import 'package:gym_management/view/main_screen.dart';
 import 'package:gym_management/view/widgets/combo_box_widget.dart';
 import '../../database_management/tables/employees/employees_data_manager.dart';
 import '../../database_management/tables/teams/teams_database_manager.dart';
@@ -12,7 +13,7 @@ Future setEmployeesAndTeamsToDB(EmployeesTableCompanion employees,TeamsDataTable
 
     // insert employees data
   try{
-    await EmployeesDatabaseManager().insertEmployee(employees).then((_) async {
+    await EmployeesDatabaseManager().insertTrainer(employees).then((_) async {
       int teamCaptainId = 0;
       int teamId = 0;
       // add captain id to each player
@@ -34,7 +35,7 @@ Future setEmployeesAndTeamsToDB(EmployeesTableCompanion employees,TeamsDataTable
     });
     return 200;
   }catch(e){
-    print(e);
+    debugPrint(e.toString());
     return 400;
   }
 
@@ -288,14 +289,14 @@ class _AddNewTeamFormState extends State<AddNewTeamForm> {
                   ],
                 ),
               ),
-              SizedBox(height: 12,),
-              FilledButton(child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              const SizedBox(height: 12,),
+              FilledButton(child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text("Add team"),
               ), onPressed: () async {
                 if(formKey.currentState!.validate()) {
                   TeamsDataTableCompanion teams =TeamsDataTableCompanion.insert(teamId: -1, teamName: _teamName.text, teamCaptainId: -1);
-                  EmployeesTableCompanion employees = EmployeesTableCompanion.insert(employeeName: _coachName.text, employeePhoneNumber: int.parse(_coachPhoneNumber.text) , employeeSpecialization: "trainer", employeePosition: _coachEmploymentStatus, employeeAddress: _coachAddress.text);
+                  EmployeesTableCompanion employees = EmployeesTableCompanion.insert(employeeName: _coachName.text, employeePhoneNumber: int.parse(_coachPhoneNumber.text) , employeeSpecialization: "trainer", employeePosition: _coachEmploymentStatus, employeeAddress: _coachAddress.text, employeeImage:const d.Value('no-image'), employeeNationalId: 0, employeeNationalIdImage: 'no-image');
 
                   await loadingDialog(context, -1,  setEmployeesAndTeamsToDB( employees, teams), null).then((value) {
 

@@ -4,11 +4,12 @@ import 'package:gym_management/view/widgets/player_widgets/player_name_widget.da
 
 import '../../../database_management/tables/generate_table.dart';
 
+ ScrollController controller = ScrollController();
 class PlayersListWidget extends StatelessWidget {
   final int teamId;
-  PlayersListWidget({super.key, required this.teamId});
+ const PlayersListWidget({super.key, required this.teamId});
 
-  ScrollController controller = ScrollController();
+ 
 
   @override
   Widget build(BuildContext context) {

@@ -18,14 +18,14 @@ List<CustomBoxData> jobStateList = [
   CustomBoxData(title: "Freelance", id: "Freelance"),
   CustomBoxData(title: "Employee", id: "Employee"),
 ];
-
+Future<List<TeamsDataTableData>> getTeams = TeamsDatabaseManager().getAllTeams();
 class SetCoachesWidget extends StatelessWidget {
   const SetCoachesWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<TeamsDataTableData>>(
-      future: TeamsDatabaseManager().getAllTeams(),
+      future: getTeams,
       builder: (BuildContext context,
           AsyncSnapshot<List<TeamsDataTableData>> snapshot) {
         switch (snapshot.connectionState) {
